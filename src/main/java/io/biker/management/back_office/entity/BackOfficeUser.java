@@ -1,4 +1,4 @@
-package io.biker.management.backOffice.entity;
+package io.biker.management.back_office.entity;
 
 import io.biker.management.user.entity.User;
 import jakarta.persistence.Entity;
