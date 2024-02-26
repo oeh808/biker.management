@@ -27,13 +27,13 @@ public class UserInfoService implements UserDetailsService {
 
         // Converting userDetail to UserDetails
         return userDetail.map(UserInfoDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 
     public String addUser(UserInfo userInfo) {
         userInfo.setPassword(encoder.encode(userInfo.getPassword()));
         repository.save(userInfo);
-        return "User Added Successfully";
+        return "User Added";
     }
 
     public boolean isDuplicateUsername(String username) {
