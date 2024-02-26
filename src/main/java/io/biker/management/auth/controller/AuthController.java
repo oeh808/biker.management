@@ -37,6 +37,17 @@ public class AuthController {
 
     private AuthMapper authMapper;
 
+    public AuthController(UserInfoService userinfoService, JwtService jwtService,
+            AuthenticationManager authenticationManager, BikerService bikerService, BackOfficeService backOfficeService,
+            AuthMapper authMapper) {
+        this.userinfoService = userinfoService;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+        this.bikerService = bikerService;
+        this.backOfficeService = backOfficeService;
+        this.authMapper = authMapper;
+    }
+
     @PostMapping("/bikers")
     public SuccessResponse createBiker(@RequestBody UserCreationDTO dto) {
         if (!userinfoService.isDuplicateUsername(dto.username())) {
