@@ -11,5 +11,5 @@ public interface BikerService {
 
     public Biker getSingleBiker(int id);
 
-    public String assignDelivery();
+    public String deleteBiker(int id);
 }
