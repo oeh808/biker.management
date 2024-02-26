@@ -68,7 +68,13 @@ public class AuthController {
         if (authentication.isAuthenticated()) {
             return jwtService.generateToken(authRequest.getUsername());
         } else {
-            throw new UsernameNotFoundException("Invalid user request!");
+            /*
+             * FIXME:
+             * Ideally error should contain the same error message as other invalid
+             * authentication for token generation to obscure details from potential
+             * malicious user.
+             */
+            throw new UsernameNotFoundException(AuthExceptionMessages.INCORRECT_USERNAME_OR_PASSWORD);
         }
     }
 }
