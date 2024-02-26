@@ -9,9 +9,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.biker.management.auth.dto.UserCreationDTO;
 import io.biker.management.auth.entity.AuthRequest;
+import io.biker.management.auth.entity.UserInfo;
+import io.biker.management.auth.exception.AuthExceptionMessages;
+import io.biker.management.auth.exception.CustomAuthException;
+import io.biker.management.auth.mapper.AuthMapper;
 import io.biker.management.auth.service.JwtService;
 import io.biker.management.auth.service.UserInfoService;
+import io.biker.management.back_office.service.BackOfficeService;
+import io.biker.management.biker.entity.Biker;
+import io.biker.management.biker.service.BikerService;
 import io.biker.management.error_handling.responses.SuccessResponse;
 
 @RestController
@@ -21,16 +29,23 @@ public class AuthController {
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
 
-    @PostMapping("/admins")
-    public SuccessResponse createAdmin() {
-        // TODO: process POST request
-        return null;
-    }
+    private BikerService bikerService;
+    private BackOfficeService backOfficeService;
+
+    private AuthMapper authMapper;
 
     @PostMapping("/bikers")
-    public SuccessResponse createBiker() {
-        // TODO: process POST request
-        return null;
+    public SuccessResponse createBiker(@RequestBody UserCreationDTO dto) {
+        if (!userinfoService.isDuplicateUsername(dto.username())) {
+            Biker biker = bikerService.createBiker(authMapper.toBiker(dto));
+            UserInfo user = authMapper.toUser_Biker(dto);
+            user.setId(biker.getId());
+
+            return new SuccessResponse(userinfoService.addUser(user));
+        } else {
+            // Throw error
+            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_USERNAME);
+        }
     }
 
     @PostMapping("/bikers/register")
