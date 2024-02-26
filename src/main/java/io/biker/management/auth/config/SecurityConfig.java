@@ -40,10 +40,12 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/auth/welcome", "/auth/generateToken",
+                        .requestMatchers("/auth/bikers", "/auth/generateToken",
                                 "/swagger-ui/**", "/api-docs/**")
                         .permitAll())
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/backOffice").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/users/**").authenticated())
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/bikers/**").authenticated())
                 .sessionManagement(management -> management
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
@@ -71,7 +73,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
+    // FIXME: Remove before production
+    WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(new AntPathRequestMatcher("/h2-console/**"));
     }
 }
