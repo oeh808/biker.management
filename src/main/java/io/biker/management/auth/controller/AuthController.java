@@ -17,6 +17,7 @@ import io.biker.management.auth.exception.CustomAuthException;
 import io.biker.management.auth.mapper.AuthMapper;
 import io.biker.management.auth.service.JwtService;
 import io.biker.management.auth.service.UserInfoService;
+import io.biker.management.back_office.entity.BackOfficeUser;
 import io.biker.management.back_office.service.BackOfficeService;
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.biker.service.BikerService;
@@ -43,21 +44,21 @@ public class AuthController {
 
             return new SuccessResponse(userinfoService.addUser(user));
         } else {
-            // Throw error
             throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_USERNAME);
         }
     }
 
-    @PostMapping("/bikers/register")
-    public SuccessResponse registerBiker() {
-        // TODO: process POST request
-        return null;
-    }
-
     @PostMapping("/backOffice")
-    public SuccessResponse createBackOfficeUser() {
-        // TODO: process POST request
-        return null;
+    public SuccessResponse createBackOfficeUser(@RequestBody UserCreationDTO dto) {
+        if (!userinfoService.isDuplicateUsername(dto.username())) {
+            BackOfficeUser boUser = backOfficeService.createBackOfficeUser(authMapper.toBoUser(dto));
+            UserInfo user = authMapper.toUser_BoUser(dto);
+            user.setId(boUser.getId());
+
+            return new SuccessResponse(userinfoService.addUser(user));
+        } else {
+            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_USERNAME);
+        }
     }
 
     @PostMapping("/generateToken")
