@@ -12,5 +12,5 @@ public interface BackOfficeService {
 
     public BackOfficeUser getSingleBackOfficeUser(int id);
 
-    public String deleteBackOfficeUser(int id);
+    public void deleteBackOfficeUser(int id);
 }
