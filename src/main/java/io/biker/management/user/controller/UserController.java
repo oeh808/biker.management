@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.biker.management.back_office.entity.BackOfficeUser;
 import io.biker.management.back_office.service.BackOfficeService;
+import io.biker.management.user.analysis.AnalysisService;
+import io.biker.management.user.analysis.BikerAnalysis;
+import io.biker.management.user.analysis.SystemAnalysis;
 
 import java.util.List;
 
@@ -15,9 +18,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/management")
 public class UserController {
     private BackOfficeService backOfficeService;
+    private AnalysisService analysisService;
 
-    public UserController(BackOfficeService backOfficeService) {
+    public UserController(BackOfficeService backOfficeService, AnalysisService analysisService) {
         this.backOfficeService = backOfficeService;
+        this.analysisService = analysisService;
     }
 
     @GetMapping("/backOffice")
@@ -31,20 +36,22 @@ public class UserController {
     }
 
     @GetMapping("/analysis/{id}")
-    public String AnalyzeBikerPerformance(@PathVariable int id) {
-        // TODO: process GET request
-        return null;
+    public BikerAnalysis AnalyzeBikerPerformance(@PathVariable int id) {
+        // FIXME: Implement some form of analysis
+        BikerAnalysis analysis = new BikerAnalysis("Behold! Biker analysis");
+        return analysis;
     }
 
     @GetMapping("/analysis")
-    public String AnalyzeSystemPerformance() {
-        // TODO: process GET request
-        return null;
+    public SystemAnalysis AnalyzeSystemPerformance() {
+        // FIXME: Implement some form of analysis
+        SystemAnalysis analysis = new SystemAnalysis("Behold! System analysis.");
+        return analysis;
     }
 
     @GetMapping("/improvements")
     public String GenerateSuggestions() {
-        // TODO: process GET request
-        return null;
+        // FIXME: Implement some form of analysis
+        return analysisService.generateReport();
     }
 }
