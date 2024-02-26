@@ -1,5 +1,6 @@
 package io.biker.management.auth.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.biker.management.auth.Roles;
 import io.biker.management.auth.dto.UserCreationDTO;
 import io.biker.management.auth.entity.AuthRequest;
 import io.biker.management.auth.entity.UserInfo;
@@ -49,6 +51,7 @@ public class AuthController {
     }
 
     @PostMapping("/backOffice")
+    @PreAuthorize("hasAuthority(" + Roles.ADMIN + ")")
     public SuccessResponse createBackOfficeUser(@RequestBody UserCreationDTO dto) {
         if (!userinfoService.isDuplicateUsername(dto.username())) {
             BackOfficeUser boUser = backOfficeService.createBackOfficeUser(authMapper.toBoUser(dto));
