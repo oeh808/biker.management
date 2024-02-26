@@ -17,7 +17,6 @@
 		<java.version>21</java.version>
 		<flyway.user>${FLYWAY_USER}</flyway.user>
         <flyway.password>${FLYWAY_PASSWORD}</flyway.password>
-        <flyway.schemas>${FLYWAY_SCHEMA}</flyway.schemas>
 	</properties>
 	<dependencies>
 		<dependency>
