@@ -62,7 +62,7 @@ public class AuthController {
     }
 
     @PostMapping("/backOffice")
-    @PreAuthorize("hasAuthority(" + Roles.ADMIN + ")")
+    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse createBackOfficeUser(@RequestBody UserCreationDTO dto) {
         if (!userinfoService.isDuplicateUsername(dto.username())) {
             BackOfficeUser boUser = backOfficeService.createBackOfficeUser(authMapper.toBoUser(dto));

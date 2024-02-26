@@ -24,14 +24,14 @@ public class BikerController {
     }
 
     @GetMapping()
-    @PreAuthorize("hasAuthority(" + Roles.BACK_OFFICE + ")")
+    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public List<Biker> getAllBikers() {
         return bikerService.getAllBikers();
     }
 
     @GetMapping("/{id}")
     // FIXME: Allows bikers to view their own information
-    @PreAuthorize("hasAuthority(" + Roles.BACK_OFFICE + ")")
+    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public Biker getSingleBiker(@PathVariable int id) {
         return getSingleBiker(id);
     }

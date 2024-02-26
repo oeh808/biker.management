@@ -28,19 +28,19 @@ public class UserController {
     }
 
     @GetMapping("/backOffice")
-    @PreAuthorize("hasAuthority(" + Roles.ADMIN + ")")
+    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public List<BackOfficeUser> getAllBackOfficeUsers() {
         return backOfficeService.getAllBackOfficeUsers();
     }
 
     @GetMapping("/backOffice/{id}")
-    @PreAuthorize("hasAuthority(" + Roles.ADMIN + ")")
+    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public BackOfficeUser getSingleBackOfficeUser(@PathVariable int id) {
         return backOfficeService.getSingleBackOfficeUser(id);
     }
 
     @GetMapping("/analysis/{id}")
-    @PreAuthorize("hasAuthority(" + Roles.BACK_OFFICE + ")")
+    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public BikerAnalysis AnalyzeBikerPerformance(@PathVariable int id) {
         // FIXME: Implement some form of analysis
         BikerAnalysis analysis = new BikerAnalysis("Behold! Biker analysis");
@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @GetMapping("/analysis")
-    @PreAuthorize("hasAuthority(" + Roles.ADMIN + ")")
+    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SystemAnalysis AnalyzeSystemPerformance() {
         // FIXME: Implement some form of analysis
         SystemAnalysis analysis = new SystemAnalysis("Behold! System analysis.");
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @GetMapping("/improvements")
-    @PreAuthorize("hasAuthority(" + Roles.BACK_OFFICE + ")")
+    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public String GenerateSuggestions() {
         // FIXME: Implement some form of analysis
         return analysisService.generateReport();
