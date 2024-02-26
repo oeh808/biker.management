@@ -1,3 +1,4 @@
+-- FIXME: Disable db manipulation by spring before production
 create sequence user_sequence start with 1 increment by 1;
 
 create table admins (
