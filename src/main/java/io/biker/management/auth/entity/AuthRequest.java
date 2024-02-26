@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+// FIXME: Change location to DTO's
 public class AuthRequest {
     private String username;
     private String password;
