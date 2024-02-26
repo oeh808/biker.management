@@ -15,13 +15,17 @@ public class BikerServiceImpl implements BikerService {
     private BikerRepo bikerRepo;
 
     public BikerServiceImpl(BikerRepo bikerRepo) {
-        // FIXME: Implement custom error handling for duplicate phone numbers
         this.bikerRepo = bikerRepo;
     }
 
     @Override
     public Biker createBiker(Biker biker) {
-        return bikerRepo.save(biker);
+        Optional<Biker> opBiker = bikerRepo.findByPhoneNumber(biker.getPhoneNumber());
+        if (opBiker.isPresent()) {
+            throw new BikerException(BikerExceptionMessages.DUPLICATE_PHONE_NUMBER);
+        } else {
+            return bikerRepo.save(biker);
+        }
     }
 
     @Override
