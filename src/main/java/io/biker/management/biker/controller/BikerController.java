@@ -33,6 +33,6 @@ public class BikerController {
     // FIXME: Allows bikers to view their own information
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public Biker getSingleBiker(@PathVariable int id) {
-        return getSingleBiker(id);
+        return bikerService.getSingleBiker(id);
     }
 }
