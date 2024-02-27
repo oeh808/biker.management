@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.biker.management.auth.Roles;
+import io.biker.management.auth.dto.AuthRequestDTO;
 import io.biker.management.auth.dto.UserCreationDTO;
-import io.biker.management.auth.entity.AuthRequest;
 import io.biker.management.auth.entity.UserInfo;
 import io.biker.management.auth.exception.AuthExceptionMessages;
 import io.biker.management.auth.exception.CustomAuthException;
@@ -76,11 +76,11 @@ public class AuthController {
     }
 
     @PostMapping("/generateToken")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+    public String authenticateAndGetToken(@RequestBody AuthRequestDTO authRequest) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getUsername());
+            return jwtService.generateToken(authRequest.username());
         } else {
             /*
              * FIXME:
