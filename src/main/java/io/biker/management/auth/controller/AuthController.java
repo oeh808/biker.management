@@ -21,7 +21,7 @@ import io.biker.management.auth.exception.AuthExceptionMessages;
 import io.biker.management.auth.exception.CustomAuthException;
 import io.biker.management.auth.mapper.AuthMapper;
 import io.biker.management.auth.service.JwtService;
-import io.biker.management.auth.service.UserInfoService;
+import io.biker.management.auth.service.UserInfoServiceImpl;
 import io.biker.management.back_office.entity.BackOfficeUser;
 import io.biker.management.back_office.service.BackOfficeService;
 import io.biker.management.biker.entity.Biker;
@@ -38,7 +38,7 @@ import jakarta.validation.Valid;
 @Tag(name = "Authorization")
 @RequestMapping("/auth")
 public class AuthController {
-    private UserInfoService userinfoService;
+    private UserInfoServiceImpl userinfoService;
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
 
@@ -47,7 +47,7 @@ public class AuthController {
 
     private AuthMapper authMapper;
 
-    public AuthController(UserInfoService userinfoService, JwtService jwtService,
+    public AuthController(UserInfoServiceImpl userinfoService, JwtService jwtService,
             AuthenticationManager authenticationManager, BikerService bikerService, BackOfficeService backOfficeService,
             AuthMapper authMapper) {
         this.userinfoService = userinfoService;
