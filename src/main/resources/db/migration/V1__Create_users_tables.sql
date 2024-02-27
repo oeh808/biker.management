@@ -1,5 +1,5 @@
 -- FIXME: Disable db manipulation by spring before production
-create sequence user_sequence start with 1 increment by 1;
+create sequence user_sequence start with 50 increment by 1;
 
 create table admins (
     id integer not null, name varchar(255), email varchar(255) unique, phone_number varchar(255) unique, primary key (id)
