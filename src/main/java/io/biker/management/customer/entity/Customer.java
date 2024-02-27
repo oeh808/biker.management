@@ -3,13 +3,16 @@ package io.biker.management.customer.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import io.biker.management.user.Address;
 import io.biker.management.user.entity.User;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Customers")
 public class Customer extends User {
+    @Embedded
     private Set<Address> addresses = new HashSet<Address>();
 
     public Customer() {
