@@ -40,7 +40,10 @@ public class UserInfoServiceImpl implements UserDetailsService, UserInfoService 
 
     @Override
     public void deleteUser(int id) {
-        checkUserExists(id);
+        if (!userExists(id)) {
+            throw new CustomAuthException(AuthExceptionMessages.USER_DOES_NOT_EXIST);
+        }
+
         repository.deleteById(id);
     }
 
@@ -52,13 +55,9 @@ public class UserInfoServiceImpl implements UserDetailsService, UserInfoService 
     }
 
     // Helper functions
-    public void checkUserExists(int id) {
+    public boolean userExists(int id) {
         Optional<UserInfo> opUser = repository.findById(id);
 
-        if (opUser.isPresent()) {
-            return;
-        } else {
-            throw new CustomAuthException(AuthExceptionMessages.USER_DOES_NOT_EXIST);
-        }
+        return opUser.isPresent();
     }
 }
