@@ -25,7 +25,7 @@ public class UserInfoService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<UserInfo> userDetail = repository.findByUsernameIgnoreCase(username);
+        Optional<UserInfo> userDetail = repository.findByUsername(username);
 
         // Converting userDetail to UserDetails
         return userDetail.map(UserInfoDetails::new)
@@ -40,7 +40,7 @@ public class UserInfoService implements UserDetailsService {
 
     public String deleteUser(int id) {
         String username = getUsername(id);
-        repository.deleteByUsernameIgnoreCase(username);
+        repository.deleteByUsername(username);
 
         return "User Deleted";
     }
@@ -57,7 +57,7 @@ public class UserInfoService implements UserDetailsService {
     }
 
     public boolean isDuplicateUsername(String username) {
-        Optional<UserInfo> opUser = repository.findByUsernameIgnoreCase(username);
+        Optional<UserInfo> opUser = repository.findByUsername(username);
 
         return opUser.isPresent();
     }
