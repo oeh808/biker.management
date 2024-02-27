@@ -33,18 +33,15 @@ public class UserInfoServiceImpl implements UserDetailsService, UserInfoService 
     }
 
     @Override
-    public String addUser(UserInfo userInfo) {
+    public UserInfo addUser(UserInfo userInfo) {
         userInfo.setPassword(encoder.encode(userInfo.getPassword()));
-        repository.save(userInfo);
-        return "User Added";
+        return repository.save(userInfo);
     }
 
     @Override
-    public String deleteUser(int id) {
-        String username = getUsername(id);
-        repository.deleteByUsername(username);
-
-        return "User Deleted";
+    public void deleteUser(int id) {
+        checkUserExists(id);
+        repository.deleteById(id);
     }
 
     @Override
@@ -55,11 +52,11 @@ public class UserInfoServiceImpl implements UserDetailsService, UserInfoService 
     }
 
     // Helper functions
-    public String getUsername(int id) {
+    public void checkUserExists(int id) {
         Optional<UserInfo> opUser = repository.findById(id);
 
         if (opUser.isPresent()) {
-            return opUser.get().getUsername();
+            return;
         } else {
             throw new CustomAuthException(AuthExceptionMessages.USER_DOES_NOT_EXIST);
         }

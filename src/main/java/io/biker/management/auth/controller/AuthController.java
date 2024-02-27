@@ -20,6 +20,7 @@ import io.biker.management.auth.entity.UserInfo;
 import io.biker.management.auth.exception.AuthExceptionMessages;
 import io.biker.management.auth.exception.CustomAuthException;
 import io.biker.management.auth.mapper.AuthMapper;
+import io.biker.management.auth.response.Responses;
 import io.biker.management.auth.service.JwtService;
 import io.biker.management.auth.service.UserInfoServiceImpl;
 import io.biker.management.back_office.entity.BackOfficeUser;
@@ -66,8 +67,9 @@ public class AuthController {
             Biker biker = bikerService.createBiker(authMapper.toBiker(dto));
             UserInfo user = authMapper.toUser_Biker(dto);
             user.setId(biker.getId());
+            userinfoService.addUser(user);
 
-            return new SuccessResponse(userinfoService.addUser(user));
+            return new SuccessResponse(Responses.USER_ADDED);
         } else {
             throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_USERNAME);
         }
@@ -84,8 +86,9 @@ public class AuthController {
             BackOfficeUser boUser = backOfficeService.createBackOfficeUser(authMapper.toBoUser(dto));
             UserInfo user = authMapper.toUser_BoUser(dto);
             user.setId(boUser.getId());
+            userinfoService.addUser(user);
 
-            return new SuccessResponse(userinfoService.addUser(user));
+            return new SuccessResponse(Responses.USER_ADDED);
         } else {
             throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_USERNAME);
         }
@@ -119,7 +122,8 @@ public class AuthController {
     public SuccessResponse deleteBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         bikerService.deleteBiker(id);
-        return new SuccessResponse(userinfoService.deleteUser(id));
+        userinfoService.deleteUser(id);
+        return new SuccessResponse(Responses.USER_DELETED);
     }
 
     @Operation(description = "DELETE endpoint for deleting a back office user." +
@@ -131,7 +135,8 @@ public class AuthController {
     public SuccessResponse deleteBackOfficeUser(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Back Office user ID") @PathVariable int id) {
         backOfficeService.deleteBackOfficeUser(id);
-        return new SuccessResponse(userinfoService.deleteUser(id));
+        userinfoService.deleteUser(id);
+        return new SuccessResponse(Responses.USER_DELETED);
     }
 
 }
