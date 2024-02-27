@@ -24,9 +24,13 @@ import io.biker.management.back_office.service.BackOfficeService;
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.biker.service.BikerService;
 import io.biker.management.error_handling.responses.SuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
+@Tag(name = "Authorization")
 @RequestMapping("/auth")
 public class AuthController {
     private UserInfoService userinfoService;
@@ -49,7 +53,9 @@ public class AuthController {
         this.authMapper = authMapper;
     }
 
+    @Operation(description = "POST endpoint for creating a bikers.", summary = "Create a biker")
     @PostMapping("/bikers")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of UserCreationDTO")
     public SuccessResponse createBiker(@Valid @RequestBody UserCreationDTO dto) {
         if (!userinfoService.isDuplicateUsername(dto.username())) {
             Biker biker = bikerService.createBiker(authMapper.toBiker(dto));
@@ -62,7 +68,11 @@ public class AuthController {
         }
     }
 
+    @Operation(description = "POST endpoint for creating a back office user." +
+            "\n\n Can only be done by admins.", summary = "Create a back office user")
     @PostMapping("/backOffice")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of UserCreationDTO")
+    @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse createBackOfficeUser(@Valid @RequestBody UserCreationDTO dto) {
         if (!userinfoService.isDuplicateUsername(dto.username())) {
@@ -76,7 +86,9 @@ public class AuthController {
         }
     }
 
+    @Operation(description = "POST endpoint for generating a Jwt Token given a user name and password.", summary = "Generate Jwt Token")
     @PostMapping("/generateToken")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of AuthRequestDTO")
     public String authenticateAndGetToken(@Valid @RequestBody AuthRequestDTO authRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
