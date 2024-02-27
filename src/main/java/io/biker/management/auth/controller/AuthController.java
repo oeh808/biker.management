@@ -27,6 +27,8 @@ import io.biker.management.back_office.entity.BackOfficeUser;
 import io.biker.management.back_office.service.BackOfficeService;
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.biker.service.BikerService;
+import io.biker.management.customer.entity.Customer;
+import io.biker.management.customer.service.CustomerService;
 import io.biker.management.error_handling.responses.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -43,20 +45,39 @@ public class AuthController {
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
 
+    private CustomerService customerService;
     private BikerService bikerService;
     private BackOfficeService backOfficeService;
 
     private AuthMapper authMapper;
 
-    public AuthController(UserInfoServiceImpl userinfoService, JwtService jwtService,
+    public AuthController(CustomerService customerService, UserInfoServiceImpl userinfoService, JwtService jwtService,
             AuthenticationManager authenticationManager, BikerService bikerService, BackOfficeService backOfficeService,
             AuthMapper authMapper) {
+        this.customerService = customerService;
         this.userinfoService = userinfoService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.bikerService = bikerService;
         this.backOfficeService = backOfficeService;
         this.authMapper = authMapper;
+    }
+
+    @Operation(description = "POST endpoint for creating a customers.", summary = "Create a customer")
+    @PostMapping("/customers")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of UserCreationDTO")
+    public SuccessResponse createCustomer(@Valid @RequestBody UserCreationDTO dto) {
+        if (!userinfoService.isDuplicateUsername(dto.username())
+                && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
+            Customer customer = customerService.createCustomer(authMapper.toCustomer(dto));
+            UserInfo user = authMapper.toUser_Customer(dto);
+            user.setId(customer.getId());
+            userinfoService.addUser(user);
+
+            return new SuccessResponse(Responses.USER_ADDED);
+        } else {
+            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
+        }
     }
 
     @Operation(description = "POST endpoint for creating a bikers.", summary = "Create a biker")
@@ -113,6 +134,19 @@ public class AuthController {
              */
             throw new UsernameNotFoundException(AuthExceptionMessages.INCORRECT_USERNAME_OR_PASSWORD);
         }
+    }
+
+    @Operation(description = "DELETE endpoint for deleting a customer." +
+            "\n\n Can only be done by admins.", summary = "Delete Customer")
+    @Transactional
+    @DeleteMapping("/customers/{id}")
+    @SecurityRequirement(name = "Authorization")
+    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    public SuccessResponse deleteCustomer(
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
+        customerService.deleteCustomer(id);
+        userinfoService.deleteUser(id);
+        return new SuccessResponse(Responses.USER_DELETED);
     }
 
     @Operation(description = "DELETE endpoint for deleting a biker." +
