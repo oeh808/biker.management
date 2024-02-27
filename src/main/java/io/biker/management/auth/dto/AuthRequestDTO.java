@@ -1,4 +1,9 @@
 package io.biker.management.auth.dto;
 
-public record AuthRequestDTO(String username, String password) {
+import io.biker.management.constants.validation.ValidationMessages;
+import jakarta.validation.constraints.NotBlank;
+
+public record AuthRequestDTO(
+        @NotBlank(message = ValidationMessages.NOT_BLANK) String username,
+        @NotBlank(message = ValidationMessages.NOT_BLANK) String password) {
 }

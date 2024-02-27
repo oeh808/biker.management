@@ -24,6 +24,7 @@ import io.biker.management.back_office.service.BackOfficeService;
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.biker.service.BikerService;
 import io.biker.management.error_handling.responses.SuccessResponse;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
@@ -49,7 +50,7 @@ public class AuthController {
     }
 
     @PostMapping("/bikers")
-    public SuccessResponse createBiker(@RequestBody UserCreationDTO dto) {
+    public SuccessResponse createBiker(@Valid @RequestBody UserCreationDTO dto) {
         if (!userinfoService.isDuplicateUsername(dto.username())) {
             Biker biker = bikerService.createBiker(authMapper.toBiker(dto));
             UserInfo user = authMapper.toUser_Biker(dto);
@@ -63,7 +64,7 @@ public class AuthController {
 
     @PostMapping("/backOffice")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
-    public SuccessResponse createBackOfficeUser(@RequestBody UserCreationDTO dto) {
+    public SuccessResponse createBackOfficeUser(@Valid @RequestBody UserCreationDTO dto) {
         if (!userinfoService.isDuplicateUsername(dto.username())) {
             BackOfficeUser boUser = backOfficeService.createBackOfficeUser(authMapper.toBoUser(dto));
             UserInfo user = authMapper.toUser_BoUser(dto);
@@ -76,7 +77,7 @@ public class AuthController {
     }
 
     @PostMapping("/generateToken")
-    public String authenticateAndGetToken(@RequestBody AuthRequestDTO authRequest) {
+    public String authenticateAndGetToken(@Valid @RequestBody AuthRequestDTO authRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
         if (authentication.isAuthenticated()) {
