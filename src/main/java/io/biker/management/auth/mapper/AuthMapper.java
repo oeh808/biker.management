@@ -15,6 +15,7 @@ public class AuthMapper {
         UserInfo user = new UserInfo();
         user.setUsername(dto.username());
         user.setPassword(dto.password());
+        user.setPhoneNumber(dto.phoneNum());
         user.setRoles(Roles.BIKER);
 
         return user;
@@ -24,6 +25,7 @@ public class AuthMapper {
         UserInfo user = new UserInfo();
         user.setUsername(dto.username());
         user.setPassword(dto.password());
+        user.setPhoneNumber(dto.phoneNum());
         user.setRoles(Roles.BACK_OFFICE);
 
         return user;
