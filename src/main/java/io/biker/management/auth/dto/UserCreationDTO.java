@@ -6,15 +6,11 @@ import jakarta.validation.constraints.NotBlank;
 
 public record UserCreationDTO(
                 @Schema(requiredProperties = {
-                                "Cannot be null",
-                                "Cannot be empty" }) @NotBlank(message = ValidationMessages.NOT_BLANK) String name,
+                                ValidationMessages.NOT_BLANK }) @NotBlank(message = ValidationMessages.NOT_BLANK) String name,
                 @Schema(requiredProperties = {
-                                "Cannot be null",
-                                "Cannot be empty" }) @NotBlank(message = ValidationMessages.NOT_BLANK) String username,
+                                ValidationMessages.NOT_BLANK }) @NotBlank(message = ValidationMessages.NOT_BLANK) String username,
                 @Schema(requiredProperties = {
-                                "Cannot be null",
-                                "Cannot be empty" }) @NotBlank(message = ValidationMessages.NOT_BLANK) String password,
+                                ValidationMessages.NOT_BLANK }) @NotBlank(message = ValidationMessages.NOT_BLANK) String password,
                 @Schema(requiredProperties = {
-                                "Cannot be null",
-                                "Cannot be empty" }) @NotBlank(message = ValidationMessages.NOT_BLANK) String phoneNum){
+                                ValidationMessages.NOT_BLANK }) @NotBlank(message = ValidationMessages.NOT_BLANK) String phoneNum){
 }

@@ -6,9 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public record AuthRequestDTO(
                 @Schema(requiredProperties = {
-                                "Cannot be null",
-                                "Cannot be empty" }) @NotBlank(message = ValidationMessages.NOT_BLANK) String username,
+                                ValidationMessages.NOT_BLANK }) @NotBlank(message = ValidationMessages.NOT_BLANK) String username,
                 @Schema(requiredProperties = {
-                                "Cannot be null",
-                                "Cannot be empty" }) @NotBlank(message = ValidationMessages.NOT_BLANK) String password){
+                                ValidationMessages.NOT_BLANK }) @NotBlank(message = ValidationMessages.NOT_BLANK) String password){
 }
