@@ -67,7 +67,6 @@ public class BikerRepoTest {
 
     @Test
     public void findByEmail_NonExistant() {
-        // TODO: Complete test
         Optional<Biker> opBiker = repo.findByEmail(biker1.getEmail() + "_");
 
         assertTrue(opBiker.isEmpty());
