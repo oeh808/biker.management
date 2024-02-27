@@ -8,4 +8,6 @@ public interface UserInfoService {
     public void deleteUser(int id);
 
     public boolean isDuplicateUsername(String username);
+
+    public boolean isDuplicatePhoneNumber(String phoneNum);
 }

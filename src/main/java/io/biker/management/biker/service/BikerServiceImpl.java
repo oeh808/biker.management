@@ -20,12 +20,7 @@ public class BikerServiceImpl implements BikerService {
 
     @Override
     public Biker createBiker(Biker biker) {
-        Optional<Biker> opBiker = bikerRepo.findByPhoneNumber(biker.getPhoneNumber());
-        if (opBiker.isPresent()) {
-            throw new BikerException(BikerExceptionMessages.DUPLICATE_PHONE_NUMBER);
-        } else {
-            return bikerRepo.save(biker);
-        }
+        return bikerRepo.save(biker);
     }
 
     @Override

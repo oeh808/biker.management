@@ -54,6 +54,13 @@ public class UserInfoServiceImpl implements UserDetailsService, UserInfoService 
         return opUser.isPresent();
     }
 
+    @Override
+    public boolean isDuplicatePhoneNumber(String phoneNum) {
+        Optional<UserInfo> opUser = repository.findByPhoneNumber(phoneNum);
+
+        return opUser.isPresent();
+    }
+
     // Helper functions
     public boolean userExists(int id) {
         Optional<UserInfo> opUser = repository.findById(id);

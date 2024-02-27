@@ -20,12 +20,7 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 
     @Override
     public BackOfficeUser createBackOfficeUser(BackOfficeUser boUser) {
-        Optional<BackOfficeUser> opBoUser = boRepo.findByPhoneNumber(boUser.getPhoneNumber());
-        if (opBoUser.isPresent()) {
-            throw new BackOfficeException(BackOfficeExceptionMessages.DUPLICATE_PHONE_NUMBER);
-        } else {
-            return boRepo.save(boUser);
-        }
+        return boRepo.save(boUser);
     }
 
     @Override

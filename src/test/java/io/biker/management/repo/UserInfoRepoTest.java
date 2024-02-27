@@ -27,8 +27,8 @@ public class UserInfoRepoTest {
 
     @BeforeAll
     public static void setUp() {
-        user1 = new UserInfo(50, "Durge", "123456", "ADMIN");
-        user2 = new UserInfo(51, "Tav", "123456", "BACK_OFFICE");
+        user1 = new UserInfo(50, "Durge", "123456", "+666 9772223918", "ADMIN");
+        user2 = new UserInfo(51, "Tav", "123456", "+333 9772223918", "BACK_OFFICE");
     }
 
     @BeforeEach

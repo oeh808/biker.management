@@ -63,7 +63,8 @@ public class AuthController {
     @PostMapping("/bikers")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of UserCreationDTO")
     public SuccessResponse createBiker(@Valid @RequestBody UserCreationDTO dto) {
-        if (!userinfoService.isDuplicateUsername(dto.username())) {
+        if (!userinfoService.isDuplicateUsername(dto.username())
+                && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
             Biker biker = bikerService.createBiker(authMapper.toBiker(dto));
             UserInfo user = authMapper.toUser_Biker(dto);
             user.setId(biker.getId());
@@ -71,7 +72,7 @@ public class AuthController {
 
             return new SuccessResponse(Responses.USER_ADDED);
         } else {
-            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_USERNAME);
+            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
         }
     }
 
@@ -82,7 +83,8 @@ public class AuthController {
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse createBackOfficeUser(@Valid @RequestBody UserCreationDTO dto) {
-        if (!userinfoService.isDuplicateUsername(dto.username())) {
+        if (!userinfoService.isDuplicateUsername(dto.username())
+                && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
             BackOfficeUser boUser = backOfficeService.createBackOfficeUser(authMapper.toBoUser(dto));
             UserInfo user = authMapper.toUser_BoUser(dto);
             user.setId(boUser.getId());
@@ -90,7 +92,7 @@ public class AuthController {
 
             return new SuccessResponse(Responses.USER_ADDED);
         } else {
-            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_USERNAME);
+            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
         }
     }
 
