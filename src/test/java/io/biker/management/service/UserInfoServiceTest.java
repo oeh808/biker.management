@@ -98,5 +98,7 @@ public class UserInfoServiceTest {
                     service.deleteUser(user.getId() - 1);
                 });
         assertTrue(ex.getMessage().contains(AuthExceptionMessages.USER_DOES_NOT_EXIST));
+
+        verify(repo, times(0)).deleteById(user.getId() - 1);
     }
 }
