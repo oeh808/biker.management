@@ -43,7 +43,8 @@ public class SecurityConfig {
                         .requestMatchers("/auth/bikers", "/auth/generateToken",
                                 "/swagger-ui/**", "/api-docs/**")
                         .permitAll())
-                .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/backOffice").authenticated())
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/backOffice/**").authenticated())
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/bikers/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/users/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/bikers/**").authenticated())
                 .sessionManagement(management -> management

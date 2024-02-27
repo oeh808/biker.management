@@ -5,6 +5,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +28,8 @@ import io.biker.management.biker.entity.Biker;
 import io.biker.management.biker.service.BikerService;
 import io.biker.management.error_handling.responses.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -104,4 +109,29 @@ public class AuthController {
             throw new UsernameNotFoundException(AuthExceptionMessages.INCORRECT_USERNAME_OR_PASSWORD);
         }
     }
+
+    @Operation(description = "DELETE endpoint for deleting a biker." +
+            "\n\n Can only be done by admins.", summary = "Delete Biker")
+    @Transactional
+    @DeleteMapping("/bikers/{id}")
+    @SecurityRequirement(name = "Authorization")
+    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    public SuccessResponse deleteBiker(
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
+        bikerService.deleteBiker(id);
+        return new SuccessResponse(userinfoService.deleteUser(id));
+    }
+
+    @Operation(description = "DELETE endpoint for deleting a back office user." +
+            "\n\n Can only be done by admins.", summary = "Delete Back Office user")
+    @Transactional
+    @DeleteMapping("/backOffice/{id}")
+    @SecurityRequirement(name = "Authorization")
+    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    public SuccessResponse deleteBackOfficeUser(
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "Back Office user ID") @PathVariable int id) {
+        backOfficeService.deleteBackOfficeUser(id);
+        return new SuccessResponse(userinfoService.deleteUser(id));
+    }
+
 }
