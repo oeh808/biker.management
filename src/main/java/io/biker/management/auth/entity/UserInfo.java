@@ -16,6 +16,7 @@ public class UserInfo {
     private int id;
     @Column(unique = true)
     private String username;
+    // FIXME: Add some form of verification for phone numbers
     private String password;
     @Column(unique = true)
     private String phoneNumber;
