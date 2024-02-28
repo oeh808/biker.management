@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 
 public record AuthRequestDTO(
         @Schema(requiredProperties = {
-                ValidationMessages.NOT_BLANK }) @NotBlank(message = "username"
+                ValidationMessages.NOT_BLANK_SCHEMA }) @NotBlank(message = "username"
                         + ValidationMessages.NOT_BLANK) String username,
-        @Schema(requiredProperties = { ValidationMessages.NOT_BLANK }) @NotBlank(message = "password"
+        @Schema(requiredProperties = { ValidationMessages.NOT_BLANK_SCHEMA }) @NotBlank(message = "password"
                 + ValidationMessages.NOT_BLANK) String password){
 }
