@@ -5,13 +5,15 @@ import java.util.List;
 import io.biker.management.product.entity.Product;
 
 public interface ProductService {
-    public Product createProduct(Product product);
+    public Product createProduct(int storeId, Product product);
 
     public List<Product> getAllProducts();
 
-    public Product getSingleProduct(int id);
+    public List<Product> getAllProductsByStore(int storeId);
+
+    public Product getSingleProduct(int storeId, int id);
 
     public Product updateProduct(int storeId, Product product);
 
-    public void deleteProduct(int id);
+    public void deleteProduct(int storeId, int id);
 }

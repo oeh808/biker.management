@@ -10,7 +10,7 @@ import io.biker.management.product.entity.Product;
 public class ProductServiceImpl implements ProductService {
 
     @Override
-    public Product createProduct(Product product) {
+    public Product createProduct(int storeId, Product product) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'createProduct'");
     }
@@ -22,7 +22,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getSingleProduct(int id) {
+    public List<Product> getAllProductsByStore(int storeId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllProductsByStore'");
+    }
+
+    @Override
+    public Product getSingleProduct(int storeId, int id) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getSingleProduct'");
     }
@@ -34,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(int id) {
+    public void deleteProduct(int storeId, int id) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteProduct'");
     }
