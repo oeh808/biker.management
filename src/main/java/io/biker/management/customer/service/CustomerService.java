@@ -1,11 +1,11 @@
 package io.biker.management.customer.service;
 
 import java.util.List;
+import java.util.Set;
 
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.user.Address;
 
-//TODO: Implement services
 public interface CustomerService {
     public Customer createCustomer(Customer customer);
 
@@ -13,7 +13,7 @@ public interface CustomerService {
 
     public Customer getSingleCustomer(int id);
 
-    public List<Address> setDeliveryAddresses(List<Address> addresses);
+    public Set<Address> addDeliveryAddress(int id, Address addresses);
 
     public void deleteCustomer(int id);
 }
