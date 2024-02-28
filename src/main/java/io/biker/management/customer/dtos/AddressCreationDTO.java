@@ -6,13 +6,18 @@ import jakarta.validation.constraints.NotBlank;
 
 public record AddressCreationDTO(
         @Schema(requiredProperties = {
-                ValidationMessages.NOT_BLANK }) @NotBlank(message = ValidationMessages.NOT_BLANK) String street,
+                ValidationMessages.NOT_BLANK }) @NotBlank(message = "street"
+                + ValidationMessages.NOT_BLANK) String street,
         @Schema(requiredProperties = {
-                ValidationMessages.NOT_BLANK }) @NotBlank(message = ValidationMessages.NOT_BLANK) String city,
+                ValidationMessages.NOT_BLANK }) @NotBlank(message = "city"
+                + ValidationMessages.NOT_BLANK) String city,
         @Schema(requiredProperties = {
-                ValidationMessages.NOT_BLANK }) @NotBlank(message = ValidationMessages.NOT_BLANK) String state,
+                ValidationMessages.NOT_BLANK }) @NotBlank(message = "state"
+                + ValidationMessages.NOT_BLANK) String state,
         @Schema(requiredProperties = {
-                ValidationMessages.NOT_BLANK }) @NotBlank(message = ValidationMessages.NOT_BLANK) String postCode,
+                ValidationMessages.NOT_BLANK }) @NotBlank(message = "postcode"
+                + ValidationMessages.NOT_BLANK) String postCode,
         @Schema(requiredProperties = {
-                ValidationMessages.NOT_BLANK }) @NotBlank(message = ValidationMessages.NOT_BLANK) String country){
+                ValidationMessages.NOT_BLANK }) @NotBlank(message = "country"
+                + ValidationMessages.NOT_BLANK) String country){
 }
