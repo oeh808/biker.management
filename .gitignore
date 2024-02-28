@@ -34,4 +34,4 @@ build/
 
 .env
 create.sql
-V1_1__Add_admins.sql
+V1_0_1__Add_admins.sql
