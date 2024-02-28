@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -47,7 +49,7 @@ public class ProductController {
             "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
     public ProductReadingDTO createProduct(
             @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
-            @RequestBody ProductCreationDTO dto) {
+            @Valid @RequestBody ProductCreationDTO dto) {
         Product product = productService.createProduct(storeId, productMapper.toProduct(dto));
         return productMapper.toDto(product);
     }
@@ -94,7 +96,7 @@ public class ProductController {
     public ProductReadingDTO updateProduct(
             @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Product ID") @PathVariable int id,
-            @RequestBody ProductCreationDTO dto) {
+            @Valid @RequestBody ProductCreationDTO dto) {
         Product product = productMapper.toProduct(dto);
         product.setProductId(id);
 
