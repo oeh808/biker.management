@@ -86,6 +86,7 @@ public class AuthMapper {
         Store store = new Store();
         store.setName(dto.name());
         store.setAddress(dto.address());
+        store.setPhoneNumber(dto.phoneNum());
 
         return store;
     }

@@ -3,7 +3,7 @@ create table products (
 );
 
 create table stores (
-    store_id integer not null, city varchar(255), country varchar(255), name varchar(255), post_code varchar(255), state varchar(255), street varchar(255), primary key (store_id)
+    store_id integer not null, city varchar(255), country varchar(255), name varchar(255), phone_number varchar(255), post_code varchar(255), state varchar(255), street varchar(255), primary key (store_id)
 );
 
 alter table if exists products
