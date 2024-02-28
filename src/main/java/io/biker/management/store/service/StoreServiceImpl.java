@@ -1,36 +1,43 @@
 package io.biker.management.store.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import io.biker.management.store.entity.Store;
+import io.biker.management.store.exception.StoreException;
+import io.biker.management.store.exception.StoreExceptionMessages;
+import io.biker.management.store.repo.StoreRepo;
 
 @Service
 public class StoreServiceImpl implements StoreService {
+    private StoreRepo storeRepo;
 
     @Override
     public Store createStore(Store store) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createStore'");
+        return storeRepo.save(store);
     }
 
     @Override
     public List<Store> getAllStores() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllStores'");
+        return storeRepo.findAll();
     }
 
     @Override
     public Store getSingleStore(int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getSingleStore'");
+        Optional<Store> opStore = storeRepo.findById(id);
+        if (opStore.isPresent()) {
+            return opStore.get();
+        } else {
+            throw new StoreException(StoreExceptionMessages.STORE_NOT_FOUND);
+        }
     }
 
     @Override
     public void deleteStore(int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteStore'");
-    }
+        getSingleStore(id);
 
+        storeRepo.deleteById(id);
+    }
 }
