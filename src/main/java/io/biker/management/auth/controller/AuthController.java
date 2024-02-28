@@ -59,12 +59,15 @@ public class AuthController {
             AuthenticationManager authenticationManager, BikerService bikerService,
             BackOfficeService backOfficeService, StoreService storeService,
             AuthMapper authMapper) {
-        this.customerService = customerService;
         this.userinfoService = userinfoService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+
+        this.customerService = customerService;
         this.bikerService = bikerService;
         this.backOfficeService = backOfficeService;
+        this.storeService = storeService;
+
         this.authMapper = authMapper;
     }
 

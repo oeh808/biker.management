@@ -14,6 +14,10 @@ import io.biker.management.store.repo.StoreRepo;
 public class StoreServiceImpl implements StoreService {
     private StoreRepo storeRepo;
 
+    public StoreServiceImpl(StoreRepo storeRepo) {
+        this.storeRepo = storeRepo;
+    }
+
     @Override
     public Store createStore(Store store) {
         return storeRepo.save(store);
