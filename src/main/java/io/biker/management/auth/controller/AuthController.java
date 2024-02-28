@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.biker.management.auth.Roles;
 import io.biker.management.auth.dto.AuthRequestDTO;
+import io.biker.management.auth.dto.StoreCreationDTO;
 import io.biker.management.auth.dto.UserCreationDTO;
 import io.biker.management.auth.entity.UserInfo;
 import io.biker.management.auth.exception.AuthExceptionMessages;
@@ -30,6 +31,8 @@ import io.biker.management.biker.service.BikerService;
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.customer.service.CustomerService;
 import io.biker.management.error_handling.responses.SuccessResponse;
+import io.biker.management.store.entity.Store;
+import io.biker.management.store.service.StoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -48,11 +51,13 @@ public class AuthController {
     private CustomerService customerService;
     private BikerService bikerService;
     private BackOfficeService backOfficeService;
+    private StoreService storeService;
 
     private AuthMapper authMapper;
 
     public AuthController(CustomerService customerService, UserInfoServiceImpl userinfoService, JwtService jwtService,
-            AuthenticationManager authenticationManager, BikerService bikerService, BackOfficeService backOfficeService,
+            AuthenticationManager authenticationManager, BikerService bikerService,
+            BackOfficeService backOfficeService, StoreService storeService,
             AuthMapper authMapper) {
         this.customerService = customerService;
         this.userinfoService = userinfoService;
@@ -117,6 +122,25 @@ public class AuthController {
         }
     }
 
+    @Operation(description = "POST endpoint for registering a store." +
+            "\n\n Can only be done by admins.", summary = "Register a store")
+    @PostMapping("/stores")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StoreCreationDTO")
+    @SecurityRequirement(name = "Authorization")
+    public SuccessResponse registerStore(@Valid @RequestBody StoreCreationDTO dto) {
+        if (!userinfoService.isDuplicateUsername(dto.name())
+                && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
+            Store store = storeService.createStore(authMapper.toStore(dto));
+            UserInfo user = authMapper.toUser_Store(dto);
+            user.setId(store.getStoreId());
+            userinfoService.addUser(user);
+
+            return new SuccessResponse(Responses.USER_ADDED);
+        } else {
+            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
+        }
+    }
+
     @Operation(description = "POST endpoint for generating a Jwt Token given a user name and password.", summary = "Generate Jwt Token")
     @PostMapping("/generateToken")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of AuthRequestDTO")
@@ -171,6 +195,19 @@ public class AuthController {
     public SuccessResponse deleteBackOfficeUser(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Back Office user ID") @PathVariable int id) {
         backOfficeService.deleteBackOfficeUser(id);
+        userinfoService.deleteUser(id);
+        return new SuccessResponse(Responses.USER_DELETED);
+    }
+
+    @Operation(description = "DELETE endpoint for deleting a store." +
+            "\n\n Can only be done by admins.", summary = "Delete Store")
+    @Transactional
+    @DeleteMapping("/stores/{id}")
+    @SecurityRequirement(name = "Authorization")
+    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    public SuccessResponse deleteStore(
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
+        storeService.deleteStore(id);
         userinfoService.deleteUser(id);
         return new SuccessResponse(Responses.USER_DELETED);
     }

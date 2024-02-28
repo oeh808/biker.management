@@ -40,15 +40,17 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/auth/bikers", "/auth/customers", "/auth/generateToken",
+                        .requestMatchers("/auth/bikers", "/auth/customers", "/auth/stores", "/auth/generateToken",
                                 "/swagger-ui/**", "/api-docs/**")
                         .permitAll())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/backOffice/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/bikers/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/customers/**").authenticated())
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/stores/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/users/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/bikers/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/customers/**").authenticated())
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/stores/**").authenticated())
                 .sessionManagement(management -> management
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
