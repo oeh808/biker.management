@@ -11,6 +11,7 @@ import io.biker.management.store.exception.StoreExceptionMessages;
 import io.biker.management.store.repo.StoreRepo;
 
 @Service
+// FIXME: Implement a way to retrieve only products with quantity > 0
 public class StoreServiceImpl implements StoreService {
     private StoreRepo storeRepo;
 
@@ -25,6 +26,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<Store> getAllStores() {
+
         return storeRepo.findAll();
     }
 
