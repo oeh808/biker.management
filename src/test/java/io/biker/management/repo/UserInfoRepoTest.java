@@ -56,4 +56,19 @@ public class UserInfoRepoTest {
 
         assertTrue(opUser.isEmpty());
     }
+
+    @Test
+    public void findByPhoneNumber_Existant() {
+        Optional<UserInfo> opUser = repo.findByPhoneNumber(user1.getPhoneNumber());
+
+        assertTrue(opUser.isPresent());
+        assertEquals(opUser.get(), user1);
+    }
+
+    @Test
+    public void findByPhoneNumber_NonExistant() {
+        Optional<UserInfo> opUser = repo.findByPhoneNumber(user1.getPhoneNumber() + "_");
+
+        assertTrue(opUser.isEmpty());
+    }
 }
