@@ -51,6 +51,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/bikers/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/customers/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/stores/**").authenticated())
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/products/**").authenticated())
                 .sessionManagement(management -> management
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
