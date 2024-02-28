@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import io.biker.management.auth.exception.CustomAuthException;
 import io.biker.management.back_office.exception.BackOfficeException;
 import io.biker.management.biker.exception.BikerException;
+import io.biker.management.customer.exception.CustomerException;
 import io.biker.management.error_handling.responses.ErrorResponse;
 
 @ControllerAdvice
@@ -42,6 +43,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorResponse handleBikerException(BikerException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(CustomerException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleCustomerException(CustomerException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
 
         return errorResponse;
