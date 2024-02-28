@@ -19,9 +19,8 @@ public class Customer extends User {
         super();
     }
 
-    public Customer(int id, String name, String email, String phoneNumber, Set<Address> addresses) {
+    public Customer(int id, String name, String email, String phoneNumber) {
         super(id, name, email, phoneNumber);
-        this.addresses = addresses;
     }
 
     public Set<Address> getAddresses() {
