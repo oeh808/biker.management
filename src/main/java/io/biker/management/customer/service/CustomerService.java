@@ -13,7 +13,7 @@ public interface CustomerService {
 
     public Customer getSingleCustomer(int id);
 
-    public Set<Address> addDeliveryAddress(int id, Address addresses);
+    public Set<Address> addDeliveryAddress(int id, Address address);
 
     public void deleteCustomer(int id);
 }
