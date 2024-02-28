@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
-@Tag(name = "Stores")
+@Tag(name = "Stores", description = "Handles retrieval of stores and their products in a customer friendly manner.")
 @SecurityRequirement(name = "Authorization")
 @RequestMapping("/stores")
 public class StoreController {
