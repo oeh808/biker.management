@@ -125,11 +125,9 @@ public class AuthController {
         }
     }
 
-    @Operation(description = "POST endpoint for registering a store." +
-            "\n\n Can only be done by admins.", summary = "Register a store")
+    @Operation(description = "POST endpoint for registering a store.", summary = "Register a store")
     @PostMapping("/stores")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StoreCreationDTO")
-    @SecurityRequirement(name = "Authorization")
     public SuccessResponse registerStore(@Valid @RequestBody StoreCreationDTO dto) {
         if (!userinfoService.isDuplicateUsername(dto.name())
                 && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
