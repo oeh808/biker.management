@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.biker.management.error_handling.responses.SuccessResponse;
-import io.biker.management.order.dto.ContactInfoDTO;
 import io.biker.management.order.dto.FeedBackCreationDTO;
 import io.biker.management.order.dto.OrderCreationDTO;
 import io.biker.management.order.dto.OrderReadingDTOBiker;
@@ -89,14 +88,14 @@ public class OrderController {
     }
 
     @PutMapping("/{id}/{orderId}")
-    public SuccessResponse UpdateStatus(@PathVariable int orderId, @RequestBody StatusCreationDTO entity) {
+    public SuccessResponse UpdateStatus(@PathVariable int orderId, @Valid @RequestBody StatusCreationDTO entity) {
         // TODO: process PUT request
         return null;
     }
 
     @PutMapping("/backOffice/{orderId}")
     public SuccessResponse UpdateStatus_BackOffice(@PathVariable int orderId,
-            @RequestBody StatusCreationDTO entity) {
+            @Valid @RequestBody StatusCreationDTO entity) {
         // TODO: process PUT request
         return null;
     }
