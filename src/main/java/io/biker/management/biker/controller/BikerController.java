@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Tag(name = "Bikers")
 @SecurityRequirement(name = "Authorization")
 @RequestMapping("/bikers")
-// FIXME: Add a way to access orders by bikerId in future OrdersController
 public class BikerController {
     private BikerService bikerService;
 
