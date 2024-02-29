@@ -3,6 +3,7 @@ package io.biker.management.order.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.biker.management.auth.response.Responses;
 import io.biker.management.error_handling.responses.SuccessResponse;
 import io.biker.management.order.dto.FeedBackCreationDTO;
 import io.biker.management.order.dto.OrderCreationDTO;
@@ -38,78 +39,104 @@ public class OrderController {
     }
 
     @PostMapping("/{userId}")
-    public OrderReadingDTOCustomer placeOrder(@PathVariable int userId, @Valid @RequestBody OrderCreationDTO entity) {
-        // TODO: process POST request
-        return null;
+    public OrderReadingDTOCustomer placeOrder(@PathVariable int userId, @Valid @RequestBody OrderCreationDTO dto) {
+        // FIXME: Implement method security
+        Order order = orderService.createOrder(userId, orderMapper.toOrder(dto));
+
+        return orderMapper.toDtoForCustomer(order);
     }
 
     @GetMapping("/{userId}/{orderId}")
     public OrderReadingDTOCustomer getOrder(@PathVariable int userId, @PathVariable int orderId) {
-        // TODO: process GET request
-        return null;
+        // FIXME: Implement method security
+        return orderMapper.toDtoForCustomer(orderService.getOrder(userId, orderId));
     }
 
     @GetMapping("/backOffice/{orderId}")
     public Order getOrder_BackOffice(@PathVariable int orderId) {
-        // TODO: process GET request
-        return null;
+        // FIXME: Implement method security
+        return orderService.getOrder_BackOffice(orderId);
     }
 
     @GetMapping("/available")
     public List<OrderReadingDTOBiker> getAvailableOrders() {
-        // TODO: process GET request
-        return null;
+        // FIXME: Implement method security
+        return orderMapper.toDtosForBiker(orderService.getAvailableOrders());
     }
 
     @GetMapping("/backOffice/available")
     public List<Order> getAvailableOrders_BackOffice() {
-        // TODO: process GET request
-        return null;
+        // FIXME: Implement method security
+        return orderService.getAvailableOrders();
     }
 
     @GetMapping("stores/{storeId}")
     public List<Order> getOrdersByStore(@PathVariable int storeId) {
-        // TODO: process GET request
-        return null;
+        // FIXME: Implement method security
+        return orderService.getOrdersByStore(storeId);
     }
 
     @GetMapping("/backOffice/bikers/{bikerId}")
     // Accessed by Back Office User
-    public List<Order> getOrdersByBiker() {
-        // TODO: process GET request
-        return null;
+    public List<Order> getOrdersByBiker(@PathVariable int bikerId) {
+        // FIXME: Implement method security
+        return orderService.getOrdersByBiker(bikerId);
     }
 
-    @PutMapping("/rate/{userId}/{orderId}")
-    public SuccessResponse RateDelivery(@PathVariable int userId, @PathVariable int orderId,
-            @Valid @RequestBody FeedBackCreationDTO entity) {
-        // TODO: process PUT request
-        return null;
+    @PutMapping("/rate/{customerId}/{orderId}")
+    public SuccessResponse rateDelivery(@PathVariable int customerId, @PathVariable int orderId,
+            @Valid @RequestBody FeedBackCreationDTO dto) {
+        // FIXME: Implement method security
+        orderService.rateOrder(customerId, orderId);
+
+        SuccessResponse successResponse = new SuccessResponse(Responses.FEEDBACK_ADDED);
+        return successResponse;
     }
 
     @PutMapping("/{id}/{orderId}")
-    public SuccessResponse UpdateStatus(@PathVariable int orderId, @Valid @RequestBody StatusCreationDTO entity) {
-        // TODO: process PUT request
-        return null;
+    public SuccessResponse updateStatus(@PathVariable int orderId, @Valid @RequestBody StatusCreationDTO dto) {
+        // FIXME: Implement method security
+        orderService.updateOrderStatus(orderId, orderId, orderMapper.toStatus(dto));
+
+        SuccessResponse successResponse = new SuccessResponse(Responses.STATUS_UPDATED);
+        return successResponse;
     }
 
     @PutMapping("/backOffice/{orderId}")
-    public SuccessResponse UpdateStatus_BackOffice(@PathVariable int orderId,
-            @Valid @RequestBody StatusCreationDTO entity) {
-        // TODO: process PUT request
-        return null;
+    public SuccessResponse updateStatus_BackOffice(@PathVariable int orderId,
+            @Valid @RequestBody StatusCreationDTO dto) {
+        // FIXME: Implement method security
+        orderService.updateOrderStatus_BackOffice(orderId, orderMapper.toStatus(dto));
+
+        SuccessResponse successResponse = new SuccessResponse(Responses.STATUS_UPDATED);
+        return successResponse;
+    }
+
+    @PutMapping("/accept/{bikerId}/{orderId}")
+    public SuccessResponse acceptDelivery(@PathVariable int bikerId, @PathVariable int orderId) {
+        // FIXME: Implement method security
+        orderService.assignDelivery(bikerId, orderId);
+
+        SuccessResponse successResponse = new SuccessResponse(Responses.ORDER_ASSIGNED(bikerId, orderId));
+        return successResponse;
     }
 
     @PutMapping("/assign/{bikerId}/{orderId}")
-    public SuccessResponse AssignDelivery(@PathVariable int bikerId, @PathVariable int orderId) {
-        // TODO: process PUT request
-        return null;
+    public SuccessResponse assignDelivery(@PathVariable int bikerId, @PathVariable int orderId) {
+        // FIXME: Implement method security
+        orderService.assignDelivery(bikerId, orderId);
+
+        SuccessResponse successResponse = new SuccessResponse(Responses.ORDER_ASSIGNED(bikerId, orderId));
+        return successResponse;
     }
 
     @DeleteMapping("/backOffice/{orderId}")
     public SuccessResponse deleteOrder(@PathVariable int orderId) {
-        // TODO: process DELETE request
-        return null;
+        // FIXME: Implement method security
+        orderService.deleteOrder(orderId);
+
+        SuccessResponse successResponse = new SuccessResponse(Responses.ORDER_DELETED);
+        return successResponse;
     }
 
 }
