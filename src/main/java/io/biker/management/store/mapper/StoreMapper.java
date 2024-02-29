@@ -18,7 +18,10 @@ public class StoreMapper {
         List<Product> products = store.getProducts();
 
         for (Product product : products) {
-            productsDto.add(new Product_CustomerReadingDTO(product.getName(), product.getPrice()));
+            // Only products that are in stock are retrieved
+            if (product.getQuantity() > 0) {
+                productsDto.add(new Product_CustomerReadingDTO(product.getName(), product.getPrice()));
+            }
         }
 
         StoreReadingDTO dto = new StoreReadingDTO(store.getName(), store.getAddress(), store.getPhoneNumber(),
