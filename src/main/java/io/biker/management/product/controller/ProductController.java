@@ -6,6 +6,7 @@ import io.biker.management.auth.Roles;
 import io.biker.management.auth.response.Responses;
 import io.biker.management.error_handling.responses.SuccessResponse;
 import io.biker.management.product.dto.ProductCreationDTO;
+import io.biker.management.product.dto.ProductReadingAdminDTO;
 import io.biker.management.product.dto.ProductReadingDTO;
 import io.biker.management.product.entity.Product;
 import io.biker.management.product.mapper.ProductMapper;
@@ -60,8 +61,8 @@ public class ProductController {
                         "\n\n Can only be done by admins.", summary = "Get ALL products")
         @GetMapping("/products")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
-        public List<ProductReadingDTO> getAllProducts() {
-                return productMapper.toDtos(productService.getAllProducts());
+        public List<ProductReadingAdminDTO> getAllProducts() {
+                return productMapper.toDtosAdmim(productService.getAllProducts());
         }
 
         @Operation(description = "GET endpoint for retrieving all products associated with a store identified by its storeId."
