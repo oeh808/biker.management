@@ -16,6 +16,8 @@ import io.biker.management.order.dto.StatusCreationDTO;
 import io.biker.management.order.entity.FeedBack;
 import io.biker.management.order.entity.Order;
 import io.biker.management.order.entity.OrderDetails;
+import io.biker.management.order.exception.OrderException;
+import io.biker.management.order.exception.OrderExceptionMessages;
 import io.biker.management.user.Address;
 
 @Component
@@ -60,8 +62,7 @@ public class OrderMapper {
         if (Arrays.stream(OrderStatus.statuses).anyMatch(dto.status()::equals)) {
             return dto.status();
         } else {
-            // FIXME: Throw error
-            return null;
+            throw new OrderException(OrderExceptionMessages.INVALID_STATUS);
         }
     }
 
