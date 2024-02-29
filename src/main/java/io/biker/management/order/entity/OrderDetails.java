@@ -1,6 +1,8 @@
 package io.biker.management.order.entity;
 
+import io.biker.management.user.Address;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,9 @@ public class OrderDetails {
     private String product;
     private float price;
     private float VAT;
+    private float totalCost;
+    @Embedded
+    private Address address;
 
     private int rating;
     private String review;

@@ -10,4 +10,6 @@ public class ValidationMessages {
     public static final String POSITIVE = " must be more than 0";
 
     public static final String POSITIVE_OR_ZERO = " must be 0 or more";
+
+    public static final String LOE_TO_FIVE = " must be less than or equal to 5";
 }
