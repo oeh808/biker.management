@@ -5,11 +5,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import io.biker.management.order.entity.Order;
+import io.biker.management.user.Address;
 
 @Service
 public class OrderServiceImpl implements OrderService {
     @Override
-    public Order createOrder(int customerId, Order order) {
+    public Order createOrder(int customerId, int productId, Address deliveryAddress) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'createOrder'");
     }

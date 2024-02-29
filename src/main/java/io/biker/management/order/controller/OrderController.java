@@ -4,9 +4,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.biker.management.auth.response.Responses;
+import io.biker.management.customer.dtos.AddressCreationDTO;
 import io.biker.management.error_handling.responses.SuccessResponse;
 import io.biker.management.order.dto.FeedBackCreationDTO;
-import io.biker.management.order.dto.OrderCreationDTO;
 import io.biker.management.order.dto.OrderReadingDTOBiker;
 import io.biker.management.order.dto.OrderReadingDTOCustomer;
 import io.biker.management.order.dto.StatusCreationDTO;
@@ -38,10 +38,11 @@ public class OrderController {
         this.orderMapper = orderMapper;
     }
 
-    @PostMapping("/{userId}")
-    public OrderReadingDTOCustomer placeOrder(@PathVariable int userId, @Valid @RequestBody OrderCreationDTO dto) {
+    @PostMapping("/{userId}/{productId}")
+    public OrderReadingDTOCustomer placeOrder(@PathVariable int userId, @PathVariable int productId,
+            @Valid @RequestBody AddressCreationDTO dto) {
         // FIXME: Implement method security
-        Order order = orderService.createOrder(userId, orderMapper.toOrder(dto));
+        Order order = orderService.createOrder(userId, productId, orderMapper.toAddress(dto));
 
         return orderMapper.toDtoForCustomer(order);
     }
