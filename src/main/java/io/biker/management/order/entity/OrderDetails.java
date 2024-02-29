@@ -18,7 +18,6 @@ public class OrderDetails {
     private float totalCost;
     @Embedded
     private Address address;
-
-    private int rating;
-    private String review;
+    @Embedded
+    private FeedBack feedBack;
 }
