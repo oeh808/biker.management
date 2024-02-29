@@ -52,7 +52,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateOrderStatus(int customerId, int orderId, String status) {
+    public void updateOrderStatus_Biker(int customerId, int orderId, String status) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateOrderStatus'");
+    }
+
+    @Override
+    public void updateOrderStatus_Store(int customerId, int orderId, String status) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateOrderStatus'");
     }

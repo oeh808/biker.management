@@ -20,7 +20,9 @@ public interface OrderService {
 
     public void rateOrder(int customerId, int orderId);
 
-    public void updateOrderStatus(int customerId, int orderId, String status);
+    public void updateOrderStatus_Biker(int bikerId, int orderId, String status);
+
+    public void updateOrderStatus_Store(int storeId, int orderId, String status);
 
     public void updateOrderStatus_BackOffice(int orderId, String status);
 
