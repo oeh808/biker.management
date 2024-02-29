@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import io.biker.management.customer.dtos.AddressCreationDTO;
 import io.biker.management.order.constants.OrderStatus;
-import io.biker.management.order.constants.Tax;
 import io.biker.management.order.dto.FeedBackCreationDTO;
 import io.biker.management.order.dto.OrderReadingDTOBiker;
 import io.biker.management.order.dto.OrderReadingDTOCustomer;
@@ -26,7 +25,7 @@ public class OrderMapper {
     public OrderReadingDTOCustomer toDtoForCustomer(Order order) {
         OrderDetails orderDetails = order.getOrderDetails();
         OrderReadingDTOCustomer dto = new OrderReadingDTOCustomer(order.getStatus(), order.getEta(),
-                orderDetails.getProduct(), orderDetails.getPrice(), Tax.VAT, orderDetails.getPrice() * (1 + Tax.VAT),
+                orderDetails.getProduct(), orderDetails.getPrice(), orderDetails.getVAT(), orderDetails.getTotalCost(),
                 order.getBiker().getName(), orderDetails.getAddress());
 
         return dto;
