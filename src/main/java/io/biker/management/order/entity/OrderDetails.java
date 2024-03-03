@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Embeddable
 public class OrderDetails {
-    private String product;
+    private String productName;
     private float price;
     private float VAT;
     private float totalCost;

@@ -25,7 +25,8 @@ public class OrderMapper {
     public OrderReadingDTOCustomer toDtoForCustomer(Order order) {
         OrderDetails orderDetails = order.getOrderDetails();
         OrderReadingDTOCustomer dto = new OrderReadingDTOCustomer(order.getStatus(), order.getEta(),
-                orderDetails.getProduct(), orderDetails.getPrice(), orderDetails.getVAT(), orderDetails.getTotalCost(),
+                orderDetails.getProductName(), orderDetails.getPrice(), orderDetails.getVAT(),
+                orderDetails.getTotalCost(),
                 order.getBiker().getName(), orderDetails.getAddress());
 
         return dto;
@@ -33,7 +34,7 @@ public class OrderMapper {
 
     public OrderReadingDTOBiker toDtoForBiker(Order order) {
         OrderDetails orderDetails = order.getOrderDetails();
-        OrderReadingDTOBiker dto = new OrderReadingDTOBiker(order.getEta(), orderDetails.getProduct(),
+        OrderReadingDTOBiker dto = new OrderReadingDTOBiker(order.getEta(), orderDetails.getProductName(),
                 orderDetails.getPrice(), order.getCustomer().getName(), order.getCustomer().getEmail(),
                 order.getCustomer().getPhoneNumber(), orderDetails.getAddress());
 
