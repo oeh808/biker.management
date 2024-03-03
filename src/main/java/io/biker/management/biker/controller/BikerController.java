@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.biker.management.auth.Roles;
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.biker.service.BikerService;
+import io.biker.management.constants.response.Responses;
+import io.biker.management.errorHandling.responses.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -15,6 +17,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -45,5 +49,17 @@ public class BikerController {
     public Biker getSingleBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         return bikerService.getSingleBiker(id);
+    }
+
+    @Operation(description = "DELETE endpoint for deleting a biker from the biker table." +
+            "\n\n Can only be done by admins.", summary = "Delete Biker")
+    @Transactional
+    @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "Authorization")
+    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    public SuccessResponse deleteBiker(
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
+        bikerService.deleteBiker(id);
+        return new SuccessResponse(Responses.USER_DELETED);
     }
 }

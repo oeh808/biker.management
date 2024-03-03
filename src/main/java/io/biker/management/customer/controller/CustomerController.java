@@ -4,10 +4,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.biker.management.auth.Roles;
+import io.biker.management.constants.response.Responses;
 import io.biker.management.customer.dtos.AddressCreationDTO;
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.customer.mapper.CustomerMapper;
 import io.biker.management.customer.service.CustomerService;
+import io.biker.management.errorHandling.responses.SuccessResponse;
 import io.biker.management.user.Address;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -66,6 +70,18 @@ public class CustomerController {
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id,
                         @Valid @RequestBody AddressCreationDTO dto) {
                 return customerService.addDeliveryAddress(id, customerMapper.toAddress(dto));
+        }
+
+        @Operation(description = "DELETE endpoint for deleting a customer from the customer table." +
+                        "\n\n Can only be done by admins.", summary = "Delete Customer")
+        @Transactional
+        @DeleteMapping("/{id}")
+        @SecurityRequirement(name = "Authorization")
+        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+        public SuccessResponse deleteCustomer(
+                        @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
+                customerService.deleteCustomer(id);
+                return new SuccessResponse(Responses.USER_DELETED);
         }
 
 }

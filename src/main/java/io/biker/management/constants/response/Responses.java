@@ -1,8 +1,8 @@
 package io.biker.management.constants.response;
 
 public class Responses {
-    public static String USER_ADDED = "User added";
-    public static String USER_DELETED = "User deleted";
+    public static String USER_ADDED = "User info added";
+    public static String USER_DELETED = "User info deleted";
 
     public static String PRODUCT_DELETED = "Product deleted";
 
@@ -16,4 +16,5 @@ public class Responses {
     public static String ORDER_DELETED = "Order deleted";
 
     public static String STORE_DELETED = "Store deleted";
+    public static String BIKER_DELETED = "Biker deleted";
 }
