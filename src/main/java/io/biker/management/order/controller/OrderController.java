@@ -19,6 +19,7 @@ import io.biker.management.order.mapper.OrderMapper;
 import io.biker.management.order.service.OrderService;
 import io.biker.management.product.entity.Product;
 import io.biker.management.product.service.ProductService;
+import io.biker.management.store.service.StoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -45,14 +46,17 @@ public class OrderController {
         private CustomerService customerService;
         private ProductService productService;
         private BikerService bikerService;
+        private StoreService storeService;
         private OrderService orderService;
         private OrderMapper orderMapper;
 
         public OrderController(CustomerService customerService, ProductService productService,
-                        BikerService bikerService, OrderService orderService, OrderMapper orderMapper) {
+                        BikerService bikerService, StoreService storeService, OrderService orderService,
+                        OrderMapper orderMapper) {
                 this.customerService = customerService;
                 this.productService = productService;
                 this.bikerService = bikerService;
+                this.storeService = storeService;
                 this.orderService = orderService;
                 this.orderMapper = orderMapper;
         }
@@ -80,7 +84,8 @@ public class OrderController {
         public OrderReadingDTOCustomer getOrder(
                         @Parameter(in = ParameterIn.PATH, name = "userId", description = "Customer ID") @PathVariable int userId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
-                return orderMapper.toDtoForCustomer(orderService.getOrder(userId, orderId));
+                return orderMapper.toDtoForCustomer(
+                                orderService.getOrder(customerService.getSingleCustomer(userId), orderId));
         }
 
         @Operation(description = "GET endpoint for retrieving a single order by its id." +
@@ -115,7 +120,7 @@ public class OrderController {
                         "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
         public List<Order> getOrdersByStore(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId) {
-                return orderService.getOrdersByStore(storeId);
+                return orderService.getOrdersByStore(storeService.getSingleStore(storeId));
         }
 
         @Operation(description = "GET endpoint for retrieving all orders associated with a biker." +
@@ -126,7 +131,7 @@ public class OrderController {
                         "(hasAuthority('" + Roles.BIKER + "') and #bikerId == authentication.principal.id)")
         public List<Order> getOrdersByBiker(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId) {
-                return orderService.getOrdersByBiker(bikerId);
+                return orderService.getOrdersByBiker(bikerService.getSingleBiker(bikerId));
         }
 
         @Operation(description = "PUT endpoint for customers to give feedback to an order." +
@@ -138,7 +143,7 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "userId", description = "Customer ID") @PathVariable int userId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody FeedBackCreationDTO dto) {
-                orderService.rateOrder(userId, orderId);
+                orderService.rateOrder(customerService.getSingleCustomer(userId), orderId, orderMapper.toFeedBack(dto));
 
                 SuccessResponse successResponse = new SuccessResponse(Responses.FEEDBACK_ADDED);
                 return successResponse;
@@ -153,7 +158,8 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody StatusCreationDTO dto) {
-                orderService.updateOrderStatus_Biker(bikerId, orderId, orderMapper.toStatus(dto));
+                orderService.updateOrderStatus_Biker(bikerService.getSingleBiker(bikerId), orderId,
+                                orderMapper.toStatus(dto));
 
                 SuccessResponse successResponse = new SuccessResponse(Responses.STATUS_UPDATED);
                 return successResponse;
@@ -168,7 +174,8 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody StatusCreationDTO dto) {
-                orderService.updateOrderStatus_Store(storeId, orderId, orderMapper.toStatus(dto));
+                orderService.updateOrderStatus_Store(storeService.getSingleStore(storeId), orderId,
+                                orderMapper.toStatus(dto));
 
                 SuccessResponse successResponse = new SuccessResponse(Responses.STATUS_UPDATED);
                 return successResponse;
@@ -195,7 +202,7 @@ public class OrderController {
         public SuccessResponse acceptDelivery(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
-                orderService.assignDelivery(bikerId, orderId);
+                orderService.assignDelivery(bikerService.getSingleBiker(bikerId), orderId);
 
                 SuccessResponse successResponse = new SuccessResponse(Responses.ORDER_ASSIGNED(bikerId, orderId));
                 return successResponse;
@@ -208,7 +215,7 @@ public class OrderController {
         public SuccessResponse assignDelivery(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
-                orderService.assignDelivery(bikerId, orderId);
+                orderService.assignDelivery(bikerService.getSingleBiker(bikerId), orderId);
 
                 SuccessResponse successResponse = new SuccessResponse(Responses.ORDER_ASSIGNED(bikerId, orderId));
                 return successResponse;
