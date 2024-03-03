@@ -14,7 +14,7 @@ import io.biker.management.store.entity.Store;
 @Component
 public class AuthMapper {
     // To UserInfo
-    public UserInfo toUser_Customer(UserCreationDTO dto) {
+    public UserInfo toUserCustomer(UserCreationDTO dto) {
         UserInfo user = new UserInfo();
         user.setUsername(dto.username());
         user.setPassword(dto.password());
@@ -24,7 +24,7 @@ public class AuthMapper {
         return user;
     }
 
-    public UserInfo toUser_Biker(UserCreationDTO dto) {
+    public UserInfo toUserBiker(UserCreationDTO dto) {
         UserInfo user = new UserInfo();
         user.setUsername(dto.username());
         user.setPassword(dto.password());
@@ -34,7 +34,7 @@ public class AuthMapper {
         return user;
     }
 
-    public UserInfo toUser_BackOfficeUser(UserCreationDTO dto) {
+    public UserInfo toUserBackOfficeUser(UserCreationDTO dto) {
         UserInfo user = new UserInfo();
         user.setUsername(dto.username());
         user.setPassword(dto.password());
@@ -44,7 +44,7 @@ public class AuthMapper {
         return user;
     }
 
-    public UserInfo toUser_Store(StoreCreationDTO dto) {
+    public UserInfo toUserStore(StoreCreationDTO dto) {
         UserInfo user = new UserInfo();
         user.setUsername(dto.name());
         user.setPassword(dto.password());

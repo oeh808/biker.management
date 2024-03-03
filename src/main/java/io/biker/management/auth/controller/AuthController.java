@@ -43,6 +43,9 @@ import jakarta.validation.Valid;
 @RestController
 @Tag(name = "Authorization")
 @RequestMapping("/auth")
+// FIXME: Move entity creation and deletion of non-'user info' entities
+// to their respective controllers
+
 public class AuthController {
     private UserInfoServiceImpl userinfoService;
     private JwtService jwtService;
@@ -78,7 +81,7 @@ public class AuthController {
         if (!userinfoService.isDuplicateUsername(dto.username())
                 && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
             Customer customer = customerService.createCustomer(authMapper.toCustomer(dto));
-            UserInfo user = authMapper.toUser_Customer(dto);
+            UserInfo user = authMapper.toUserCustomer(dto);
             user.setId(customer.getId());
             userinfoService.addUser(user);
 
@@ -88,6 +91,7 @@ public class AuthController {
         }
     }
 
+    // FIXME: Only back office users and admins can register bikers
     @Operation(description = "POST endpoint for creating a bikers.", summary = "Create a biker")
     @PostMapping("/bikers")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of UserCreationDTO")
@@ -95,7 +99,7 @@ public class AuthController {
         if (!userinfoService.isDuplicateUsername(dto.username())
                 && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
             Biker biker = bikerService.createBiker(authMapper.toBiker(dto));
-            UserInfo user = authMapper.toUser_Biker(dto);
+            UserInfo user = authMapper.toUserBiker(dto);
             user.setId(biker.getId());
             userinfoService.addUser(user);
 
@@ -105,6 +109,7 @@ public class AuthController {
         }
     }
 
+    // FIXME: Only back office users and admins can register back office users
     @Operation(description = "POST endpoint for creating a back office user." +
             "\n\n Can only be done by admins.", summary = "Create a back office user")
     @PostMapping("/backOffice")
@@ -115,7 +120,7 @@ public class AuthController {
         if (!userinfoService.isDuplicateUsername(dto.username())
                 && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
             BackOfficeUser backOfficeUser = backOfficeService.createBackOfficeUser(authMapper.toBackOfficeUser(dto));
-            UserInfo user = authMapper.toUser_BackOfficeUser(dto);
+            UserInfo user = authMapper.toUserBackOfficeUser(dto);
             user.setId(backOfficeUser.getId());
             userinfoService.addUser(user);
 
@@ -125,6 +130,7 @@ public class AuthController {
         }
     }
 
+    // FIXME: admins can register stores
     @Operation(description = "POST endpoint for registering a store.", summary = "Register a store")
     @PostMapping("/stores")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StoreCreationDTO")
@@ -132,8 +138,8 @@ public class AuthController {
         if (!userinfoService.isDuplicateUsername(dto.name())
                 && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
             Store store = storeService.createStore(authMapper.toStore(dto));
-            UserInfo user = authMapper.toUser_Store(dto);
-            user.setId(store.getStoreId());
+            UserInfo user = authMapper.toUserStore(dto);
+            user.setId(store.getId());
             userinfoService.addUser(user);
 
             return new SuccessResponse(Responses.USER_ADDED);
