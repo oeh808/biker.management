@@ -12,27 +12,27 @@ import io.biker.management.backOffice.repo.BackOfficeUserRepo;
 
 @Service
 public class BackOfficeServiceImpl implements BackOfficeService {
-    private BackOfficeUserRepo boRepo;
+    private BackOfficeUserRepo backOfficeRepo;
 
-    public BackOfficeServiceImpl(BackOfficeUserRepo boRepo) {
-        this.boRepo = boRepo;
+    public BackOfficeServiceImpl(BackOfficeUserRepo backOfficeRepo) {
+        this.backOfficeRepo = backOfficeRepo;
     }
 
     @Override
-    public BackOfficeUser createBackOfficeUser(BackOfficeUser boUser) {
-        return boRepo.save(boUser);
+    public BackOfficeUser createBackOfficeUser(BackOfficeUser backOfficeUser) {
+        return backOfficeRepo.save(backOfficeUser);
     }
 
     @Override
     public List<BackOfficeUser> getAllBackOfficeUsers() {
-        return boRepo.findAll();
+        return backOfficeRepo.findAll();
     }
 
     @Override
     public BackOfficeUser getSingleBackOfficeUser(int id) {
-        Optional<BackOfficeUser> opBoUser = boRepo.findById(id);
-        if (opBoUser.isPresent()) {
-            return opBoUser.get();
+        Optional<BackOfficeUser> opBackOfficeUser = backOfficeRepo.findById(id);
+        if (opBackOfficeUser.isPresent()) {
+            return opBackOfficeUser.get();
         } else {
             throw new BackOfficeException(BackOfficeExceptionMessages.BACK_OFFICE_USER_NOT_FOUND);
         }
@@ -41,7 +41,7 @@ public class BackOfficeServiceImpl implements BackOfficeService {
     @Override
     public void deleteBackOfficeUser(int id) {
         getSingleBackOfficeUser(id);
-        boRepo.deleteById(id);
+        backOfficeRepo.deleteById(id);
     }
 
 }

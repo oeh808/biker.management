@@ -6,7 +6,7 @@ import io.biker.management.backOffice.entity.BackOfficeUser;
 
 public interface BackOfficeService {
 
-    public BackOfficeUser createBackOfficeUser(BackOfficeUser boUser);
+    public BackOfficeUser createBackOfficeUser(BackOfficeUser backOfficeUser);
 
     public List<BackOfficeUser> getAllBackOfficeUsers();
 

@@ -114,9 +114,9 @@ public class AuthController {
     public SuccessResponse createBackOfficeUser(@Valid @RequestBody UserCreationDTO dto) {
         if (!userinfoService.isDuplicateUsername(dto.username())
                 && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
-            BackOfficeUser boUser = backOfficeService.createBackOfficeUser(authMapper.toBoUser(dto));
-            UserInfo user = authMapper.toUser_BoUser(dto);
-            user.setId(boUser.getId());
+            BackOfficeUser backOfficeUser = backOfficeService.createBackOfficeUser(authMapper.toBackOfficeUser(dto));
+            UserInfo user = authMapper.toUser_BackOfficeUser(dto);
+            user.setId(backOfficeUser.getId());
             userinfoService.addUser(user);
 
             return new SuccessResponse(Responses.USER_ADDED);

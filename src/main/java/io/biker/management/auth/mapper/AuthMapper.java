@@ -34,7 +34,7 @@ public class AuthMapper {
         return user;
     }
 
-    public UserInfo toUser_BoUser(UserCreationDTO dto) {
+    public UserInfo toUser_BackOfficeUser(UserCreationDTO dto) {
         UserInfo user = new UserInfo();
         user.setUsername(dto.username());
         user.setPassword(dto.password());
@@ -73,13 +73,13 @@ public class AuthMapper {
         return biker;
     }
 
-    public BackOfficeUser toBoUser(UserCreationDTO dto) {
-        BackOfficeUser boUser = new BackOfficeUser();
-        boUser.setName(dto.name());
-        boUser.setEmail(dto.username());
-        boUser.setPhoneNumber(dto.password());
+    public BackOfficeUser toBackOfficeUser(UserCreationDTO dto) {
+        BackOfficeUser backOfficeUser = new BackOfficeUser();
+        backOfficeUser.setName(dto.name());
+        backOfficeUser.setEmail(dto.username());
+        backOfficeUser.setPhoneNumber(dto.password());
 
-        return boUser;
+        return backOfficeUser;
     }
 
     public Store toStore(StoreCreationDTO dto) {

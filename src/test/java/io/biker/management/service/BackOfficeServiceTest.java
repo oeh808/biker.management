@@ -47,66 +47,66 @@ public class BackOfficeServiceTest {
     @Autowired
     private BackOfficeService service;
 
-    private static BackOfficeUser boUser;
+    private static BackOfficeUser backOfficeUser;
 
     @BeforeAll
     public static void setUp() {
-        boUser = new BackOfficeUser(1, "Gale", "MagicMan@gmail.com", "+44 770820695");
+        backOfficeUser = new BackOfficeUser(1, "Gale", "MagicMan@gmail.com", "+44 770820695");
     }
 
     @Test
     public void createBackOfficeUser() {
-        when(repo.save(boUser)).thenReturn(boUser);
+        when(repo.save(backOfficeUser)).thenReturn(backOfficeUser);
 
-        assertEquals(boUser, service.createBackOfficeUser(boUser));
+        assertEquals(backOfficeUser, service.createBackOfficeUser(backOfficeUser));
     }
 
     @Test
     public void getAllBackOfficeUsers() {
-        List<BackOfficeUser> boUsers = new ArrayList<BackOfficeUser>();
-        boUsers.add(boUser);
-        when(repo.findAll()).thenReturn(boUsers);
+        List<BackOfficeUser> backOfficeUsers = new ArrayList<BackOfficeUser>();
+        backOfficeUsers.add(backOfficeUser);
+        when(repo.findAll()).thenReturn(backOfficeUsers);
 
-        assertTrue(service.getAllBackOfficeUsers().contains(boUser));
+        assertTrue(service.getAllBackOfficeUsers().contains(backOfficeUser));
     }
 
     @Test
     public void getSingleBackOfficeUser_Existant() {
-        when(repo.findById(boUser.getId())).thenReturn(Optional.of(boUser));
+        when(repo.findById(backOfficeUser.getId())).thenReturn(Optional.of(backOfficeUser));
 
-        assertEquals(boUser, service.getSingleBackOfficeUser(boUser.getId()));
+        assertEquals(backOfficeUser, service.getSingleBackOfficeUser(backOfficeUser.getId()));
     }
 
     @Test
     public void getSingleBackOfficeUser_NonExistant() {
-        when(repo.findById(boUser.getId() - 1)).thenReturn(Optional.empty());
+        when(repo.findById(backOfficeUser.getId() - 1)).thenReturn(Optional.empty());
 
         BackOfficeException ex = assertThrows(BackOfficeException.class,
                 () -> {
-                    service.getSingleBackOfficeUser(boUser.getId() - 1);
+                    service.getSingleBackOfficeUser(backOfficeUser.getId() - 1);
                 });
         assertTrue(ex.getMessage().contains(BackOfficeExceptionMessages.BACK_OFFICE_USER_NOT_FOUND));
     }
 
     @Test
     public void deleteBackOfficeUser_Existant() {
-        when(repo.findById(boUser.getId())).thenReturn(Optional.of(boUser));
+        when(repo.findById(backOfficeUser.getId())).thenReturn(Optional.of(backOfficeUser));
 
-        service.deleteBackOfficeUser(boUser.getId());
+        service.deleteBackOfficeUser(backOfficeUser.getId());
 
-        verify(repo, times(1)).deleteById(boUser.getId());
+        verify(repo, times(1)).deleteById(backOfficeUser.getId());
     }
 
     @Test
     public void deleteBackOfficeUser_NonExistant() {
-        when(repo.findById(boUser.getId() - 1)).thenReturn(Optional.empty());
+        when(repo.findById(backOfficeUser.getId() - 1)).thenReturn(Optional.empty());
 
         BackOfficeException ex = assertThrows(BackOfficeException.class,
                 () -> {
-                    service.getSingleBackOfficeUser(boUser.getId() - 1);
+                    service.getSingleBackOfficeUser(backOfficeUser.getId() - 1);
                 });
         assertTrue(ex.getMessage().contains(BackOfficeExceptionMessages.BACK_OFFICE_USER_NOT_FOUND));
 
-        verify(repo, times(0)).deleteById(boUser.getId() - 1);
+        verify(repo, times(0)).deleteById(backOfficeUser.getId() - 1);
     }
 }
