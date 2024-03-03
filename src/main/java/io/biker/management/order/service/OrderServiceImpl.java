@@ -1,5 +1,6 @@
 package io.biker.management.order.service;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,6 +98,33 @@ public class OrderServiceImpl implements OrderService {
 
         order.setStatus(status);
         orderRepo.save(order);
+    }
+
+    @Override
+    public Order updateOrderEta_Biker(Biker biker, int orderId, Date eta) {
+        Optional<Order> opOrder = orderRepo.findbyOrderIdAndBiker(orderId, biker);
+        Order order = getOrderFromOptional(opOrder);
+        order.setEta(eta);
+
+        return order;
+    }
+
+    @Override
+    public Order updateOrderEta_Store(Store store, int orderId, Date eta) {
+        Optional<Order> opOrder = orderRepo.findbyOrderIdAndStore(orderId, store);
+        Order order = getOrderFromOptional(opOrder);
+        order.setEta(eta);
+
+        return order;
+    }
+
+    @Override
+    public Order updateOrderEta_BackOffice(int orderId, Date eta) {
+        Optional<Order> opOrder = orderRepo.findById(orderId);
+        Order order = getOrderFromOptional(opOrder);
+        order.setEta(eta);
+
+        return order;
     }
 
     @Override

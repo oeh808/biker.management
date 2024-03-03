@@ -1,5 +1,6 @@
 package io.biker.management.order.service;
 
+import java.sql.Date;
 import java.util.List;
 
 import io.biker.management.biker.entity.Biker;
@@ -30,6 +31,12 @@ public interface OrderService {
     public void updateOrderStatus_Store(Store store, int orderId, String status);
 
     public void updateOrderStatus_BackOffice(int orderId, String status);
+
+    public Order updateOrderEta_Biker(Biker biker, int orderId, Date eta);
+
+    public Order updateOrderEta_Store(Store store, int orderId, Date eta);
+
+    public Order updateOrderEta_BackOffice(int orderId, Date eta);
 
     public void assignDelivery(Biker biker, int orderId);
 
