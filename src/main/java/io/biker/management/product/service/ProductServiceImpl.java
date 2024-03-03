@@ -55,6 +55,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Product getProduct(int id) {
+        Optional<Product> opProduct = productRepo.findById(id);
+        if (opProduct.isPresent()) {
+            return opProduct.get();
+        } else {
+            throw new ProductException(ProductExceptionMessages.PRODUCT_NOT_FOUND);
+        }
+    }
+
+    @Override
     public Product updateProduct(int storeId, Product product) {
         Product ogProduct = getSingleProduct(storeId, product.getProductId());
         product.setStore(ogProduct.getStore());

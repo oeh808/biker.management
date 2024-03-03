@@ -2,11 +2,13 @@ package io.biker.management.order.service;
 
 import java.util.List;
 
+import io.biker.management.customer.entity.Customer;
 import io.biker.management.order.entity.Order;
+import io.biker.management.product.entity.Product;
 import io.biker.management.user.Address;
 
 public interface OrderService {
-    public Order createOrder(int customerId, int productId, Address deliveryAddress);
+    public Order createOrder(Customer customer, Product product, Address deliveryAddress);
 
     public Order getOrder(int customerId, int orderId);
 
