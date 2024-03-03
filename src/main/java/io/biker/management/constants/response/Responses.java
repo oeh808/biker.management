@@ -1,4 +1,4 @@
-package io.biker.management.auth.response;
+package io.biker.management.constants.response;
 
 public class Responses {
     public static String USER_ADDED = "User added";

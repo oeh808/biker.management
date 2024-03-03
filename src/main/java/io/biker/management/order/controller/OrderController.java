@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.biker.management.auth.Roles;
-import io.biker.management.auth.response.Responses;
 import io.biker.management.biker.service.BikerService;
+import io.biker.management.constants.response.Responses;
 import io.biker.management.customer.dtos.AddressCreationDTO;
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.customer.service.CustomerService;

@@ -21,13 +21,13 @@ import io.biker.management.auth.entity.UserInfo;
 import io.biker.management.auth.exception.AuthExceptionMessages;
 import io.biker.management.auth.exception.CustomAuthException;
 import io.biker.management.auth.mapper.AuthMapper;
-import io.biker.management.auth.response.Responses;
 import io.biker.management.auth.service.JwtService;
 import io.biker.management.auth.service.UserInfoServiceImpl;
 import io.biker.management.backOffice.entity.BackOfficeUser;
 import io.biker.management.backOffice.service.BackOfficeService;
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.biker.service.BikerService;
+import io.biker.management.constants.response.Responses;
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.customer.service.CustomerService;
 import io.biker.management.errorHandling.responses.SuccessResponse;
@@ -214,7 +214,6 @@ public class AuthController {
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse deleteStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
-        storeService.deleteStore(id);
         userinfoService.deleteUser(id);
         return new SuccessResponse(Responses.USER_DELETED);
     }
