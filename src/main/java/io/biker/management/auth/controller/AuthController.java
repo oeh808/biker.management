@@ -206,8 +206,8 @@ public class AuthController {
         return new SuccessResponse(Responses.USER_DELETED);
     }
 
-    @Operation(description = "DELETE endpoint for deleting a store." +
-            "\n\n Can only be done by admins.", summary = "Delete Store")
+    @Operation(description = "DELETE endpoint for deleting store login information." +
+            "\n\n Can only be done by admins.", summary = "Delete Store Info")
     @Transactional
     @DeleteMapping("/stores/{id}")
     @SecurityRequirement(name = "Authorization")

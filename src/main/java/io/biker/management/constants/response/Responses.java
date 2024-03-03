@@ -14,4 +14,6 @@ public class Responses {
     }
 
     public static String ORDER_DELETED = "Order deleted";
+
+    public static String STORE_DELETED = "Store deleted";
 }
