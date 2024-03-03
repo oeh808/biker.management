@@ -1,8 +1,8 @@
-package io.biker.management.back_office.service;
+package io.biker.management.backOffice.service;
 
 import java.util.List;
 
-import io.biker.management.back_office.entity.BackOfficeUser;
+import io.biker.management.backOffice.entity.BackOfficeUser;
 
 public interface BackOfficeService {
 

@@ -6,7 +6,7 @@ import io.biker.management.auth.Roles;
 import io.biker.management.auth.dto.StoreCreationDTO;
 import io.biker.management.auth.dto.UserCreationDTO;
 import io.biker.management.auth.entity.UserInfo;
-import io.biker.management.back_office.entity.BackOfficeUser;
+import io.biker.management.backOffice.entity.BackOfficeUser;
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.store.entity.Store;

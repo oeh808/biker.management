@@ -9,7 +9,7 @@ import io.biker.management.biker.service.BikerService;
 import io.biker.management.customer.dtos.AddressCreationDTO;
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.customer.service.CustomerService;
-import io.biker.management.error_handling.responses.SuccessResponse;
+import io.biker.management.errorHandling.responses.SuccessResponse;
 import io.biker.management.order.dto.FeedBackCreationDTO;
 import io.biker.management.order.dto.OrderReadingDTOBiker;
 import io.biker.management.order.dto.OrderReadingDTOCustomer;

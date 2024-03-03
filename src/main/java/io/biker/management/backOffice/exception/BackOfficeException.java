@@ -1,4 +1,4 @@
-package io.biker.management.back_office.exception;
+package io.biker.management.backOffice.exception;
 
 public class BackOfficeException extends RuntimeException {
     private String message;

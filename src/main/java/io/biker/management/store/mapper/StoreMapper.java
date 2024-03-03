@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import io.biker.management.product.entity.Product;
-import io.biker.management.store.dto.Product_CustomerReadingDTO;
+import io.biker.management.store.dto.ProductCustomerReadingDTO;
 import io.biker.management.store.dto.StoreReadingDTO;
 import io.biker.management.store.entity.Store;
 
@@ -14,13 +14,13 @@ import io.biker.management.store.entity.Store;
 public class StoreMapper {
     // To DTO
     public StoreReadingDTO toReadingDto(Store store) {
-        List<Product_CustomerReadingDTO> productsDto = new ArrayList<>();
+        List<ProductCustomerReadingDTO> productsDto = new ArrayList<>();
         List<Product> products = store.getProducts();
 
         for (Product product : products) {
             // Only products that are in stock are retrieved
             if (product.getQuantity() > 0) {
-                productsDto.add(new Product_CustomerReadingDTO(product.getName(), product.getPrice()));
+                productsDto.add(new ProductCustomerReadingDTO(product.getName(), product.getPrice()));
             }
         }
 

@@ -21,12 +21,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.biker.management.back_office.entity.BackOfficeUser;
-import io.biker.management.back_office.exception.BackOfficeException;
-import io.biker.management.back_office.exception.BackOfficeExceptionMessages;
-import io.biker.management.back_office.repo.BackOfficeUserRepo;
-import io.biker.management.back_office.service.BackOfficeService;
-import io.biker.management.back_office.service.BackOfficeServiceImpl;
+import io.biker.management.backOffice.entity.BackOfficeUser;
+import io.biker.management.backOffice.exception.BackOfficeException;
+import io.biker.management.backOffice.exception.BackOfficeExceptionMessages;
+import io.biker.management.backOffice.repo.BackOfficeUserRepo;
+import io.biker.management.backOffice.service.BackOfficeService;
+import io.biker.management.backOffice.service.BackOfficeServiceImpl;
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)

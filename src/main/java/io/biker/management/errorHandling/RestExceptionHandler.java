@@ -1,4 +1,4 @@
-package io.biker.management.error_handling;
+package io.biker.management.errorHandling;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,10 +22,10 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import io.biker.management.auth.exception.CustomAuthException;
-import io.biker.management.back_office.exception.BackOfficeException;
+import io.biker.management.backOffice.exception.BackOfficeException;
 import io.biker.management.biker.exception.BikerException;
 import io.biker.management.customer.exception.CustomerException;
-import io.biker.management.error_handling.responses.ErrorResponse;
+import io.biker.management.errorHandling.responses.ErrorResponse;
 import io.biker.management.order.exception.OrderException;
 import io.biker.management.product.exception.ProductException;
 import io.biker.management.store.exception.StoreException;

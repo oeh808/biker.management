@@ -1,4 +1,4 @@
-package io.biker.management.error_handling.responses;
+package io.biker.management.errorHandling.responses;
 
 public abstract class CustomResponse {
     private String message;

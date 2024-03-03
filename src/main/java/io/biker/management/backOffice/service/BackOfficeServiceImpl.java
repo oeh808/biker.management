@@ -1,14 +1,14 @@
-package io.biker.management.back_office.service;
+package io.biker.management.backOffice.service;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import io.biker.management.back_office.entity.BackOfficeUser;
-import io.biker.management.back_office.exception.BackOfficeException;
-import io.biker.management.back_office.exception.BackOfficeExceptionMessages;
-import io.biker.management.back_office.repo.BackOfficeUserRepo;
+import io.biker.management.backOffice.entity.BackOfficeUser;
+import io.biker.management.backOffice.exception.BackOfficeException;
+import io.biker.management.backOffice.exception.BackOfficeExceptionMessages;
+import io.biker.management.backOffice.repo.BackOfficeUserRepo;
 
 @Service
 public class BackOfficeServiceImpl implements BackOfficeService {

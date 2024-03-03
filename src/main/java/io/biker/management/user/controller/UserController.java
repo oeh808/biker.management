@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.biker.management.auth.Roles;
-import io.biker.management.back_office.entity.BackOfficeUser;
-import io.biker.management.back_office.service.BackOfficeService;
+import io.biker.management.backOffice.entity.BackOfficeUser;
+import io.biker.management.backOffice.service.BackOfficeService;
 import io.biker.management.user.analysis.AnalysisService;
 import io.biker.management.user.analysis.BikerAnalysis;
 import io.biker.management.user.analysis.SystemAnalysis;
