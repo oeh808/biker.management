@@ -10,7 +10,7 @@ create table back_office_users (
 );
 
 create table bikers (
-    id integer not null, name varchar(255), email varchar(255) unique, password varchar(255), phone_number varchar(255) unique, current_location varchar(255), primary key (id)
+    id integer not null, name varchar(255), email varchar(255) unique, password varchar(255), phone_number varchar(255) unique, street varchar(255), city varchar(255), state varchar(255), post_code varchar(255), country varchar(255), primary key (id)
 );
 
 create table customer_addresses (
