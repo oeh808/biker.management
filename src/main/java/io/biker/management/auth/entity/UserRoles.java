@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserInfo {
+public class UserRoles {
     @Id
     private int userId;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)

@@ -1,9 +1,9 @@
 package io.biker.management.auth.service;
 
-import io.biker.management.auth.entity.UserInfo;
+import io.biker.management.auth.entity.UserRoles;
 
-public interface UserInfoService {
-    public UserInfo addUser(UserInfo user);
+public interface UserRolesService {
+    public UserRoles addUser(UserRoles user);
 
     public void deleteUser(int id);
 

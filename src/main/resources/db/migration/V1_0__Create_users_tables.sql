@@ -24,6 +24,6 @@ create table customers (
 alter table if exists customer_addresses
 add constraint FKrvr6wl9gll7u98cda18smugp4 foreign key (customer_id) references customers;
 
-create table user_info (
+create table user_roles (
     user_id integer not null, roles varchar(255), primary key (user_id)
 );

@@ -20,44 +20,44 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.biker.management.admin.entity.Admin;
-import io.biker.management.auth.entity.UserInfo;
+import io.biker.management.auth.entity.UserRoles;
 import io.biker.management.auth.exception.AuthExceptionMessages;
 import io.biker.management.auth.exception.CustomAuthException;
-import io.biker.management.auth.repo.UserInfoRepo;
-import io.biker.management.auth.service.UserInfoServiceImpl;
+import io.biker.management.auth.repo.UserRolesRepo;
+import io.biker.management.auth.service.UserRolesServiceImpl;
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
-public class UserInfoServiceTest {
+public class UserRolesServiceTest {
     @TestConfiguration
     static class ServiceTestConfig {
         @Bean
         @Autowired
-        UserInfoServiceImpl service() {
-            return new UserInfoServiceImpl();
+        UserRolesServiceImpl service() {
+            return new UserRolesServiceImpl();
         }
     }
 
     @MockBean
-    private UserInfoRepo repo;
+    private UserRolesRepo repo;
 
     @Autowired
-    private UserInfoServiceImpl service;
+    private UserRolesServiceImpl service;
 
-    private static UserInfo user;
+    private static UserRoles userRoles;
 
     @BeforeAll
     public static void setUp() {
-        user = new UserInfo(1, new Admin(1, "Durge", "Bhaal@gmail.com", "+666 9772223918", "password"),
+        userRoles = new UserRoles(1, new Admin(1, "Durge", "Bhaal@gmail.com", "+666 9772223918", "password"),
                 "ADMIN");
     }
 
     @Test
     public void loadUserByUsername_Existant() {
-        when(repo.findByUser_Email(user.getUser().getEmail())).thenReturn(Optional.of(user));
+        when(repo.findByUser_Email(userRoles.getUser().getEmail())).thenReturn(Optional.of(userRoles));
 
-        assertEquals(user.getUser().getEmail(),
-                service.loadUserByUsername(user.getUser().getEmail()).getUsername());
+        assertEquals(userRoles.getUser().getEmail(),
+                service.loadUserByUsername(userRoles.getUser().getEmail()).getUsername());
     }
 
     @Test
@@ -73,30 +73,30 @@ public class UserInfoServiceTest {
 
     @Test
     public void addUser() {
-        when(repo.save(user)).thenReturn(user);
+        when(repo.save(userRoles)).thenReturn(userRoles);
 
-        assertEquals(user, service.addUser(user));
+        assertEquals(userRoles, service.addUser(userRoles));
     }
 
     @Test
     public void deleteUser_Existant() {
-        when(repo.findById(user.getUserId())).thenReturn(Optional.of(user));
+        when(repo.findById(userRoles.getUserId())).thenReturn(Optional.of(userRoles));
 
-        service.deleteUser(user.getUserId());
+        service.deleteUser(userRoles.getUserId());
 
-        verify(repo, times(1)).deleteById(user.getUserId());
+        verify(repo, times(1)).deleteById(userRoles.getUserId());
     }
 
     @Test
     public void deleteUser_NonExistant() {
-        when(repo.findById(user.getUserId() - 1)).thenReturn(Optional.empty());
+        when(repo.findById(userRoles.getUserId() - 1)).thenReturn(Optional.empty());
 
         CustomAuthException ex = assertThrows(CustomAuthException.class,
                 () -> {
-                    service.deleteUser(user.getUserId() - 1);
+                    service.deleteUser(userRoles.getUserId() - 1);
                 });
         assertTrue(ex.getMessage().contains(AuthExceptionMessages.USER_DOES_NOT_EXIST));
 
-        verify(repo, times(0)).deleteById(user.getUserId() - 1);
+        verify(repo, times(0)).deleteById(userRoles.getUserId() - 1);
     }
 }

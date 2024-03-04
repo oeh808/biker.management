@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import io.biker.management.auth.filter.JwtAuthFilter;
-import io.biker.management.auth.service.UserInfoServiceImpl;
+import io.biker.management.auth.service.UserRolesServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +32,7 @@ public class SecurityConfig {
     // User Creation
     @Bean
     UserDetailsService userDetailsService() {
-        return new UserInfoServiceImpl();
+        return new UserRolesServiceImpl();
     }
 
     // Configuring HttpSecurity

@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.biker.management.auth.Roles;
 import io.biker.management.auth.dto.AuthRequestDTO;
-import io.biker.management.auth.entity.UserInfo;
+import io.biker.management.auth.entity.UserRoles;
 import io.biker.management.auth.exception.AuthExceptionMessages;
 import io.biker.management.auth.service.JwtService;
-import io.biker.management.auth.service.UserInfoServiceImpl;
+import io.biker.management.auth.service.UserRolesService;
 import io.biker.management.backOffice.entity.BackOfficeUser;
 import io.biker.management.backOffice.service.BackOfficeService;
 import io.biker.management.biker.entity.Biker;
@@ -40,7 +40,7 @@ import jakarta.validation.Valid;
 @Tag(name = "Authorization")
 @RequestMapping("/auth")
 public class AuthController {
-    private UserInfoServiceImpl userinfoService;
+    private UserRolesService userRolesService;
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
 
@@ -49,10 +49,10 @@ public class AuthController {
     private BackOfficeService backOfficeService;
     private StoreService storeService;
 
-    public AuthController(CustomerService customerService, UserInfoServiceImpl userinfoService, JwtService jwtService,
+    public AuthController(CustomerService customerService, UserRolesService userRolesService, JwtService jwtService,
             AuthenticationManager authenticationManager, BikerService bikerService,
             BackOfficeService backOfficeService, StoreService storeService) {
-        this.userinfoService = userinfoService;
+        this.userRolesService = userRolesService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
 
@@ -71,8 +71,8 @@ public class AuthController {
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
         Customer customer = customerService.getSingleCustomer(id);
 
-        UserInfo user = new UserInfo(id, customer, Roles.CUSTOMER);
-        userinfoService.addUser(user);
+        UserRoles user = new UserRoles(id, customer, Roles.CUSTOMER);
+        userRolesService.addUser(user);
 
         return new SuccessResponse(Responses.USER_ADDED);
     }
@@ -86,8 +86,8 @@ public class AuthController {
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         Biker biker = bikerService.getSingleBiker(id);
 
-        UserInfo user = new UserInfo(id, biker, Roles.BIKER);
-        userinfoService.addUser(user);
+        UserRoles user = new UserRoles(id, biker, Roles.BIKER);
+        userRolesService.addUser(user);
 
         return new SuccessResponse(Responses.USER_ADDED);
     }
@@ -101,8 +101,8 @@ public class AuthController {
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         BackOfficeUser backOfficeUser = backOfficeService.getSingleBackOfficeUser(id);
 
-        UserInfo user = new UserInfo(id, backOfficeUser, Roles.BACK_OFFICE);
-        userinfoService.addUser(user);
+        UserRoles user = new UserRoles(id, backOfficeUser, Roles.BACK_OFFICE);
+        userRolesService.addUser(user);
 
         return new SuccessResponse(Responses.USER_ADDED);
     }
@@ -116,8 +116,8 @@ public class AuthController {
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
         Store store = storeService.getSingleStore(id);
 
-        UserInfo user = new UserInfo(id, store, Roles.STORE);
-        userinfoService.addUser(user);
+        UserRoles user = new UserRoles(id, store, Roles.STORE);
+        userRolesService.addUser(user);
 
         return new SuccessResponse(Responses.USER_ADDED);
     }
@@ -149,7 +149,7 @@ public class AuthController {
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse deleteStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "User ID") @PathVariable int id) {
-        userinfoService.deleteUser(id);
+        userRolesService.deleteUser(id);
         return new SuccessResponse(Responses.USER_DELETED);
     }
 

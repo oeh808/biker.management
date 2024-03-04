@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import io.biker.management.auth.entity.UserInfo;
+import io.biker.management.auth.entity.UserRoles;
 
 public class UserInfoDetails implements UserDetails {
     private int id;
@@ -17,11 +17,11 @@ public class UserInfoDetails implements UserDetails {
     private String password;
     private List<GrantedAuthority> authorities;
 
-    public UserInfoDetails(UserInfo userInfo) {
-        id = userInfo.getUserId();
-        username = userInfo.getUser().getEmail();
-        password = userInfo.getUser().getPassword();
-        authorities = Arrays.stream(userInfo.getRoles().split(","))
+    public UserInfoDetails(UserRoles userRoles) {
+        id = userRoles.getUserId();
+        username = userRoles.getUser().getEmail();
+        password = userRoles.getUser().getPassword();
+        authorities = Arrays.stream(userRoles.getRoles().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
