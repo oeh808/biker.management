@@ -51,7 +51,7 @@ public class BackOfficeServiceTest {
 
     @BeforeAll
     public static void setUp() {
-        backOfficeUser = new BackOfficeUser(1, "Gale", "MagicMan@gmail.com", "+44 770820695");
+        backOfficeUser = new BackOfficeUser(1, "Gale", "MagicMan@gmail.com", "+44 770820695", "password");
     }
 
     @Test

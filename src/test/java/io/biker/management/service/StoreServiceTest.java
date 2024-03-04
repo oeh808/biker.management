@@ -50,7 +50,8 @@ public class StoreServiceTest {
 
     @BeforeAll
     public static void setUp() {
-        store = new Store(50, "Sorcerous Sundries", "SorcerousSundries@gmail.com", "+44 920350022", null, null);
+        store = new Store(50, "Sorcerous Sundries", "SorcerousSundries@gmail.com", "+44 920350022",
+                "password", null, null);
     }
 
     @Test

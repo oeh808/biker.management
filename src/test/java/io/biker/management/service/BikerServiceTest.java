@@ -50,7 +50,7 @@ public class BikerServiceTest {
 
     @BeforeAll
     public static void setUp() {
-        biker = new Biker(1, "Timmy", "Timmyyy@gmail.com", "+1512 3514000", null);
+        biker = new Biker(1, "Timmy", "Timmyyy@gmail.com", "+1512 3514000", "password", null);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package io.biker.management.store.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.biker.management.product.entity.Product;
@@ -20,11 +21,12 @@ public class Store extends User {
     private List<Product> products;
 
     public Store() {
-
+        products = new ArrayList<>();
     }
 
-    public Store(int id, String name, String email, String phoneNumber, Address address, List<Product> products) {
-        super(id, name, email, phoneNumber);
+    public Store(int id, String name, String email, String phoneNumber, String password, Address address,
+            List<Product> products) {
+        super(id, name, email, phoneNumber, password);
         this.address = address;
         this.products = products;
     }

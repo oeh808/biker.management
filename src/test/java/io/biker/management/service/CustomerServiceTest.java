@@ -54,7 +54,7 @@ public class CustomerServiceTest {
 
     @BeforeAll
     public static void setUp() {
-        customer = new Customer(50, "Volo", "BardMan", "+44 770820695");
+        customer = new Customer(50, "Volo", "BardMan", "+44 770820695", "password");
     }
 
     @BeforeEach

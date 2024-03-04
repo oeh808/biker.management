@@ -36,4 +36,5 @@ public abstract class User {
     private String email;
     @Column(unique = true)
     private String phoneNumber;
+    private String password;
 }

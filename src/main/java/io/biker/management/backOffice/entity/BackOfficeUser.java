@@ -11,7 +11,7 @@ public class BackOfficeUser extends User {
         super();
     }
 
-    public BackOfficeUser(int id, String name, String email, String phoneNumber) {
-        super(id, name, email, phoneNumber);
+    public BackOfficeUser(int id, String name, String email, String phoneNumber, String password) {
+        super(id, name, email, phoneNumber, password);
     }
 }

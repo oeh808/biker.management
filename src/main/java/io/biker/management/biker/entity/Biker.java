@@ -13,8 +13,8 @@ public class Biker extends User {
         super();
     }
 
-    public Biker(int id, String name, String email, String phoneNumber, String currentLocation) {
-        super(id, name, email, phoneNumber);
+    public Biker(int id, String name, String email, String phoneNumber, String currentLocation, String password) {
+        super(id, name, email, phoneNumber, password);
         this.currentLocation = currentLocation;
     }
 

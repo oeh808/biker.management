@@ -61,7 +61,7 @@ public class ProductServiceTest {
 
     @BeforeAll
     public static void setUp() {
-        store1 = new Store(50, "Sorcerous Sundries", "SorcerousSundries@gmail.com", "+44 920350022", null,
+        store1 = new Store(50, "Sorcerous Sundries", "SorcerousSundries@gmail.com", "+44 920350022", "password", null,
                 new ArrayList<Product>());
         product = new Product(1, "Bag of Holding", 499.99f, 3, null);
     }
