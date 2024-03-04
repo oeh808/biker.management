@@ -43,7 +43,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @SecurityRequirement(name = "Authorization")
 @Tag(name = "Orders")
 @RequestMapping("/orders")
-// TODO: Implement updating eta dates for orders
 public class OrderController {
         private CustomerService customerService;
         private ProductService productService;
@@ -138,7 +137,7 @@ public class OrderController {
 
         @Operation(description = "PUT endpoint for updating the eta of an order." +
                         "\n\n Can only be done by bikers that are associated with the order.", summary = "Update order eta (Biker)")
-        @PutMapping("/bikers/{bikerId}/{orderId}")
+        @PutMapping("/eta/bikers/{bikerId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
         @PreAuthorize("(hasAuthority('" + Roles.BIKER + "') and #id == authentication.principal.id)")
         public SuccessResponse updateEta_Biker(
@@ -154,7 +153,7 @@ public class OrderController {
 
         @Operation(description = "PUT endpoint for updating the eta of an order." +
                         "\n\n Can only be done by stores that are associated with the order.", summary = "Update order eta (Stoner)")
-        @PutMapping("/stores/{storeId}/{orderId}")
+        @PutMapping("/eta/stores/{storeId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
         @PreAuthorize("(hasAuthority('" + Roles.STORE + "') and #id == authentication.principal.id)")
         public SuccessResponse updateEta_Store(
@@ -170,7 +169,7 @@ public class OrderController {
 
         @Operation(description = "PUT endpoint for updating the eta of an order." +
                         "\n\n Can only be done by back office users.", summary = "Update order eta (Back office)")
-        @PutMapping("/backOffice/{orderId}")
+        @PutMapping("/eta/backOffice/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
         public SuccessResponse updateEta_BackOffice(
@@ -199,7 +198,7 @@ public class OrderController {
 
         @Operation(description = "PUT endpoint for updating the status of an order." +
                         "\n\n Can only be done by bikers that are associated with the order.", summary = "Update order status (Biker)")
-        @PutMapping("/bikers/{bikerId}/{orderId}")
+        @PutMapping("/status/bikers/{bikerId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
         @PreAuthorize("(hasAuthority('" + Roles.BIKER + "') and #id == authentication.principal.id)")
         public SuccessResponse updateStatus_Biker(
@@ -215,7 +214,7 @@ public class OrderController {
 
         @Operation(description = "PUT endpoint for updating the status of an order." +
                         "\n\n Can only be done by stores that are associated with the order.", summary = "Update order status (Stoner)")
-        @PutMapping("/stores/{storeId}/{orderId}")
+        @PutMapping("/status/stores/{storeId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
         @PreAuthorize("(hasAuthority('" + Roles.STORE + "') and #id == authentication.principal.id)")
         public SuccessResponse updateStatus_Store(
@@ -231,7 +230,7 @@ public class OrderController {
 
         @Operation(description = "PUT endpoint for updating the status of an order." +
                         "\n\n Can only be done by back office users.", summary = "Update order status (Back office)")
-        @PutMapping("/backOffice/{orderId}")
+        @PutMapping("/status/backOffice/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
         public SuccessResponse updateStatus_BackOffice(
