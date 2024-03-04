@@ -77,6 +77,7 @@ public class AuthController {
     @Operation(description = "POST endpoint for registering a customer and assigning their roles." +
             "\n\n Can only be done by admins.", summary = "Register a customer")
     @PostMapping("/customers/{id}")
+    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse registerCustomer(@PathVariable int id) {
         Customer customer = customerService.getSingleCustomer(id);
         UserInfo user = new UserInfo(id, customer.getEmail(), customer.getPassword(), customer.getPhoneNumber(),
