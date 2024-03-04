@@ -3,6 +3,8 @@ package io.biker.management.auth.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -19,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import io.biker.management.auth.Roles;
 import io.biker.management.auth.filter.JwtAuthFilter;
 import io.biker.management.auth.service.UserRolesServiceImpl;
 
@@ -66,6 +69,17 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    // Role Hierarchy
+    @Bean
+    RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl r = new RoleHierarchyImpl();
+        r.setHierarchy(Roles.ADMIN + " > " + Roles.CUSTOMER + " and " +
+                Roles.ADMIN + " > " + Roles.BIKER + " and " +
+                Roles.ADMIN + " > " + Roles.STORE + " and " +
+                Roles.ADMIN + " > " + Roles.BACK_OFFICE);
+        return r;
     }
 
     @Bean
