@@ -3,6 +3,9 @@ package io.biker.management.auth.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +21,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -76,17 +78,17 @@ public class SecurityConfig {
     @Bean
     RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl r = new RoleHierarchyImpl();
-        r.setHierarchy(Roles.ADMIN + " > " + Roles.CUSTOMER + " and " +
-                Roles.ADMIN + " > " + Roles.BIKER + " and " +
-                Roles.ADMIN + " > " + Roles.STORE + " and " +
+        r.setHierarchy(Roles.ADMIN + " > " + Roles.CUSTOMER + "\n" +
+                Roles.ADMIN + " > " + Roles.BIKER + "\n" +
+                Roles.ADMIN + " > " + Roles.STORE + "\n" +
                 Roles.ADMIN + " > " + Roles.BACK_OFFICE);
         return r;
     }
 
     @Bean
-    DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler() {
-        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
-        expressionHandler.setRoleHierarchy(roleHierarchy());
+    static MethodSecurityExpressionHandler methodSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy);
         return expressionHandler;
     }
 
