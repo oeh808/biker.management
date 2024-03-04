@@ -74,21 +74,15 @@ public class AuthController {
         this.authMapper = authMapper;
     }
 
-    @Operation(description = "POST endpoint for creating a customers.", summary = "Create a customer")
-    @PostMapping("/customers")
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of UserCreationDTO")
-    public SuccessResponse createCustomer(@Valid @RequestBody UserCreationDTO dto) {
-        if (!userinfoService.isDuplicateUsername(dto.username())
-                && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
-            Customer customer = customerService.createCustomer(authMapper.toCustomer(dto));
-            UserInfo user = authMapper.toUserCustomer(dto);
-            user.setId(customer.getId());
-            userinfoService.addUser(user);
-
-            return new SuccessResponse(Responses.USER_ADDED);
-        } else {
-            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
-        }
+    @Operation(description = "POST endpoint for registering a customer and assigning their roles." +
+            "\n\n Can only be done by admins.", summary = "Register a customer")
+    @PostMapping("/customers/{id}")
+    public SuccessResponse registerCustomer(@PathVariable int id) {
+        Customer customer = customerService.getSingleCustomer(id);
+        UserInfo user = new UserInfo(id, customer.getEmail(), customer.getPassword(), customer.getPhoneNumber(),
+                Roles.CUSTOMER);
+        userinfoService.addUser(user);
+        return new SuccessResponse(Responses.USER_ADDED);
     }
 
     // FIXME: Only back office users and admins can register bikers

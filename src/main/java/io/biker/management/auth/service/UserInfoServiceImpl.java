@@ -33,7 +33,10 @@ public class UserInfoServiceImpl implements UserDetailsService, UserInfoService 
 
     @Override
     public UserInfo addUser(UserInfo userInfo) {
-        userInfo.setPassword(encoder.encode(userInfo.getPassword()));
+        if (isDuplicatePhoneNumber(userInfo.getPhoneNumber()) || isDuplicateUsername(userInfo.getUsername())) {
+            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
+        }
+
         return repository.save(userInfo);
     }
 
