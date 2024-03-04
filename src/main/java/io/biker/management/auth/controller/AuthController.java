@@ -15,11 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.biker.management.auth.Roles;
 import io.biker.management.auth.dto.AuthRequestDTO;
-import io.biker.management.auth.dto.UserCreationDTO;
 import io.biker.management.auth.entity.UserInfo;
 import io.biker.management.auth.exception.AuthExceptionMessages;
-import io.biker.management.auth.exception.CustomAuthException;
-import io.biker.management.auth.mapper.AuthMapper;
 import io.biker.management.auth.service.JwtService;
 import io.biker.management.auth.service.UserInfoServiceImpl;
 import io.biker.management.backOffice.entity.BackOfficeUser;
@@ -42,9 +39,6 @@ import jakarta.validation.Valid;
 @RestController
 @Tag(name = "Authorization")
 @RequestMapping("/auth")
-// FIXME: Move entity creation of non-'user info' entities
-// to their respective controllers
-
 public class AuthController {
     private UserInfoServiceImpl userinfoService;
     private JwtService jwtService;
@@ -55,12 +49,9 @@ public class AuthController {
     private BackOfficeService backOfficeService;
     private StoreService storeService;
 
-    private AuthMapper authMapper;
-
     public AuthController(CustomerService customerService, UserInfoServiceImpl userinfoService, JwtService jwtService,
             AuthenticationManager authenticationManager, BikerService bikerService,
-            BackOfficeService backOfficeService, StoreService storeService,
-            AuthMapper authMapper) {
+            BackOfficeService backOfficeService, StoreService storeService) {
         this.userinfoService = userinfoService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
@@ -69,13 +60,12 @@ public class AuthController {
         this.bikerService = bikerService;
         this.backOfficeService = backOfficeService;
         this.storeService = storeService;
-
-        this.authMapper = authMapper;
     }
 
     @Operation(description = "POST endpoint for registering a customer and assigning their roles." +
             "\n\n Can only be done by admins.", summary = "Register a customer")
     @PostMapping("/customers/{id}")
+    @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse registerCustomer(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
@@ -89,6 +79,7 @@ public class AuthController {
     @Operation(description = "POST endpoint for registering a biker and assigning their roles." +
             "\n\n Can only be done by back office users and admins.", summary = "Register a biker")
     @PostMapping("/bikers/{id}")
+    @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public SuccessResponse registerBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
@@ -99,30 +90,25 @@ public class AuthController {
         return new SuccessResponse(Responses.USER_ADDED);
     }
 
-    // FIXME: Only back office users and admins can register back office users
-    @Operation(description = "POST endpoint for creating a back office user." +
-            "\n\n Can only be done by admins.", summary = "Create a back office user")
-    @PostMapping("/backOffice")
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of UserCreationDTO")
+    @Operation(description = "POST endpoint for registering a back office user and assigning their roles." +
+            "\n\n Can only be done by back office users and admins.", summary = "Register a back office user")
+    @PostMapping("/backOffice/{id}")
     @SecurityRequirement(name = "Authorization")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
-    public SuccessResponse createBackOfficeUser(@Valid @RequestBody UserCreationDTO dto) {
-        if (!userinfoService.isDuplicateUsername(dto.username())
-                && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
-            BackOfficeUser backOfficeUser = backOfficeService.createBackOfficeUser(authMapper.toBackOfficeUser(dto));
-            UserInfo user = authMapper.toUserBackOfficeUser(dto);
-            user.setId(backOfficeUser.getId());
-            userinfoService.addUser(user);
-
-            return new SuccessResponse(Responses.USER_ADDED);
-        } else {
-            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
-        }
+    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
+    public SuccessResponse registerBackOfficeUser(
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
+        BackOfficeUser backOfficeUser = backOfficeService.getSingleBackOfficeUser(id);
+        UserInfo user = new UserInfo(id, backOfficeUser.getEmail(), backOfficeUser.getPassword(),
+                backOfficeUser.getPhoneNumber(),
+                Roles.BACK_OFFICE);
+        userinfoService.addUser(user);
+        return new SuccessResponse(Responses.USER_ADDED);
     }
 
     @Operation(description = "POST endpoint for registering a store and assigning their roles." +
             "\n\n Can only be done by admins.", summary = "Register a store")
     @PostMapping("/stores/{id}")
+    @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse registerStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
