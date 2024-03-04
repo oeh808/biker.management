@@ -39,7 +39,7 @@ public class ProductRepoTest {
     public static void setUp() {
         store1 = new Store(50, "Sorcerous Sundries", "SorcerousSundries@gmail.com", "+44 920350022",
                 "password", null, new ArrayList<Product>());
-        store2 = new Store(51, "The Blushing Mermaid", "SorcerousSundries@gmail.com", "+44 920350322",
+        store2 = new Store(51, "The Blushing Mermaid", "TheBlushingMermaid@gmail.com", "+44 920350322",
                 "password", null, new ArrayList<Product>());
         product1 = new Product(1, "Brown Bag", 49.99f, 20, null);
         product2 = new Product(2, "Bag of Holding", 499.99f, 3, null);
