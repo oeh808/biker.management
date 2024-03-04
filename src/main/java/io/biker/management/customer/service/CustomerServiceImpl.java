@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import io.biker.management.auth.exception.AuthExceptionMessages;
@@ -17,15 +18,19 @@ import io.biker.management.user.Address;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
+    private PasswordEncoder encoder;
     private CustomerRepo customerRepo;
 
-    public CustomerServiceImpl(CustomerRepo customerRepo) {
+    public CustomerServiceImpl(PasswordEncoder encoder, CustomerRepo customerRepo) {
+        this.encoder = encoder;
         this.customerRepo = customerRepo;
     }
 
     @Override
     public Customer createCustomer(Customer customer) {
         if (hasUniqueEmail(customer.getEmail()) && hasUniquePhoneNumber(customer.getPhoneNumber())) {
+            customer.setPassword(encoder.encode(customer.getPassword()));
+
             return customerRepo.save(customer);
         } else {
             throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);

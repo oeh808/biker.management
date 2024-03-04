@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -39,13 +40,16 @@ public class CustomerServiceTest {
     static class ServiceTestConfig {
         @Bean
         @Autowired
-        CustomerService service(CustomerRepo repo) {
-            return new CustomerServiceImpl(repo);
+        CustomerService service(CustomerRepo repo, PasswordEncoder encoder) {
+            return new CustomerServiceImpl(encoder, repo);
         }
     }
 
     @MockBean
     private CustomerRepo repo;
+
+    @MockBean
+    private PasswordEncoder encoder;
 
     @Autowired
     private CustomerService service;
