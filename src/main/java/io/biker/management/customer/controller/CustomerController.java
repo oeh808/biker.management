@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.biker.management.auth.Roles;
 import io.biker.management.constants.response.Responses;
 import io.biker.management.customer.dtos.AddressCreationDTO;
+import io.biker.management.customer.dtos.CustomerCreationDTO;
+import io.biker.management.customer.dtos.CustomerReadingDTO;
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.customer.mapper.CustomerMapper;
 import io.biker.management.customer.service.CustomerService;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @Tag(name = "Customers")
@@ -42,12 +45,21 @@ public class CustomerController {
                 this.customerMapper = customerMapper;
         }
 
+        @Operation(description = "POST endpoint for creating a customers.", summary = "Create a customer")
+        @PostMapping()
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of CustomerCreationDTO")
+        public CustomerReadingDTO createCustomer(@Valid @RequestBody CustomerCreationDTO dto) {
+                Customer customer = customerService.createCustomer(customerMapper.toCustomer(dto));
+
+                return customerMapper.toDto(customer);
+        }
+
         @Operation(description = "GET endpoint for retrieving all customers." +
                         "\n\n Can only be done by admins", summary = "Get all customers")
         @GetMapping()
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
-        public List<Customer> getAllCustomers() {
-                return customerService.getAllCustomers();
+        public List<CustomerReadingDTO> getAllCustomers() {
+                return customerMapper.toDtos(customerService.getAllCustomers());
         }
 
         @Operation(description = "GET endpoint for retrieving a single customer given their id." +
@@ -55,9 +67,9 @@ public class CustomerController {
         @GetMapping("/{id}")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
                         "(hasAuthority('" + Roles.CUSTOMER + "') and #id == authentication.principal.id)")
-        public Customer getSingleCustomer(
+        public CustomerReadingDTO getSingleCustomer(
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
-                return customerService.getSingleCustomer(id);
+                return customerMapper.toDto(customerService.getSingleCustomer(id));
         }
 
         @Operation(description = "PUT endpoint for a delivery address to a customer given their id." +
