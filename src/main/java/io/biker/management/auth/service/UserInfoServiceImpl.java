@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import io.biker.management.auth.entity.UserInfo;
@@ -18,13 +17,10 @@ public class UserInfoServiceImpl implements UserDetailsService, UserInfoService 
     @Autowired
     private UserInfoRepo repository;
 
-    @Autowired
-    private PasswordEncoder encoder;
-
     @Override
     public UserDetails loadUserByUsername(String username) {
 
-        Optional<UserInfo> userDetail = repository.findByUsername(username);
+        Optional<UserInfo> userDetail = repository.findByUser_Email(username);
 
         // Converting userDetail to UserDetails
         return userDetail.map(UserInfoDetails::new)
@@ -33,7 +29,8 @@ public class UserInfoServiceImpl implements UserDetailsService, UserInfoService 
 
     @Override
     public UserInfo addUser(UserInfo userInfo) {
-        if (isDuplicatePhoneNumber(userInfo.getPhoneNumber()) || isDuplicateUsername(userInfo.getUsername())) {
+        if (isDuplicatePhoneNumber(userInfo.getUser().getPhoneNumber())
+                || isDuplicateUsername(userInfo.getUser().getEmail())) {
             throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
         }
 
@@ -51,20 +48,20 @@ public class UserInfoServiceImpl implements UserDetailsService, UserInfoService 
 
     @Override
     public boolean isDuplicateUsername(String username) {
-        Optional<UserInfo> opUser = repository.findByUsername(username);
+        Optional<UserInfo> opUser = repository.findByUser_Email(username);
 
         return opUser.isPresent();
     }
 
     @Override
     public boolean isDuplicatePhoneNumber(String phoneNum) {
-        Optional<UserInfo> opUser = repository.findByPhoneNumber(phoneNum);
+        Optional<UserInfo> opUser = repository.findByUser_PhoneNumber(phoneNum);
 
         return opUser.isPresent();
     }
 
     // Helper functions
-    public boolean userExists(int id) {
+    private boolean userExists(int id) {
         Optional<UserInfo> opUser = repository.findById(id);
 
         return opUser.isPresent();

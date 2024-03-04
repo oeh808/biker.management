@@ -15,59 +15,77 @@ import org.springframework.test.context.ActiveProfiles;
 
 import io.biker.management.auth.entity.UserInfo;
 import io.biker.management.auth.repo.UserInfoRepo;
+import io.biker.management.backOffice.entity.BackOfficeUser;
+import io.biker.management.backOffice.repo.BackOfficeUserRepo;
 
 @ActiveProfiles("test")
 @DataJpaTest
 public class UserInfoRepoTest {
     @Autowired
-    private UserInfoRepo repo;
+    private BackOfficeUserRepo backOfficeUserRepo;
 
-    private static UserInfo user1;
-    private static UserInfo user2;
+    @Autowired
+    private UserInfoRepo userInfoRepo;
+
+    private static BackOfficeUser backOfficeUser1;
+    private static BackOfficeUser backOfficeUser2;
+
+    private UserInfo user1;
+    private UserInfo user2;
 
     @BeforeAll
     public static void setUp() {
-        user1 = new UserInfo(50, "Durge", "123456", "+666 9772223918", "ADMIN");
-        user2 = new UserInfo(51, "Tav", "123456", "+333 9772223918", "BACK_OFFICE");
+        backOfficeUser1 = new BackOfficeUser(50, "Durge", "Bhaal@gmail.com", "+666 9772223918", "password");
+        backOfficeUser2 = new BackOfficeUser(51, "Tav", "Vanilla@gmail.com", "+333 9772223918", "password");
     }
 
     @BeforeEach
     public void setUpForEach() {
-        repo.save(user1);
-        repo.save(user2);
+        backOfficeUser1 = backOfficeUserRepo.save(backOfficeUser1);
+        backOfficeUser2 = backOfficeUserRepo.save(backOfficeUser2);
+
+        user1 = new UserInfo(backOfficeUser1.getId(), backOfficeUser1,
+                "BACK_OFFICE");
+        user2 = new UserInfo(backOfficeUser2.getId(), backOfficeUser2,
+                "BACK_OFFICE");
+
+        user1 = userInfoRepo.save(user1);
+        user2 = userInfoRepo.save(user2);
     }
 
     @AfterEach
     public void tearDownForEach() {
-        repo.deleteAll();
+        userInfoRepo.deleteAll();
+        backOfficeUserRepo.deleteAll();
     }
 
     @Test
-    public void findByUsername_Existant() {
-        Optional<UserInfo> opUser = repo.findByUsername(user1.getUsername());
+    public void findByUser_Email_Existant() {
+        Optional<UserInfo> opUser = userInfoRepo.findByUser_Email(user1.getUser().getEmail());
 
         assertTrue(opUser.isPresent());
         assertEquals(opUser.get(), user1);
     }
 
     @Test
-    public void findByUsername_NonExistant() {
-        Optional<UserInfo> opUser = repo.findByUsername(user1.getUsername() + "_");
+    public void findByUser_Email_NonExistant() {
+        Optional<UserInfo> opUser = userInfoRepo.findByUser_Email(user1.getUser().getEmail() + "_");
 
         assertTrue(opUser.isEmpty());
     }
 
     @Test
-    public void findByPhoneNumber_Existant() {
-        Optional<UserInfo> opUser = repo.findByPhoneNumber(user1.getPhoneNumber());
+    public void findByUser_PhoneNumber_Existant() {
+        Optional<UserInfo> opUser = userInfoRepo.findByUser_PhoneNumber(user1.getUser().getPhoneNumber());
 
         assertTrue(opUser.isPresent());
         assertEquals(opUser.get(), user1);
     }
 
     @Test
-    public void findByPhoneNumber_NonExistant() {
-        Optional<UserInfo> opUser = repo.findByPhoneNumber(user1.getPhoneNumber() + "_");
+    public void findByUser_PhoneNumber_NonExistant() {
+        Optional<UserInfo> opUser = userInfoRepo.findByUser_PhoneNumber(user1.getUser().getPhoneNumber() +
+                "_");
 
         assertTrue(opUser.isEmpty());
     }

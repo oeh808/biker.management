@@ -70,9 +70,10 @@ public class AuthController {
     public SuccessResponse registerCustomer(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
         Customer customer = customerService.getSingleCustomer(id);
-        UserInfo user = new UserInfo(id, customer.getEmail(), customer.getPassword(), customer.getPhoneNumber(),
-                Roles.CUSTOMER);
+
+        UserInfo user = new UserInfo(id, customer, Roles.CUSTOMER);
         userinfoService.addUser(user);
+
         return new SuccessResponse(Responses.USER_ADDED);
     }
 
@@ -84,9 +85,10 @@ public class AuthController {
     public SuccessResponse registerBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         Biker biker = bikerService.getSingleBiker(id);
-        UserInfo user = new UserInfo(id, biker.getEmail(), biker.getPassword(), biker.getPhoneNumber(),
-                Roles.BIKER);
+
+        UserInfo user = new UserInfo(id, biker, Roles.BIKER);
         userinfoService.addUser(user);
+
         return new SuccessResponse(Responses.USER_ADDED);
     }
 
@@ -98,10 +100,10 @@ public class AuthController {
     public SuccessResponse registerBackOfficeUser(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         BackOfficeUser backOfficeUser = backOfficeService.getSingleBackOfficeUser(id);
-        UserInfo user = new UserInfo(id, backOfficeUser.getEmail(), backOfficeUser.getPassword(),
-                backOfficeUser.getPhoneNumber(),
-                Roles.BACK_OFFICE);
+
+        UserInfo user = new UserInfo(id, backOfficeUser, Roles.BACK_OFFICE);
         userinfoService.addUser(user);
+
         return new SuccessResponse(Responses.USER_ADDED);
     }
 
@@ -113,9 +115,10 @@ public class AuthController {
     public SuccessResponse registerStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
         Store store = storeService.getSingleStore(id);
-        UserInfo user = new UserInfo(id, store.getEmail(), store.getPassword(), store.getPhoneNumber(),
-                Roles.STORE);
+
+        UserInfo user = new UserInfo(id, store, Roles.STORE);
         userinfoService.addUser(user);
+
         return new SuccessResponse(Responses.USER_ADDED);
     }
 

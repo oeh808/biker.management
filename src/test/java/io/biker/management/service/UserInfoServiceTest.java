@@ -16,10 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import io.biker.management.admin.entity.Admin;
 import io.biker.management.auth.entity.UserInfo;
 import io.biker.management.auth.exception.AuthExceptionMessages;
 import io.biker.management.auth.exception.CustomAuthException;
@@ -41,9 +41,6 @@ public class UserInfoServiceTest {
     @MockBean
     private UserInfoRepo repo;
 
-    @MockBean
-    private PasswordEncoder encoder;
-
     @Autowired
     private UserInfoServiceImpl service;
 
@@ -51,19 +48,21 @@ public class UserInfoServiceTest {
 
     @BeforeAll
     public static void setUp() {
-        user = new UserInfo(1, "Bhaal@gmail.com", "123456", "+666 9772223918", "ADMIN");
+        user = new UserInfo(1, new Admin(1, "Durge", "Bhaal@gmail.com", "+666 9772223918", "password"),
+                "ADMIN");
     }
 
     @Test
     public void loadUserByUsername_Existant() {
-        when(repo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(repo.findByUser_Email(user.getUser().getEmail())).thenReturn(Optional.of(user));
 
-        assertEquals(user.getUsername(), service.loadUserByUsername(user.getUsername()).getUsername());
+        assertEquals(user.getUser().getEmail(),
+                service.loadUserByUsername(user.getUser().getEmail()).getUsername());
     }
 
     @Test
     public void loadUserByUsername_NonExistant() {
-        when(repo.findByUsername("Blah")).thenReturn(Optional.empty());
+        when(repo.findByUser_Email("Blah")).thenReturn(Optional.empty());
 
         CustomAuthException ex = assertThrows(CustomAuthException.class,
                 () -> {
@@ -74,7 +73,6 @@ public class UserInfoServiceTest {
 
     @Test
     public void addUser() {
-        when(encoder.encode(user.getPassword())).thenReturn(user.getPassword());
         when(repo.save(user)).thenReturn(user);
 
         assertEquals(user, service.addUser(user));
@@ -82,23 +80,23 @@ public class UserInfoServiceTest {
 
     @Test
     public void deleteUser_Existant() {
-        when(repo.findById(user.getId())).thenReturn(Optional.of(user));
+        when(repo.findById(user.getUserId())).thenReturn(Optional.of(user));
 
-        service.deleteUser(user.getId());
+        service.deleteUser(user.getUserId());
 
-        verify(repo, times(1)).deleteById(user.getId());
+        verify(repo, times(1)).deleteById(user.getUserId());
     }
 
     @Test
     public void deleteUser_NonExistant() {
-        when(repo.findById(user.getId() - 1)).thenReturn(Optional.empty());
+        when(repo.findById(user.getUserId() - 1)).thenReturn(Optional.empty());
 
         CustomAuthException ex = assertThrows(CustomAuthException.class,
                 () -> {
-                    service.deleteUser(user.getId() - 1);
+                    service.deleteUser(user.getUserId() - 1);
                 });
         assertTrue(ex.getMessage().contains(AuthExceptionMessages.USER_DOES_NOT_EXIST));
 
-        verify(repo, times(0)).deleteById(user.getId() - 1);
+        verify(repo, times(0)).deleteById(user.getUserId() - 1);
     }
 }
