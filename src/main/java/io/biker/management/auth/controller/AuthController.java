@@ -167,52 +167,14 @@ public class AuthController {
         }
     }
 
-    @Operation(description = "DELETE endpoint for deleting a customer's login information.." +
-            "\n\n Can only be done by admins.", summary = "Delete Customer Info")
-    @Transactional
-    @DeleteMapping("/customers/{id}")
-    @SecurityRequirement(name = "Authorization")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
-    public SuccessResponse deleteCustomer(
-            @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
-        userinfoService.deleteUser(id);
-        return new SuccessResponse(Responses.USER_DELETED);
-    }
-
-    @Operation(description = "DELETE endpoint for deleting a biker's login information.." +
-            "\n\n Can only be done by admins.", summary = "Delete Biker Info")
-    @Transactional
-    @DeleteMapping("/bikers/{id}")
-    @SecurityRequirement(name = "Authorization")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
-    public SuccessResponse deleteBiker(
-            @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
-        userinfoService.deleteUser(id);
-        return new SuccessResponse(Responses.USER_DELETED);
-    }
-
-    // FIXME: Move back office deletion to back office
-    @Operation(description = "DELETE endpoint for deleting a back office user." +
-            "\n\n Can only be done by admins.", summary = "Delete Back Office user")
-    @Transactional
-    @DeleteMapping("/backOffice/{id}")
-    @SecurityRequirement(name = "Authorization")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
-    public SuccessResponse deleteBackOfficeUser(
-            @Parameter(in = ParameterIn.PATH, name = "id", description = "Back Office user ID") @PathVariable int id) {
-        backOfficeService.deleteBackOfficeUser(id);
-        userinfoService.deleteUser(id);
-        return new SuccessResponse(Responses.USER_DELETED);
-    }
-
-    @Operation(description = "DELETE endpoint for deleting store login information." +
+    @Operation(description = "DELETE endpoint for deleting user login information." +
             "\n\n Can only be done by admins.", summary = "Delete Store Info")
     @Transactional
     @DeleteMapping("/stores/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse deleteStore(
-            @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "User ID") @PathVariable int id) {
         userinfoService.deleteUser(id);
         return new SuccessResponse(Responses.USER_DELETED);
     }

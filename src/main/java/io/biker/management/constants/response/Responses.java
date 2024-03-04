@@ -17,4 +17,5 @@ public class Responses {
 
     public static String STORE_DELETED = "Store deleted";
     public static String BIKER_DELETED = "Biker deleted";
+    public static String BACK_OFFICE_USER_DELETED = "Back Office Users deleted";
 }
