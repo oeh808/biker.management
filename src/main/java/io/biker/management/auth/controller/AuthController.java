@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.biker.management.auth.Roles;
 import io.biker.management.auth.dto.AuthRequestDTO;
-import io.biker.management.auth.dto.StoreCreationDTO;
 import io.biker.management.auth.dto.UserCreationDTO;
 import io.biker.management.auth.entity.UserInfo;
 import io.biker.management.auth.exception.AuthExceptionMessages;
@@ -121,22 +120,17 @@ public class AuthController {
         }
     }
 
-    // FIXME: admins can register stores
-    @Operation(description = "POST endpoint for registering a store.", summary = "Register a store")
-    @PostMapping("/stores")
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StoreCreationDTO")
-    public SuccessResponse registerStore(@Valid @RequestBody StoreCreationDTO dto) {
-        if (!userinfoService.isDuplicateUsername(dto.name())
-                && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
-            Store store = storeService.createStore(authMapper.toStore(dto));
-            UserInfo user = authMapper.toUserStore(dto);
-            user.setId(store.getId());
-            userinfoService.addUser(user);
-
-            return new SuccessResponse(Responses.USER_ADDED);
-        } else {
-            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
-        }
+    @Operation(description = "POST endpoint for registering a store and assigning their roles." +
+            "\n\n Can only be done by admins.", summary = "Register a store")
+    @PostMapping("/stores/{id}")
+    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    public SuccessResponse registerStore(
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
+        Store store = storeService.getSingleStore(id);
+        UserInfo user = new UserInfo(id, store.getEmail(), store.getPassword(), store.getPhoneNumber(),
+                Roles.STORE);
+        userinfoService.addUser(user);
+        return new SuccessResponse(Responses.USER_ADDED);
     }
 
     @Operation(description = "POST endpoint for generating a Jwt Token given a user name and password.", summary = "Generate Jwt Token")

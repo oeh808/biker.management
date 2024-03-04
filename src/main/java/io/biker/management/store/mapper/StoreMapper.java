@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import io.biker.management.customer.dtos.AddressCreationDTO;
 import io.biker.management.product.entity.Product;
 import io.biker.management.store.dto.ProductCustomerReadingDTO;
+import io.biker.management.store.dto.StoreCreationDTO;
 import io.biker.management.store.dto.StoreReadingDTO;
 import io.biker.management.store.entity.Store;
+import io.biker.management.user.Address;
 
 @Component
 public class StoreMapper {
@@ -38,5 +41,23 @@ public class StoreMapper {
         }
 
         return dtos;
+    }
+
+    // To Entity
+    public Store toStore(StoreCreationDTO dto) {
+        Store store = new Store();
+        store.setName(dto.name());
+        store.setEmail(dto.email());
+        store.setPassword(dto.password());
+        store.setPhoneNumber(dto.phoneNum());
+        store.setAddress(toAddress(dto.address()));
+
+        return store;
+    }
+
+    public Address toAddress(AddressCreationDTO dto) {
+        Address address = new Address(dto.street(), dto.city(), dto.state(), dto.postCode(), dto.country());
+
+        return address;
     }
 }
