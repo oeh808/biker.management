@@ -78,7 +78,8 @@ public class AuthController {
             "\n\n Can only be done by admins.", summary = "Register a customer")
     @PostMapping("/customers/{id}")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
-    public SuccessResponse registerCustomer(@PathVariable int id) {
+    public SuccessResponse registerCustomer(
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
         Customer customer = customerService.getSingleCustomer(id);
         UserInfo user = new UserInfo(id, customer.getEmail(), customer.getPassword(), customer.getPhoneNumber(),
                 Roles.CUSTOMER);
@@ -86,22 +87,17 @@ public class AuthController {
         return new SuccessResponse(Responses.USER_ADDED);
     }
 
-    // FIXME: Only back office users and admins can register bikers
-    @Operation(description = "POST endpoint for creating a bikers.", summary = "Create a biker")
-    @PostMapping("/bikers")
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of UserCreationDTO")
-    public SuccessResponse createBiker(@Valid @RequestBody UserCreationDTO dto) {
-        if (!userinfoService.isDuplicateUsername(dto.username())
-                && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
-            Biker biker = bikerService.createBiker(authMapper.toBiker(dto));
-            UserInfo user = authMapper.toUserBiker(dto);
-            user.setId(biker.getId());
-            userinfoService.addUser(user);
-
-            return new SuccessResponse(Responses.USER_ADDED);
-        } else {
-            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
-        }
+    @Operation(description = "POST endpoint for registering a biker and assigning their roles." +
+            "\n\n Can only be done by back office users and admins.", summary = "Register a biker")
+    @PostMapping("/bikers/{id}")
+    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
+    public SuccessResponse registerBiker(
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
+        Biker biker = bikerService.getSingleBiker(id);
+        UserInfo user = new UserInfo(id, biker.getEmail(), biker.getPassword(), biker.getPhoneNumber(),
+                Roles.BIKER);
+        userinfoService.addUser(user);
+        return new SuccessResponse(Responses.USER_ADDED);
     }
 
     // FIXME: Only back office users and admins can register back office users
