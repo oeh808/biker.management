@@ -95,7 +95,7 @@ public class CustomerController {
         public SuccessResponse deleteCustomer(
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
                 customerService.deleteCustomer(id);
-                return new SuccessResponse(Responses.USER_DELETED);
+                return new SuccessResponse(Responses.CUSTOMER_DELETED);
         }
 
 }

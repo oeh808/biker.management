@@ -78,6 +78,6 @@ public class BikerController {
     public SuccessResponse deleteBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         bikerService.deleteBiker(id);
-        return new SuccessResponse(Responses.USER_DELETED);
+        return new SuccessResponse(Responses.BIKER_DELETED);
     }
 }
