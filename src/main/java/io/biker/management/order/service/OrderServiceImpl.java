@@ -110,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = getOrderFromOptional(opOrder);
         order.setEta(eta);
 
-        return order;
+        return orderRepo.save(order);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = getOrderFromOptional(opOrder);
         order.setEta(eta);
 
-        return order;
+        return orderRepo.save(order);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = getOrderFromOptional(opOrder);
         order.setEta(eta);
 
-        return order;
+        return orderRepo.save(order);
     }
 
     @Override
