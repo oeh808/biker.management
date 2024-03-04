@@ -12,11 +12,11 @@ import io.biker.management.biker.entity.Biker;
 
 public interface OrderRepo extends JpaRepository<Order, Integer> {
 
-    Optional<Order> findbyOrderIdAndCustomer(int orderId, Customer customer);
+    Optional<Order> findByOrderIdAndCustomer(int orderId, Customer customer);
 
-    Optional<Order> findbyOrderIdAndBiker(int orderId, Biker biker);
+    Optional<Order> findByOrderIdAndBiker(int orderId, Biker biker);
 
-    Optional<Order> findbyOrderIdAndStore(int orderId, Store store);
+    Optional<Order> findByOrderIdAndStore(int orderId, Store store);
 
     List<Order> findByStatus(String status);
 

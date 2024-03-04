@@ -24,6 +24,10 @@ import io.biker.management.user.Address;
 public class OrderServiceImpl implements OrderService {
     private OrderRepo orderRepo;
 
+    public OrderServiceImpl(OrderRepo orderRepo) {
+        this.orderRepo = orderRepo;
+    }
+
     @Override
     public Order createOrder(Customer customer, Product product, Address deliveryAddress) {
         OrderDetails orderDetails = new OrderDetails(product.getName(), product.getPrice(),
@@ -36,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getOrder(Customer customer, int orderId) {
-        Optional<Order> opOrder = orderRepo.findbyOrderIdAndCustomer(orderId, customer);
+        Optional<Order> opOrder = orderRepo.findByOrderIdAndCustomer(orderId, customer);
 
         return getOrderFromOptional(opOrder);
     }
@@ -75,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void updateOrderStatus_Biker(Biker biker, int orderId, String status) {
-        Optional<Order> opOrder = orderRepo.findbyOrderIdAndBiker(orderId, biker);
+        Optional<Order> opOrder = orderRepo.findByOrderIdAndBiker(orderId, biker);
         Order order = getOrderFromOptional(opOrder);
 
         order.setStatus(status);
@@ -84,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void updateOrderStatus_Store(Store store, int orderId, String status) {
-        Optional<Order> opOrder = orderRepo.findbyOrderIdAndStore(orderId, store);
+        Optional<Order> opOrder = orderRepo.findByOrderIdAndStore(orderId, store);
         Order order = getOrderFromOptional(opOrder);
 
         order.setStatus(status);
@@ -102,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order updateOrderEta_Biker(Biker biker, int orderId, Date eta) {
-        Optional<Order> opOrder = orderRepo.findbyOrderIdAndBiker(orderId, biker);
+        Optional<Order> opOrder = orderRepo.findByOrderIdAndBiker(orderId, biker);
         Order order = getOrderFromOptional(opOrder);
         order.setEta(eta);
 
@@ -111,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order updateOrderEta_Store(Store store, int orderId, Date eta) {
-        Optional<Order> opOrder = orderRepo.findbyOrderIdAndStore(orderId, store);
+        Optional<Order> opOrder = orderRepo.findByOrderIdAndStore(orderId, store);
         Order order = getOrderFromOptional(opOrder);
         order.setEta(eta);
 
