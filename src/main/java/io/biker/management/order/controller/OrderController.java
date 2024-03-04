@@ -10,6 +10,7 @@ import io.biker.management.customer.dtos.AddressCreationDTO;
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.customer.service.CustomerService;
 import io.biker.management.errorHandling.responses.SuccessResponse;
+import io.biker.management.order.dto.EtaCreationDTO;
 import io.biker.management.order.dto.FeedBackCreationDTO;
 import io.biker.management.order.dto.OrderReadingDTOBiker;
 import io.biker.management.order.dto.OrderReadingDTOCustomer;
@@ -133,6 +134,52 @@ public class OrderController {
         public List<Order> getOrdersByBiker(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId) {
                 return orderService.getOrdersByBiker(bikerService.getSingleBiker(bikerId));
+        }
+
+        @Operation(description = "PUT endpoint for updating the eta of an order." +
+                        "\n\n Can only be done by bikers that are associated with the order.", summary = "Update order eta (Biker)")
+        @PutMapping("/bikers/{bikerId}/{orderId}")
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
+        @PreAuthorize("(hasAuthority('" + Roles.BIKER + "') and #id == authentication.principal.id)")
+        public SuccessResponse updateEta_Biker(
+                        @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
+                        @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
+                        @Valid @RequestBody EtaCreationDTO dto) {
+                orderService.updateOrderEta_Biker(bikerService.getSingleBiker(bikerId), orderId,
+                                orderMapper.toDate(dto));
+
+                SuccessResponse successResponse = new SuccessResponse(Responses.ETA_UPDATED);
+                return successResponse;
+        }
+
+        @Operation(description = "PUT endpoint for updating the eta of an order." +
+                        "\n\n Can only be done by stores that are associated with the order.", summary = "Update order eta (Stoner)")
+        @PutMapping("/stores/{storeId}/{orderId}")
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
+        @PreAuthorize("(hasAuthority('" + Roles.STORE + "') and #id == authentication.principal.id)")
+        public SuccessResponse updateEta_Store(
+                        @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
+                        @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
+                        @Valid @RequestBody EtaCreationDTO dto) {
+                orderService.updateOrderEta_Store(storeService.getSingleStore(storeId), orderId,
+                                orderMapper.toDate(dto));
+
+                SuccessResponse successResponse = new SuccessResponse(Responses.ETA_UPDATED);
+                return successResponse;
+        }
+
+        @Operation(description = "PUT endpoint for updating the eta of an order." +
+                        "\n\n Can only be done by back office users.", summary = "Update order eta (Back office)")
+        @PutMapping("/backOffice/{orderId}")
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
+        @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
+        public SuccessResponse updateEta_BackOffice(
+                        @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
+                        @Valid @RequestBody EtaCreationDTO dto) {
+                orderService.updateOrderEta_BackOffice(orderId, orderMapper.toDate(dto));
+
+                SuccessResponse successResponse = new SuccessResponse(Responses.ETA_UPDATED);
+                return successResponse;
         }
 
         @Operation(description = "PUT endpoint for customers to give feedback to an order." +

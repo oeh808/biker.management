@@ -8,6 +8,7 @@ public class Responses {
 
     public static String FEEDBACK_ADDED = "Feedback added";
     public static String STATUS_UPDATED = "Status updated";
+    public static String ETA_UPDATED = "Eta updated";
 
     public static String ORDER_ASSIGNED(int bikerId, int orderId) {
         return "Biker with id: " + bikerId + " has been assigned to order with id: " + orderId;

@@ -1,5 +1,6 @@
 package io.biker.management.order.mapper;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import io.biker.management.customer.dtos.AddressCreationDTO;
 import io.biker.management.order.constants.OrderStatus;
+import io.biker.management.order.dto.EtaCreationDTO;
 import io.biker.management.order.dto.FeedBackCreationDTO;
 import io.biker.management.order.dto.OrderReadingDTOBiker;
 import io.biker.management.order.dto.OrderReadingDTOCustomer;
@@ -64,6 +66,12 @@ public class OrderMapper {
         } else {
             throw new OrderException(OrderExceptionMessages.INVALID_STATUS);
         }
+    }
+
+    public Date toDate(EtaCreationDTO dto) {
+        Date date = dto.eta();
+
+        return date;
     }
 
     public FeedBack toFeedBack(FeedBackCreationDTO dto) {
