@@ -5,6 +5,6 @@ import java.util.List;
 import io.biker.management.user.Address;
 
 public record StoreReadingDTO(String name, Address address, String phoneNum,
-        List<Product_CustomerReadingDTO> products) {
+        List<ProductCustomerReadingDTO> products) {
 
 }

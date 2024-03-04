@@ -1,5 +1,6 @@
 package io.biker.management.biker.entity;
 
+import io.biker.management.user.Address;
 import io.biker.management.user.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -7,22 +8,22 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "BIKERS")
 public class Biker extends User {
-    private String currentLocation;
+    private Address currentLocation;
 
     public Biker() {
         super();
     }
 
-    public Biker(int id, String name, String email, String phoneNumber, String currentLocation) {
-        super(id, name, email, phoneNumber);
+    public Biker(int id, String name, String email, String phoneNumber, String password, Address currentLocation) {
+        super(id, name, email, phoneNumber, password);
         this.currentLocation = currentLocation;
     }
 
-    public String getCurrentLocation() {
+    public Address getCurrentLocation() {
         return currentLocation;
     }
 
-    public void setCurrentLocation(String currentLocation) {
+    public void setCurrentLocation(Address currentLocation) {
         this.currentLocation = currentLocation;
     }
 }

@@ -15,22 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.biker.management.auth.Roles;
 import io.biker.management.auth.dto.AuthRequestDTO;
-import io.biker.management.auth.dto.StoreCreationDTO;
-import io.biker.management.auth.dto.UserCreationDTO;
-import io.biker.management.auth.entity.UserInfo;
+import io.biker.management.auth.entity.UserRoles;
 import io.biker.management.auth.exception.AuthExceptionMessages;
-import io.biker.management.auth.exception.CustomAuthException;
-import io.biker.management.auth.mapper.AuthMapper;
-import io.biker.management.auth.response.Responses;
 import io.biker.management.auth.service.JwtService;
-import io.biker.management.auth.service.UserInfoServiceImpl;
-import io.biker.management.back_office.entity.BackOfficeUser;
-import io.biker.management.back_office.service.BackOfficeService;
+import io.biker.management.auth.service.UserRolesService;
+import io.biker.management.backOffice.entity.BackOfficeUser;
+import io.biker.management.backOffice.service.BackOfficeService;
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.biker.service.BikerService;
+import io.biker.management.constants.response.Responses;
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.customer.service.CustomerService;
-import io.biker.management.error_handling.responses.SuccessResponse;
+import io.biker.management.errorHandling.responses.SuccessResponse;
 import io.biker.management.store.entity.Store;
 import io.biker.management.store.service.StoreService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +40,7 @@ import jakarta.validation.Valid;
 @Tag(name = "Authorization")
 @RequestMapping("/auth")
 public class AuthController {
-    private UserInfoServiceImpl userinfoService;
+    private UserRolesService userRolesService;
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
 
@@ -53,13 +49,10 @@ public class AuthController {
     private BackOfficeService backOfficeService;
     private StoreService storeService;
 
-    private AuthMapper authMapper;
-
-    public AuthController(CustomerService customerService, UserInfoServiceImpl userinfoService, JwtService jwtService,
+    public AuthController(CustomerService customerService, UserRolesService userRolesService, JwtService jwtService,
             AuthenticationManager authenticationManager, BikerService bikerService,
-            BackOfficeService backOfficeService, StoreService storeService,
-            AuthMapper authMapper) {
-        this.userinfoService = userinfoService;
+            BackOfficeService backOfficeService, StoreService storeService) {
+        this.userRolesService = userRolesService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
 
@@ -67,79 +60,66 @@ public class AuthController {
         this.bikerService = bikerService;
         this.backOfficeService = backOfficeService;
         this.storeService = storeService;
-
-        this.authMapper = authMapper;
     }
 
-    @Operation(description = "POST endpoint for creating a customers.", summary = "Create a customer")
-    @PostMapping("/customers")
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of UserCreationDTO")
-    public SuccessResponse createCustomer(@Valid @RequestBody UserCreationDTO dto) {
-        if (!userinfoService.isDuplicateUsername(dto.username())
-                && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
-            Customer customer = customerService.createCustomer(authMapper.toCustomer(dto));
-            UserInfo user = authMapper.toUser_Customer(dto);
-            user.setId(customer.getId());
-            userinfoService.addUser(user);
-
-            return new SuccessResponse(Responses.USER_ADDED);
-        } else {
-            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
-        }
-    }
-
-    @Operation(description = "POST endpoint for creating a bikers.", summary = "Create a biker")
-    @PostMapping("/bikers")
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of UserCreationDTO")
-    public SuccessResponse createBiker(@Valid @RequestBody UserCreationDTO dto) {
-        if (!userinfoService.isDuplicateUsername(dto.username())
-                && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
-            Biker biker = bikerService.createBiker(authMapper.toBiker(dto));
-            UserInfo user = authMapper.toUser_Biker(dto);
-            user.setId(biker.getId());
-            userinfoService.addUser(user);
-
-            return new SuccessResponse(Responses.USER_ADDED);
-        } else {
-            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
-        }
-    }
-
-    @Operation(description = "POST endpoint for creating a back office user." +
-            "\n\n Can only be done by admins.", summary = "Create a back office user")
-    @PostMapping("/backOffice")
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of UserCreationDTO")
+    @Operation(description = "POST endpoint for registering a customer and assigning their roles." +
+            "\n\n Can only be done by admins.", summary = "Register a customer")
+    @PostMapping("/customers/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
-    public SuccessResponse createBackOfficeUser(@Valid @RequestBody UserCreationDTO dto) {
-        if (!userinfoService.isDuplicateUsername(dto.username())
-                && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
-            BackOfficeUser boUser = backOfficeService.createBackOfficeUser(authMapper.toBoUser(dto));
-            UserInfo user = authMapper.toUser_BoUser(dto);
-            user.setId(boUser.getId());
-            userinfoService.addUser(user);
+    public SuccessResponse registerCustomer(
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
+        Customer customer = customerService.getSingleCustomer(id);
 
-            return new SuccessResponse(Responses.USER_ADDED);
-        } else {
-            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
-        }
+        UserRoles user = new UserRoles(id, customer, Roles.CUSTOMER);
+        userRolesService.addUser(user);
+
+        return new SuccessResponse(Responses.USER_ADDED);
     }
 
-    @Operation(description = "POST endpoint for registering a store.", summary = "Register a store")
-    @PostMapping("/stores")
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StoreCreationDTO")
-    public SuccessResponse registerStore(@Valid @RequestBody StoreCreationDTO dto) {
-        if (!userinfoService.isDuplicateUsername(dto.name())
-                && !userinfoService.isDuplicatePhoneNumber(dto.phoneNum())) {
-            Store store = storeService.createStore(authMapper.toStore(dto));
-            UserInfo user = authMapper.toUser_Store(dto);
-            user.setId(store.getStoreId());
-            userinfoService.addUser(user);
+    @Operation(description = "POST endpoint for registering a biker and assigning their roles." +
+            "\n\n Can only be done by back office users and admins.", summary = "Register a biker")
+    @PostMapping("/bikers/{id}")
+    @SecurityRequirement(name = "Authorization")
+    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
+    public SuccessResponse registerBiker(
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
+        Biker biker = bikerService.getSingleBiker(id);
 
-            return new SuccessResponse(Responses.USER_ADDED);
-        } else {
-            throw new CustomAuthException(AuthExceptionMessages.DUPLICATE_DATA);
-        }
+        UserRoles user = new UserRoles(id, biker, Roles.BIKER);
+        userRolesService.addUser(user);
+
+        return new SuccessResponse(Responses.USER_ADDED);
+    }
+
+    @Operation(description = "POST endpoint for registering a back office user and assigning their roles." +
+            "\n\n Can only be done by back office users and admins.", summary = "Register a back office user")
+    @PostMapping("/backOffice/{id}")
+    @SecurityRequirement(name = "Authorization")
+    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
+    public SuccessResponse registerBackOfficeUser(
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
+        BackOfficeUser backOfficeUser = backOfficeService.getSingleBackOfficeUser(id);
+
+        UserRoles user = new UserRoles(id, backOfficeUser, Roles.BACK_OFFICE);
+        userRolesService.addUser(user);
+
+        return new SuccessResponse(Responses.USER_ADDED);
+    }
+
+    @Operation(description = "POST endpoint for registering a store and assigning their roles." +
+            "\n\n Can only be done by admins.", summary = "Register a store")
+    @PostMapping("/stores/{id}")
+    @SecurityRequirement(name = "Authorization")
+    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    public SuccessResponse registerStore(
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
+        Store store = storeService.getSingleStore(id);
+
+        UserRoles user = new UserRoles(id, store, Roles.STORE);
+        userRolesService.addUser(user);
+
+        return new SuccessResponse(Responses.USER_ADDED);
     }
 
     @Operation(description = "POST endpoint for generating a Jwt Token given a user name and password.", summary = "Generate Jwt Token")
@@ -161,55 +141,15 @@ public class AuthController {
         }
     }
 
-    @Operation(description = "DELETE endpoint for deleting a customer." +
-            "\n\n Can only be done by admins.", summary = "Delete Customer")
+    @Operation(description = "DELETE endpoint for deleting user login information." +
+            "\n\n Can only be done by admins.", summary = "Delete Store Info")
     @Transactional
-    @DeleteMapping("/customers/{id}")
-    @SecurityRequirement(name = "Authorization")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
-    public SuccessResponse deleteCustomer(
-            @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
-        customerService.deleteCustomer(id);
-        userinfoService.deleteUser(id);
-        return new SuccessResponse(Responses.USER_DELETED);
-    }
-
-    @Operation(description = "DELETE endpoint for deleting a biker." +
-            "\n\n Can only be done by admins.", summary = "Delete Biker")
-    @Transactional
-    @DeleteMapping("/bikers/{id}")
-    @SecurityRequirement(name = "Authorization")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
-    public SuccessResponse deleteBiker(
-            @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
-        bikerService.deleteBiker(id);
-        userinfoService.deleteUser(id);
-        return new SuccessResponse(Responses.USER_DELETED);
-    }
-
-    @Operation(description = "DELETE endpoint for deleting a back office user." +
-            "\n\n Can only be done by admins.", summary = "Delete Back Office user")
-    @Transactional
-    @DeleteMapping("/backOffice/{id}")
-    @SecurityRequirement(name = "Authorization")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
-    public SuccessResponse deleteBackOfficeUser(
-            @Parameter(in = ParameterIn.PATH, name = "id", description = "Back Office user ID") @PathVariable int id) {
-        backOfficeService.deleteBackOfficeUser(id);
-        userinfoService.deleteUser(id);
-        return new SuccessResponse(Responses.USER_DELETED);
-    }
-
-    @Operation(description = "DELETE endpoint for deleting a store." +
-            "\n\n Can only be done by admins.", summary = "Delete Store")
-    @Transactional
-    @DeleteMapping("/stores/{id}")
+    @DeleteMapping("/users/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse deleteStore(
-            @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
-        storeService.deleteStore(id);
-        userinfoService.deleteUser(id);
+            @Parameter(in = ParameterIn.PATH, name = "id", description = "User ID") @PathVariable int id) {
+        userRolesService.deleteUser(id);
         return new SuccessResponse(Responses.USER_DELETED);
     }
 

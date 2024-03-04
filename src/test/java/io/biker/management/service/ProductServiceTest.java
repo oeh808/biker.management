@@ -61,14 +61,15 @@ public class ProductServiceTest {
 
     @BeforeAll
     public static void setUp() {
-        store1 = new Store(50, "Sorcerous Sundries", "+44 920350022", null, new ArrayList<Product>());
+        store1 = new Store(50, "Sorcerous Sundries", "SorcerousSundries@gmail.com", "+44 920350022", "password", null,
+                new ArrayList<Product>());
         product = new Product(1, "Bag of Holding", 499.99f, 3, null);
     }
 
     @BeforeEach
     public void setUpMocks() {
-        when(storeRepo.findById(store1.getStoreId())).thenReturn(Optional.of(store1));
-        when(storeRepo.findById(store1.getStoreId() - 1)).thenReturn(Optional.empty());
+        when(storeRepo.findById(store1.getId())).thenReturn(Optional.of(store1));
+        when(storeRepo.findById(store1.getId() - 1)).thenReturn(Optional.empty());
 
         when(productRepo.findByProductIdAndStore(product.getProductId(), store1)).thenReturn(Optional.of(product));
         when(productRepo.findByProductIdAndStore(product.getProductId() - 1, store1)).thenReturn(Optional.empty());
@@ -79,14 +80,14 @@ public class ProductServiceTest {
     public void createProduct_ExistantStore() {
         when(productRepo.save(product)).thenReturn(product);
 
-        assertEquals(product, service.createProduct(store1.getStoreId(), product));
+        assertEquals(product, service.createProduct(store1.getId(), product));
     }
 
     @Test
     public void createProduct_NonExistantStore() {
         StoreException ex = assertThrows(StoreException.class,
                 () -> {
-                    service.createProduct(store1.getStoreId() - 1, product);
+                    service.createProduct(store1.getId() - 1, product);
                 });
         assertTrue(ex.getMessage().contains(StoreExceptionMessages.STORE_NOT_FOUND));
     }
@@ -107,37 +108,37 @@ public class ProductServiceTest {
         products.add(product);
         when(productRepo.findByStore(store1)).thenReturn(products);
 
-        assertTrue(service.getAllProductsByStore(store1.getStoreId()).contains(product));
+        assertTrue(service.getAllProductsByStore(store1.getId()).contains(product));
     }
 
     @Test
     public void getAllProductsByStore_NonExistantStore() {
         StoreException ex = assertThrows(StoreException.class,
                 () -> {
-                    service.getAllProductsByStore(store1.getStoreId() - 1);
+                    service.getAllProductsByStore(store1.getId() - 1);
                 });
         assertTrue(ex.getMessage().contains(StoreExceptionMessages.STORE_NOT_FOUND));
     }
 
     @Test
     public void getSingleProduct_ExistantStoreAndProduct() {
-        assertEquals(product, service.getSingleProduct(store1.getStoreId(), product.getProductId()));
+        assertEquals(product, service.getSingleProduct(store1.getId(), product.getProductId()));
     }
 
     @Test
     public void getSingleProduct_ExistantStoreNotProduct() {
         ProductException ex = assertThrows(ProductException.class,
                 () -> {
-                    service.getSingleProduct(store1.getStoreId(), product.getProductId() - 1);
+                    service.getSingleProduct(store1.getId(), product.getProductId() - 1);
                 });
-        assertTrue(ex.getMessage().contains(ProductExceptionMessages.PRODUCT_NOT_FOUND(store1.getStoreId())));
+        assertTrue(ex.getMessage().contains(ProductExceptionMessages.PRODUCT_NOT_FOUND(store1.getId())));
     }
 
     @Test
     public void getSingleProduct_NonExistantStoreNotProduct() {
         StoreException ex = assertThrows(StoreException.class,
                 () -> {
-                    service.getSingleProduct(store1.getStoreId() - 1, product.getProductId());
+                    service.getSingleProduct(store1.getId() - 1, product.getProductId());
                 });
         assertTrue(ex.getMessage().contains(StoreExceptionMessages.STORE_NOT_FOUND));
     }
@@ -147,7 +148,7 @@ public class ProductServiceTest {
     public void updateProduct_ExistantStoreAndProduct() {
         when(productRepo.save(product)).thenReturn(product);
 
-        assertEquals(product, service.updateProduct(store1.getStoreId(), product));
+        assertEquals(product, service.updateProduct(store1.getId(), product));
     }
 
     @Test
@@ -156,9 +157,9 @@ public class ProductServiceTest {
 
         ProductException ex = assertThrows(ProductException.class,
                 () -> {
-                    service.updateProduct(store1.getStoreId(), product);
+                    service.updateProduct(store1.getId(), product);
                 });
-        assertTrue(ex.getMessage().contains(ProductExceptionMessages.PRODUCT_NOT_FOUND(store1.getStoreId())));
+        assertTrue(ex.getMessage().contains(ProductExceptionMessages.PRODUCT_NOT_FOUND(store1.getId())));
 
         product.setProductId(product.getProductId() + 1);
     }
@@ -167,7 +168,7 @@ public class ProductServiceTest {
     public void updateProduct_NonExistantStoreNotProduct() {
         StoreException ex = assertThrows(StoreException.class,
                 () -> {
-                    service.updateProduct(store1.getStoreId() - 1, product);
+                    service.updateProduct(store1.getId() - 1, product);
                 });
         assertTrue(ex.getMessage().contains(StoreExceptionMessages.STORE_NOT_FOUND));
     }
@@ -175,7 +176,7 @@ public class ProductServiceTest {
     // Delete
     @Test
     public void deleteProduct_ExistantStoreAndProduct() {
-        service.deleteProduct(store1.getStoreId(), product.getProductId());
+        service.deleteProduct(store1.getId(), product.getProductId());
 
         verify(productRepo, times(1)).deleteById(product.getProductId());
     }
@@ -184,9 +185,9 @@ public class ProductServiceTest {
     public void deleteProduct_ExistantStoreNotProduct() {
         ProductException ex = assertThrows(ProductException.class,
                 () -> {
-                    service.deleteProduct(store1.getStoreId(), product.getProductId() - 1);
+                    service.deleteProduct(store1.getId(), product.getProductId() - 1);
                 });
-        assertTrue(ex.getMessage().contains(ProductExceptionMessages.PRODUCT_NOT_FOUND(store1.getStoreId())));
+        assertTrue(ex.getMessage().contains(ProductExceptionMessages.PRODUCT_NOT_FOUND(store1.getId())));
 
         verify(productRepo, times(0)).deleteById(anyInt());
     }
@@ -195,7 +196,7 @@ public class ProductServiceTest {
     public void deleteProduct_NonExistantStoreNotProduct() {
         StoreException ex = assertThrows(StoreException.class,
                 () -> {
-                    service.deleteProduct(store1.getStoreId() - 1, product.getProductId());
+                    service.deleteProduct(store1.getId() - 1, product.getProductId());
                 });
         assertTrue(ex.getMessage().contains(StoreExceptionMessages.STORE_NOT_FOUND));
 

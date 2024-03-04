@@ -32,7 +32,7 @@ public class ProductMapper {
     public ProductReadingAdminDTO toDtoAdmin(Product product) {
         ProductReadingAdminDTO dto = new ProductReadingAdminDTO(product.getProductId(),
                 product.getName(), product.getPrice(),
-                product.getQuantity(), product.getStore().getStoreId());
+                product.getQuantity(), product.getStore().getId());
 
         return dto;
     }

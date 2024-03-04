@@ -18,15 +18,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.biker.management.back_office.entity.BackOfficeUser;
-import io.biker.management.back_office.exception.BackOfficeException;
-import io.biker.management.back_office.exception.BackOfficeExceptionMessages;
-import io.biker.management.back_office.repo.BackOfficeUserRepo;
-import io.biker.management.back_office.service.BackOfficeService;
-import io.biker.management.back_office.service.BackOfficeServiceImpl;
+import io.biker.management.backOffice.entity.BackOfficeUser;
+import io.biker.management.backOffice.exception.BackOfficeException;
+import io.biker.management.backOffice.exception.BackOfficeExceptionMessages;
+import io.biker.management.backOffice.repo.BackOfficeUserRepo;
+import io.biker.management.backOffice.service.BackOfficeService;
+import io.biker.management.backOffice.service.BackOfficeServiceImpl;
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
@@ -36,77 +37,80 @@ public class BackOfficeServiceTest {
     static class ServiceTestConfig {
         @Bean
         @Autowired
-        BackOfficeService service(BackOfficeUserRepo repo) {
-            return new BackOfficeServiceImpl(repo);
+        BackOfficeService service(BackOfficeUserRepo repo, PasswordEncoder encoder) {
+            return new BackOfficeServiceImpl(repo, encoder);
         }
     }
 
     @MockBean
     private BackOfficeUserRepo repo;
 
+    @MockBean
+    private PasswordEncoder encoder;
+
     @Autowired
     private BackOfficeService service;
 
-    private static BackOfficeUser boUser;
+    private static BackOfficeUser backOfficeUser;
 
     @BeforeAll
     public static void setUp() {
-        boUser = new BackOfficeUser(1, "Gale", "MagicMan@gmail.com", "+44 770820695");
+        backOfficeUser = new BackOfficeUser(1, "Gale", "MagicMan@gmail.com", "+44 770820695", "password");
     }
 
     @Test
     public void createBackOfficeUser() {
-        when(repo.save(boUser)).thenReturn(boUser);
+        when(repo.save(backOfficeUser)).thenReturn(backOfficeUser);
 
-        assertEquals(boUser, service.createBackOfficeUser(boUser));
+        assertEquals(backOfficeUser, service.createBackOfficeUser(backOfficeUser));
     }
 
     @Test
     public void getAllBackOfficeUsers() {
-        List<BackOfficeUser> boUsers = new ArrayList<BackOfficeUser>();
-        boUsers.add(boUser);
-        when(repo.findAll()).thenReturn(boUsers);
+        List<BackOfficeUser> backOfficeUsers = new ArrayList<BackOfficeUser>();
+        backOfficeUsers.add(backOfficeUser);
+        when(repo.findAll()).thenReturn(backOfficeUsers);
 
-        assertTrue(service.getAllBackOfficeUsers().contains(boUser));
+        assertTrue(service.getAllBackOfficeUsers().contains(backOfficeUser));
     }
 
     @Test
     public void getSingleBackOfficeUser_Existant() {
-        when(repo.findById(boUser.getId())).thenReturn(Optional.of(boUser));
+        when(repo.findById(backOfficeUser.getId())).thenReturn(Optional.of(backOfficeUser));
 
-        assertEquals(boUser, service.getSingleBackOfficeUser(boUser.getId()));
+        assertEquals(backOfficeUser, service.getSingleBackOfficeUser(backOfficeUser.getId()));
     }
 
     @Test
     public void getSingleBackOfficeUser_NonExistant() {
-        when(repo.findById(boUser.getId() - 1)).thenReturn(Optional.empty());
+        when(repo.findById(backOfficeUser.getId() - 1)).thenReturn(Optional.empty());
 
         BackOfficeException ex = assertThrows(BackOfficeException.class,
                 () -> {
-                    service.getSingleBackOfficeUser(boUser.getId() - 1);
+                    service.getSingleBackOfficeUser(backOfficeUser.getId() - 1);
                 });
         assertTrue(ex.getMessage().contains(BackOfficeExceptionMessages.BACK_OFFICE_USER_NOT_FOUND));
     }
 
     @Test
     public void deleteBackOfficeUser_Existant() {
-        when(repo.findById(boUser.getId())).thenReturn(Optional.of(boUser));
+        when(repo.findById(backOfficeUser.getId())).thenReturn(Optional.of(backOfficeUser));
 
-        service.deleteBackOfficeUser(boUser.getId());
+        service.deleteBackOfficeUser(backOfficeUser.getId());
 
-        verify(repo, times(1)).deleteById(boUser.getId());
+        verify(repo, times(1)).deleteById(backOfficeUser.getId());
     }
 
     @Test
     public void deleteBackOfficeUser_NonExistant() {
-        when(repo.findById(boUser.getId() - 1)).thenReturn(Optional.empty());
+        when(repo.findById(backOfficeUser.getId() - 1)).thenReturn(Optional.empty());
 
         BackOfficeException ex = assertThrows(BackOfficeException.class,
                 () -> {
-                    service.getSingleBackOfficeUser(boUser.getId() - 1);
+                    service.getSingleBackOfficeUser(backOfficeUser.getId() - 1);
                 });
         assertTrue(ex.getMessage().contains(BackOfficeExceptionMessages.BACK_OFFICE_USER_NOT_FOUND));
 
-        verify(repo, times(0)).deleteById(boUser.getId() - 1);
+        verify(repo, times(0)).deleteById(backOfficeUser.getId() - 1);
     }
 }

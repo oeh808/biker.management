@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -35,13 +36,16 @@ public class StoreServiceTest {
     static class ServiceTestConfig {
         @Bean
         @Autowired
-        StoreService service(StoreRepo repo) {
-            return new StoreServiceImpl(repo);
+        StoreService service(StoreRepo repo, PasswordEncoder encoder) {
+            return new StoreServiceImpl(repo, encoder);
         }
     }
 
     @MockBean
     private StoreRepo repo;
+
+    @MockBean
+    private PasswordEncoder encoder;
 
     @Autowired
     private StoreService service;
@@ -50,7 +54,8 @@ public class StoreServiceTest {
 
     @BeforeAll
     public static void setUp() {
-        store = new Store(50, "Sorcerous Sundries", "+44 920350022", null, null);
+        store = new Store(50, "Sorcerous Sundries", "SorcerousSundries@gmail.com", "+44 920350022",
+                "password", null, null);
     }
 
     @Test
@@ -71,38 +76,38 @@ public class StoreServiceTest {
 
     @Test
     public void getSingleStore_Existant() {
-        when(repo.findById(store.getStoreId())).thenReturn(Optional.of(store));
+        when(repo.findById(store.getId())).thenReturn(Optional.of(store));
 
-        assertEquals(store, service.getSingleStore(store.getStoreId()));
+        assertEquals(store, service.getSingleStore(store.getId()));
     }
 
     @Test
     public void getSingleStore_NonExistant() {
-        when(repo.findById(store.getStoreId() - 1)).thenReturn(Optional.empty());
+        when(repo.findById(store.getId() - 1)).thenReturn(Optional.empty());
 
         StoreException ex = assertThrows(StoreException.class,
                 () -> {
-                    service.getSingleStore(store.getStoreId() - 1);
+                    service.getSingleStore(store.getId() - 1);
                 });
         assertTrue(ex.getMessage().contains(StoreExceptionMessages.STORE_NOT_FOUND));
     }
 
     @Test
     public void deleteStore_Existant() {
-        when(repo.findById(store.getStoreId())).thenReturn(Optional.of(store));
+        when(repo.findById(store.getId())).thenReturn(Optional.of(store));
 
-        service.deleteStore(store.getStoreId());
+        service.deleteStore(store.getId());
 
-        verify(repo, times(1)).deleteById(store.getStoreId());
+        verify(repo, times(1)).deleteById(store.getId());
     }
 
     @Test
     public void deleteStore_NonExistant() {
-        when(repo.findById(store.getStoreId() - 1)).thenReturn(Optional.empty());
+        when(repo.findById(store.getId() - 1)).thenReturn(Optional.empty());
 
         StoreException ex = assertThrows(StoreException.class,
                 () -> {
-                    service.deleteStore(store.getStoreId() - 1);
+                    service.deleteStore(store.getId() - 1);
                 });
         assertTrue(ex.getMessage().contains(StoreExceptionMessages.STORE_NOT_FOUND));
     }

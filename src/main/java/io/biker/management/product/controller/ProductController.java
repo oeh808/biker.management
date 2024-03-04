@@ -3,8 +3,8 @@ package io.biker.management.product.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.biker.management.auth.Roles;
-import io.biker.management.auth.response.Responses;
-import io.biker.management.error_handling.responses.SuccessResponse;
+import io.biker.management.constants.response.Responses;
+import io.biker.management.errorHandling.responses.SuccessResponse;
 import io.biker.management.product.dto.ProductCreationDTO;
 import io.biker.management.product.dto.ProductReadingAdminDTO;
 import io.biker.management.product.dto.ProductReadingDTO;

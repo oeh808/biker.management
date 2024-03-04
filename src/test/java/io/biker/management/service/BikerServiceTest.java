@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -35,13 +36,16 @@ public class BikerServiceTest {
     static class ServiceTestConfig {
         @Bean
         @Autowired
-        BikerService service(BikerRepo repo) {
-            return new BikerServiceImpl(repo);
+        BikerService service(BikerRepo repo, PasswordEncoder encoder) {
+            return new BikerServiceImpl(repo, encoder);
         }
     }
 
     @MockBean
     private BikerRepo repo;
+
+    @MockBean
+    private PasswordEncoder encoder;
 
     @Autowired
     private BikerService service;
@@ -50,7 +54,7 @@ public class BikerServiceTest {
 
     @BeforeAll
     public static void setUp() {
-        biker = new Biker(1, "Timmy", "Timmyyy@gmail.com", "+1512 3514000", null);
+        biker = new Biker(1, "Timmy", "Timmyyy@gmail.com", "+1512 3514000", "password", null);
     }
 
     @Test

@@ -3,6 +3,11 @@ package io.biker.management.auth.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -19,8 +24,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import io.biker.management.auth.Roles;
 import io.biker.management.auth.filter.JwtAuthFilter;
-import io.biker.management.auth.service.UserInfoServiceImpl;
+import io.biker.management.auth.service.UserRolesServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +38,7 @@ public class SecurityConfig {
     // User Creation
     @Bean
     UserDetailsService userDetailsService() {
-        return new UserInfoServiceImpl();
+        return new UserRolesServiceImpl();
     }
 
     // Configuring HttpSecurity
@@ -40,19 +46,21 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/auth/bikers", "/auth/customers", "/auth/stores", "/auth/generateToken",
+                        .requestMatchers("customers", "/auth/generateToken",
                                 "/swagger-ui/**", "/api-docs/**")
                         .permitAll())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/backOffice/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/bikers/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/customers/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/stores/**").authenticated())
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/users/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/users/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/bikers/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/customers/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/stores/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/products/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/*/products/**").authenticated())
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/orders/**").authenticated())
                 .sessionManagement(management -> management
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
@@ -64,6 +72,24 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    // Role Hierarchy
+    @Bean
+    RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl r = new RoleHierarchyImpl();
+        r.setHierarchy(Roles.ADMIN + " > " + Roles.CUSTOMER + "\n" +
+                Roles.ADMIN + " > " + Roles.BIKER + "\n" +
+                Roles.ADMIN + " > " + Roles.STORE + "\n" +
+                Roles.ADMIN + " > " + Roles.BACK_OFFICE);
+        return r;
+    }
+
+    @Bean
+    static MethodSecurityExpressionHandler methodSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy);
+        return expressionHandler;
     }
 
     @Bean
