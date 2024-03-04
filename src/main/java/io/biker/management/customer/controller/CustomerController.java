@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @Tag(name = "Customers")
-@SecurityRequirement(name = "Authorization")
 @RequestMapping("/customers")
 public class CustomerController {
         private CustomerService customerService;
@@ -57,6 +56,7 @@ public class CustomerController {
         @Operation(description = "GET endpoint for retrieving all customers." +
                         "\n\n Can only be done by admins", summary = "Get all customers")
         @GetMapping()
+        @SecurityRequirement(name = "Authorization")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
         public List<CustomerReadingDTO> getAllCustomers() {
                 return customerMapper.toDtos(customerService.getAllCustomers());
@@ -65,6 +65,7 @@ public class CustomerController {
         @Operation(description = "GET endpoint for retrieving a single customer given their id." +
                         "\n\n Can only be done by admins or the customer being retrieved.", summary = "Get single customer")
         @GetMapping("/{id}")
+        @SecurityRequirement(name = "Authorization")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
                         "(hasAuthority('" + Roles.CUSTOMER + "') and #id == authentication.principal.id)")
         public CustomerReadingDTO getSingleCustomer(
@@ -76,6 +77,7 @@ public class CustomerController {
                         "\n\n Can only be done by admins or the customer whose address is being set.", summary = "Add customer delivery addresses")
         @PutMapping("/{id}/addresses")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of AddressCreationDTO")
+        @SecurityRequirement(name = "Authorization")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
                         "(hasAuthority('" + Roles.CUSTOMER + "') and #id == authentication.principal.id)")
         public Set<Address> addDeliveryAddress(

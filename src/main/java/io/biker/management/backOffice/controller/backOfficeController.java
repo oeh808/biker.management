@@ -41,7 +41,6 @@ public class backOfficeController {
             "\n\n Can only be done by back office users and admins.", summary = "Create a back office user")
     @PostMapping("/backOffice")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of BackOfficeUserCreationDTO")
-    @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public BackOfficeUserReadingDTO createBackOfficeUser(@Valid @RequestBody BackOfficeUserCreationDTO dto) {
         BackOfficeUser backOfficeUser = backOfficeService.createBackOfficeUser(backOfficeMapper.toBackOfficeUser(dto));
@@ -53,7 +52,6 @@ public class backOfficeController {
             "\n\n Can only be done by admins.", summary = "Delete Back Office user")
     @Transactional
     @DeleteMapping("/backOffice/{id}")
-    @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse deleteBackOfficeUser(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Back Office user ID") @PathVariable int id) {

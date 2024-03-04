@@ -71,7 +71,6 @@ public class StoreController {
             "\n\n Can only be done by admins.", summary = "Delete Store")
     @Transactional
     @DeleteMapping("/{id}")
-    @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse deleteStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {

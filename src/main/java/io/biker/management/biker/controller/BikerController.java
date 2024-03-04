@@ -74,7 +74,6 @@ public class BikerController {
             "\n\n Can only be done by admins.", summary = "Delete Biker")
     @Transactional
     @DeleteMapping("/{id}")
-    @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse deleteBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
