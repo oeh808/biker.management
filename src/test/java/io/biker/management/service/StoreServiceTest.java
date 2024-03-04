@@ -29,6 +29,7 @@ import io.biker.management.store.repo.StoreRepo;
 import io.biker.management.store.service.StoreService;
 import io.biker.management.store.service.StoreServiceImpl;
 
+// FIXME: Ensure test is up to date
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 public class StoreServiceTest {

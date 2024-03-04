@@ -33,6 +33,7 @@ import io.biker.management.customer.service.CustomerService;
 import io.biker.management.customer.service.CustomerServiceImpl;
 import io.biker.management.user.Address;
 
+// FIXME: Ensure test is up to date
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 public class CustomerServiceTest {

@@ -20,6 +20,7 @@ import io.biker.management.product.repo.ProductRepo;
 import io.biker.management.store.entity.Store;
 import io.biker.management.store.repo.StoreRepo;
 
+// FIXME: Ensure test is up to date
 @ActiveProfiles("test")
 @DataJpaTest
 public class ProductRepoTest {
