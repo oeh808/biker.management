@@ -1,4 +1,4 @@
-package io.biker.management.user.analysis;
+package io.biker.management.user.analysis.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SystemAnalysis {
-    private String message;
+    private float averageBikerEfficiency;
+    private float averageOrderRating;
 }
