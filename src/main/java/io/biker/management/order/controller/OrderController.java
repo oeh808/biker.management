@@ -14,6 +14,7 @@ import io.biker.management.order.dto.EtaCreationDTO;
 import io.biker.management.order.dto.FeedBackCreationDTO;
 import io.biker.management.order.dto.OrderReadingDTOBiker;
 import io.biker.management.order.dto.OrderReadingDTOCustomer;
+import io.biker.management.order.dto.OrderReadingDTOStoreAndBackOffice;
 import io.biker.management.order.dto.StatusCreationDTO;
 import io.biker.management.order.entity.Order;
 import io.biker.management.order.mapper.OrderMapper;
@@ -94,9 +95,9 @@ public class OrderController {
                         "\n\n Can only be done by back office users.", summary = "Get order (Back office)")
         @GetMapping("/backOffice/{orderId}")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
-        public Order getOrder_BackOffice(
+        public OrderReadingDTOStoreAndBackOffice getOrder_BackOffice(
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
-                return orderService.getOrder_BackOffice(orderId);
+                return orderMapper.toDtoForStoresAndBackOffice(orderService.getOrder_BackOffice(orderId));
         }
 
         @Operation(description = "GET endpoint for retrieving all orders available for pick up." +
@@ -111,8 +112,8 @@ public class OrderController {
                         "\n\n Can only be done by back office users.", summary = "Get available orders (Back office)")
         @GetMapping("/backOffice/available")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
-        public List<Order> getAvailableOrders_BackOffice() {
-                return orderService.getAvailableOrders();
+        public List<OrderReadingDTOStoreAndBackOffice> getAvailableOrders_BackOffice() {
+                return orderMapper.toDtosForStoresandBackOffice(orderService.getAvailableOrders());
         }
 
         @Operation(description = "GET endpoint for retrieving all orders associated with a store." +
@@ -120,9 +121,10 @@ public class OrderController {
         @GetMapping("stores/{storeId}")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "') or " +
                         "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
-        public List<Order> getOrdersByStore(
+        public List<OrderReadingDTOStoreAndBackOffice> getOrdersByStore(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId) {
-                return orderService.getOrdersByStore(storeService.getSingleStore(storeId));
+                return orderMapper.toDtosForStoresandBackOffice(
+                                orderService.getOrdersByStore(storeService.getSingleStore(storeId)));
         }
 
         @Operation(description = "GET endpoint for retrieving all orders associated with a biker." +
@@ -131,9 +133,10 @@ public class OrderController {
         // Accessed by Back Office User
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "') or " +
                         "(hasAuthority('" + Roles.BIKER + "') and #bikerId == authentication.principal.id)")
-        public List<Order> getOrdersByBiker(
+        public List<OrderReadingDTOStoreAndBackOffice> getOrdersByBiker(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId) {
-                return orderService.getOrdersByBiker(bikerService.getSingleBiker(bikerId));
+                return orderMapper.toDtosForStoresandBackOffice(
+                                orderService.getOrdersByBiker(bikerService.getSingleBiker(bikerId)));
         }
 
         @Operation(description = "PUT endpoint for updating the eta of an order." +

@@ -13,6 +13,7 @@ import io.biker.management.order.dto.EtaCreationDTO;
 import io.biker.management.order.dto.FeedBackCreationDTO;
 import io.biker.management.order.dto.OrderReadingDTOBiker;
 import io.biker.management.order.dto.OrderReadingDTOCustomer;
+import io.biker.management.order.dto.OrderReadingDTOStoreAndBackOffice;
 import io.biker.management.order.dto.StatusCreationDTO;
 import io.biker.management.order.entity.FeedBack;
 import io.biker.management.order.entity.Order;
@@ -55,6 +56,34 @@ public class OrderMapper {
         List<OrderReadingDTOBiker> dtos = new ArrayList<>();
         for (Order order : orders) {
             dtos.add(toDtoForBiker(order));
+        }
+
+        return dtos;
+    }
+
+    public OrderReadingDTOStoreAndBackOffice toDtoForStoresAndBackOffice(Order order) {
+        OrderDetails orderDetails = order.getOrderDetails();
+        OrderReadingDTOStoreAndBackOffice dto;
+        if (order.getBiker() == null) {
+            dto = new OrderReadingDTOStoreAndBackOffice(order.getOrderId(),
+                    order.getCustomer().getId(), order.getStore().getId(), -1, orderDetails.getProduct().getProductId(),
+                    order.getStatus(), order.getEta(), orderDetails.getAddress(),
+                    orderDetails.getTotalCost(), orderDetails.getFeedBack());
+        } else {
+            dto = new OrderReadingDTOStoreAndBackOffice(order.getOrderId(),
+                    order.getCustomer().getId(), order.getStore().getId(), order.getBiker().getId(),
+                    orderDetails.getProduct().getProductId(),
+                    order.getStatus(), order.getEta(), orderDetails.getAddress(),
+                    orderDetails.getTotalCost(), orderDetails.getFeedBack());
+        }
+
+        return dto;
+    }
+
+    public List<OrderReadingDTOStoreAndBackOffice> toDtosForStoresandBackOffice(List<Order> orders) {
+        List<OrderReadingDTOStoreAndBackOffice> dtos = new ArrayList<>();
+        for (Order order : orders) {
+            dtos.add(toDtoForStoresAndBackOffice(order));
         }
 
         return dtos;
