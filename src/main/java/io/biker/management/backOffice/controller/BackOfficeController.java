@@ -28,11 +28,11 @@ import jakarta.validation.Valid;
 @Tag(name = "Back Office Users")
 @SecurityRequirement(name = "Authorization")
 @RequestMapping("/backOffice")
-public class BaackOfficeController {
+public class BackOfficeController {
     private BackOfficeService backOfficeService;
     private BackOfficeMapper backOfficeMapper;
 
-    public BaackOfficeController(BackOfficeService backOfficeService, BackOfficeMapper backOfficeMapper) {
+    public BackOfficeController(BackOfficeService backOfficeService, BackOfficeMapper backOfficeMapper) {
         this.backOfficeService = backOfficeService;
         this.backOfficeMapper = backOfficeMapper;
     }
