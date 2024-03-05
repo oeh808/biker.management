@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@Tag(name = "Bikers")
+@Tag(name = "Bikers", description = "Controller for handling mappings for bikers")
 @SecurityRequirement(name = "Authorization")
 @RequestMapping("/bikers")
 public class BikerController {
@@ -41,8 +41,9 @@ public class BikerController {
         this.bikerMapper = bikerMapper;
     }
 
-    @Operation(description = "POST endpoint for creating a bikers." +
-            "\n\n Can only be done by back office users and admins.", summary = "Create a biker")
+    @Operation(description = "POST endpoint for creating a bikers in the table of bikers." +
+            "\n\n Can only be done by back office users." +
+            "\n\n Returns the biker created as an instance of BikerReadingDTO.", summary = "Create a biker")
     @PostMapping()
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of BikerCreationDTO")
@@ -53,7 +54,8 @@ public class BikerController {
     }
 
     @Operation(description = "GET endpoint for retrieving all bikers." +
-            "\n\n Can only be done by back office users.", summary = "Get all bikers")
+            "\n\n Can only be done by back office users." +
+            "\n\n Returns all bikers as an List of BikerReadingDTO.", summary = "Get all bikers")
     @GetMapping()
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public List<BikerReadingDTO> getAllBikers() {
@@ -61,7 +63,8 @@ public class BikerController {
     }
 
     @Operation(description = "GET endpoint for retrieving a single biker given their id." +
-            "\n\n Can only be done by back office users or the biker being retrieved.", summary = "Get single biker")
+            "\n\n Can only be done by back office users or the biker being retrieved." +
+            "\n\n Returns the biker as an instance of BikerReadingDTO.", summary = "Get single biker")
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "') or " +
             "(hasAuthority('" + Roles.BIKER + "') and #id == authentication.principal.id)")
@@ -71,7 +74,8 @@ public class BikerController {
     }
 
     @Operation(description = "DELETE endpoint for deleting a biker from the biker table." +
-            "\n\n Can only be done by admins.", summary = "Delete Biker")
+            "\n\n Can only be done by admins." +
+            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete a Biker")
     @Transactional
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")

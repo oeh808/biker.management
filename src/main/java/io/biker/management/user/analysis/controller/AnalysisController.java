@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
-@Tag(name = "Analysis")
+@Tag(name = "Analysis", description = "Controller for handling mappings for analytics")
 @SecurityRequirement(name = "Authorization")
 @RequestMapping("/analysis")
 public class AnalysisController {
@@ -33,7 +33,8 @@ public class AnalysisController {
     }
 
     @Operation(description = "GET endpoint for retrieving an analysis of a biker's performance given their id." +
-            "\n\n Can only be done by back office users.", summary = "Get an analysis of a single biker's performance")
+            "\n\n Can only be done by back office users." +
+            "\n\n Returns the biker analysis as an instance of BikerAnalysis.", summary = "Get an analysis of a single biker's performance")
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public BikerAnalysis analyzeBikerPerformance(
@@ -42,7 +43,8 @@ public class AnalysisController {
     }
 
     @Operation(description = "GET endpoint for retrieving an a report of the system's performance." +
-            "\n\n Can only be done by admins.", summary = "Get a report of the system as a whole")
+            "\n\n Can only be done by back office users." +
+            "\n\n Returns the system analysis as an instance of SystemAnalysis.", summary = "Get a report of the system as a whole")
     @GetMapping()
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public SystemAnalysis analyzeSystemPerformance() {
@@ -50,7 +52,8 @@ public class AnalysisController {
     }
 
     @Operation(description = "GET endpoint for generating a system report with suggestions included." +
-            "\n\n Can only be done by back office users.", summary = "Get suggestions for improving system")
+            "\n\n Can only be done by back office users." +
+            "\n\n Returns the system report as an instance of SystemReport.", summary = "Get a report of system performance")
     @GetMapping("/report")
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public SystemReport generateReport() {

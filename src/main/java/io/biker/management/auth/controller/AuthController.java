@@ -37,7 +37,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@Tag(name = "Authorization")
+@Tag(name = "Authorization", description = "Controller for handling mappings authentication and registering users")
 @RequestMapping("/auth")
 public class AuthController {
     private UserRolesService userRolesService;
@@ -62,8 +62,10 @@ public class AuthController {
         this.storeService = storeService;
     }
 
-    @Operation(description = "POST endpoint for registering a customer and assigning their roles." +
-            "\n\n Can only be done by admins.", summary = "Register a customer")
+    @Operation(description = "POST endpoint for registering a customer and assigning their roles. (Entity must be created before registeration)"
+            +
+            "\n\n Can only be done by admins." +
+            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Register a customer")
     @PostMapping("/customers/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
@@ -77,8 +79,10 @@ public class AuthController {
         return new SuccessResponse(Responses.USER_ADDED);
     }
 
-    @Operation(description = "POST endpoint for registering a biker and assigning their roles." +
-            "\n\n Can only be done by back office users and admins.", summary = "Register a biker")
+    @Operation(description = "POST endpoint for registering a biker and assigning their roles. (Entity must be created before registeration)"
+            +
+            "\n\n Can only be done by back office users." +
+            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Register a biker")
     @PostMapping("/bikers/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
@@ -92,8 +96,10 @@ public class AuthController {
         return new SuccessResponse(Responses.USER_ADDED);
     }
 
-    @Operation(description = "POST endpoint for registering a back office user and assigning their roles." +
-            "\n\n Can only be done by back office users and admins.", summary = "Register a back office user")
+    @Operation(description = "POST endpoint for registering a back office user and assigning their roles. (Entity must be created before registeration)"
+            +
+            "\n\n Can only be done by back office users." +
+            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Register a back office user")
     @PostMapping("/backOffice/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
@@ -107,8 +113,10 @@ public class AuthController {
         return new SuccessResponse(Responses.USER_ADDED);
     }
 
-    @Operation(description = "POST endpoint for registering a store and assigning their roles." +
-            "\n\n Can only be done by admins.", summary = "Register a store")
+    @Operation(description = "POST endpoint for registering a store and assigning their roles. (Entity must be created before registeration)"
+            +
+            "\n\n Can only be done by admins." +
+            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Register a store")
     @PostMapping("/stores/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
@@ -122,7 +130,9 @@ public class AuthController {
         return new SuccessResponse(Responses.USER_ADDED);
     }
 
-    @Operation(description = "POST endpoint for generating a Jwt Token given a user name and password.", summary = "Generate Jwt Token")
+    @Operation(description = "POST endpoint for generating a Jwt Token given a user name and password (Basically the login mapping)."
+            +
+            "\n\n Returns a Jwt token as an instance of String", summary = "Generate Jwt Token")
     @PostMapping("/generateToken")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of AuthRequestDTO")
     public String authenticateAndGetToken(@Valid @RequestBody AuthRequestDTO authRequest) {
@@ -140,8 +150,10 @@ public class AuthController {
         }
     }
 
-    @Operation(description = "DELETE endpoint for deleting user login information." +
-            "\n\n Can only be done by admins.", summary = "Delete Store Info")
+    @Operation(description = "DELETE endpoint for deleting a user and their roles (Does not affect the user's respective entity table)."
+            +
+            "\n\n Can only be done by admins." +
+            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete Store Info")
     @Transactional
     @DeleteMapping("/users/{id}")
     @SecurityRequirement(name = "Authorization")

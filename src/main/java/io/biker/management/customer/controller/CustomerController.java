@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
-@Tag(name = "Customers")
+@Tag(name = "Customers", description = "Controller for handling mappings for customers")
 @RequestMapping("/customers")
 public class CustomerController {
         private CustomerService customerService;
@@ -44,7 +44,8 @@ public class CustomerController {
                 this.customerMapper = customerMapper;
         }
 
-        @Operation(description = "POST endpoint for creating a customers.", summary = "Create a customer")
+        @Operation(description = "POST endpoint for creating a customers in the table of customers." +
+                        "\n\n Returns the customer created as an instance of CustomerReadingDTO.", summary = "Create a customer")
         @PostMapping()
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of CustomerCreationDTO")
         public CustomerReadingDTO createCustomer(@Valid @RequestBody CustomerCreationDTO dto) {
@@ -54,7 +55,8 @@ public class CustomerController {
         }
 
         @Operation(description = "GET endpoint for retrieving all customers." +
-                        "\n\n Can only be done by admins", summary = "Get all customers")
+                        "\n\n Can only be done by admins" +
+                        "\n\n Returns all customers as a List of CustomerReadingDTO.", summary = "Get all customers")
         @GetMapping()
         @SecurityRequirement(name = "Authorization")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
@@ -63,7 +65,8 @@ public class CustomerController {
         }
 
         @Operation(description = "GET endpoint for retrieving a single customer given their id." +
-                        "\n\n Can only be done by admins or the customer being retrieved.", summary = "Get single customer")
+                        "\n\n Can only be done by the customer being retrieved." +
+                        "\n\n Returns the customer as an instance of CustomerReadingDTO.", summary = "Get single customer")
         @GetMapping("/{id}")
         @SecurityRequirement(name = "Authorization")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
@@ -74,7 +77,8 @@ public class CustomerController {
         }
 
         @Operation(description = "PUT endpoint for a delivery address to a customer given their id." +
-                        "\n\n Can only be done by admins or the customer whose address is being set.", summary = "Add customer delivery addresses")
+                        "\n\n Can only be done by the customer whose address is being set." +
+                        "\n\n Returns the customer's addresses as a Set of Address.", summary = "Add customer delivery addresses")
         @PutMapping("/{id}/addresses")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of AddressCreationDTO")
         @SecurityRequirement(name = "Authorization")
@@ -87,7 +91,8 @@ public class CustomerController {
         }
 
         @Operation(description = "DELETE endpoint for deleting a customer from the customer table." +
-                        "\n\n Can only be done by admins.", summary = "Delete Customer")
+                        "\n\n Can only be done by admins." +
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete a Customer")
         @Transactional
         @DeleteMapping("/{id}")
         @SecurityRequirement(name = "Authorization")

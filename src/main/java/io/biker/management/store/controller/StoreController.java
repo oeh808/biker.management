@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@Tag(name = "Stores", description = "Handles retrieval of stores and their products in a customer friendly manner.")
+@Tag(name = "Stores", description = "Controller for handling mappings for stores")
 @SecurityRequirement(name = "Authorization")
 @RequestMapping("/stores")
 public class StoreController {
@@ -41,34 +41,38 @@ public class StoreController {
         this.storeMapper = storeMapper;
     }
 
-    @Operation(description = "POST endpoint for registering a store." +
-            "\n\n Can only be done by admins.", summary = "Register a store")
+    @Operation(description = "POST endpoint for creating a store in the table of stores." +
+            "\n\n Can only be done by admins." +
+            "\n\n Returns the store created as an instance of StoreReadingDTO.", summary = "Create a store")
     @PostMapping()
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StoreCreationDTO")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
-    public StoreReadingDTO registerStore(@Valid @RequestBody StoreCreationDTO dto) {
+    public StoreReadingDTO createStore(@Valid @RequestBody StoreCreationDTO dto) {
         Store store = storeMapper.toStore(dto);
 
         return storeMapper.toReadingDto(store);
     }
 
     @Operation(description = "GET endpoint for retrieving all stores." +
-            "\n\n Can be done by any authenticated user.", summary = "Get all stores")
+            "\n\n Can be done by any authenticated user." +
+            "\n\n Returns the all stores as a List of StoreReadingDTO.", summary = "Get all stores")
     @GetMapping()
     public List<StoreReadingDTO> getAllStores() {
         return storeMapper.toReadingDtos(storeService.getAllStores());
     }
 
     @Operation(description = "GET endpoint for retrieving a single store." +
-            "\n\n Can be done by any authenticated user.", summary = "Get a single store")
+            "\n\n Can be done by any authenticated user." +
+            "\n\n Returns the store as an instance of StoreReadingDTO.", summary = "Get a single store")
     @GetMapping("/{storeId}")
     public StoreReadingDTO getSingleStore(
             @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId) {
         return storeMapper.toReadingDto(storeService.getSingleStore(storeId));
     }
 
-    @Operation(description = "DELETE endpoint for deleting a store from the store table." +
-            "\n\n Can only be done by admins.", summary = "Delete Store")
+    @Operation(description = "DELETE endpoint for deleting a store from the table of stores." +
+            "\n\n Can only be done by admins." +
+            "\n\n Returns a response as an instance of SuccessResponse", summary = "Delete a Store")
     @Transactional
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")

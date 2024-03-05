@@ -41,8 +41,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
+@Tag(name = "Orders", description = "Controller for handling mappings authentication and registering users")
 @SecurityRequirement(name = "Authorization")
-@Tag(name = "Orders")
 @RequestMapping("/orders")
 public class OrderController {
         private CustomerService customerService;
@@ -64,7 +64,8 @@ public class OrderController {
         }
 
         @Operation(description = "POST endpoint for creating an order." +
-                        "\n\n Can only be done by customers placing orders for themselves or admins.", summary = "Create order")
+                        "\n\n Can only be done by customers placing orders for themselves." +
+                        "\n\n Returns the order created as an instance of OrderReadingDTOCustomer", summary = "Create order")
         @PostMapping("/{userId}/{productId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of AddressCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
@@ -81,9 +82,11 @@ public class OrderController {
         }
 
         @Operation(description = "GET endpoint for retrieving a single order by its id." +
-                        "\n\n Can only be done by customers who have placed the order.", summary = "Get order (Customer)")
+                        "\n\n Can only be done by customers who have placed the order." +
+                        "\n\n Returns the order as an instance of OrderReadingDTOCustomer", summary = "Get order (Customer)")
         @GetMapping("/{userId}/{orderId}")
-        @PreAuthorize("(hasAuthority('" + Roles.CUSTOMER + "') and #userId == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles.CUSTOMER + "') and #userId == authentication.principal.id)")
         public OrderReadingDTOCustomer getOrder(
                         @Parameter(in = ParameterIn.PATH, name = "userId", description = "Customer ID") @PathVariable int userId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
@@ -91,8 +94,10 @@ public class OrderController {
                                 orderService.getOrder(customerService.getSingleCustomer(userId), orderId));
         }
 
-        @Operation(description = "GET endpoint for retrieving a single order by its id." +
-                        "\n\n Can only be done by back office users.", summary = "Get order (Back office)")
+        @Operation(description = "GET endpoint for retrieving a single order by its id. (Provides more database related info in response than similair request)"
+                        +
+                        "\n\n Can only be done by back office users." +
+                        " the order as an instance of OrderReadingDTOStoreAndBackOffice", summary = "Get order (Back office)")
         @GetMapping("/backOffice/{orderId}")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
         public OrderReadingDTOStoreAndBackOffice getOrder_BackOffice(
@@ -101,15 +106,18 @@ public class OrderController {
         }
 
         @Operation(description = "GET endpoint for retrieving all orders available for pick up." +
-                        "\n\n Can only be done by bikers.", summary = "Get available orders (Biker)")
+                        "\n\n Can only be done by bikers." +
+                        "\n all orders that are available as a List of OrderReadingDTOBiker", summary = "Get available orders (Biker)")
         @GetMapping("/available")
         @PreAuthorize("hasAuthority('" + Roles.BIKER + "')")
         public List<OrderReadingDTOBiker> getAvailableOrders() {
                 return orderMapper.toDtosForBiker(orderService.getAvailableOrders());
         }
 
-        @Operation(description = "GET endpoint for retrieving all orders available for pick up." +
-                        "\n\n Can only be done by back office users.", summary = "Get available orders (Back office)")
+        @Operation(description = "GET endpoint for retrieving all orders available for pick up. (Provides more database related info in response than similair request)"
+                        +
+                        "\n\n Can only be done by back office users." +
+                        "\n\n Returns all orders that are available as a List of OrderReadingDTOStoreAndBackOffice", summary = "Get available orders (Back office)")
         @GetMapping("/backOffice/available")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
         public List<OrderReadingDTOStoreAndBackOffice> getAvailableOrders_BackOffice() {
@@ -117,7 +125,8 @@ public class OrderController {
         }
 
         @Operation(description = "GET endpoint for retrieving all orders associated with a store." +
-                        "\n\n Can only be done by back office users or stores accessing their own orders.", summary = "Get orders associated with store")
+                        "\n\n Can only be done by back office users or stores accessing their own orders." +
+                        "\n\n Returns all orders associated with a store as a List of OrderReadingDTOStoreAndBackOffice", summary = "Get orders associated with store")
         @GetMapping("stores/{storeId}")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "') or " +
                         "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
@@ -128,7 +137,8 @@ public class OrderController {
         }
 
         @Operation(description = "GET endpoint for retrieving all orders associated with a biker." +
-                        "\n\n Can only be done by back office users.", summary = "Get orders associated with biker")
+                        "\n\n Can only be done by back office users." +
+                        "\n\n Returns all orders associated with a biker as a List of OrderReadingDTOStoreAndBackOffice", summary = "Get orders associated with biker")
         @GetMapping("/bikers/{bikerId}")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
         public List<OrderReadingDTOStoreAndBackOffice> getOrdersByBiker(
@@ -137,11 +147,13 @@ public class OrderController {
                                 orderService.getOrdersByBiker(bikerService.getSingleBiker(bikerId)));
         }
 
-        @Operation(description = "PUT endpoint for updating the eta of an order." +
-                        "\n\n Can only be done by bikers that are associated with the order.", summary = "Update order eta (Biker)")
+        @Operation(description = "PUT endpoint for updating the estimated time of arrival of an order by a biker." +
+                        "\n\n Can only be done by bikers that are associated with the order." +
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order eta (Biker)")
         @PutMapping("/eta/bikers/{bikerId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
-        @PreAuthorize("(hasAuthority('" + Roles.BIKER + "') and #bikerId == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles.BIKER + "') and #bikerId == authentication.principal.id)")
         public SuccessResponse updateEta_Biker(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
@@ -153,11 +165,13 @@ public class OrderController {
                 return successResponse;
         }
 
-        @Operation(description = "PUT endpoint for updating the eta of an order." +
-                        "\n\n Can only be done by stores that are associated with the order.", summary = "Update order eta (Stoner)")
+        @Operation(description = "PUT endpoint for updating the estimated time of arrival of an order by a store." +
+                        "\n\n Can only be done by stores that are associated with the order." +
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order eta (Stoner)")
         @PutMapping("/eta/stores/{storeId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
-        @PreAuthorize("(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
         public SuccessResponse updateEta_Store(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
@@ -169,8 +183,10 @@ public class OrderController {
                 return successResponse;
         }
 
-        @Operation(description = "PUT endpoint for updating the eta of an order." +
-                        "\n\n Can only be done by back office users.", summary = "Update order eta (Back office)")
+        @Operation(description = "PUT endpoint for updating the estimated time of arrival of an order by a  backoffice user."
+                        +
+                        "\n\n Can only be done by back office users." +
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order eta (Back office)")
         @PutMapping("/eta/backOffice/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
@@ -184,10 +200,12 @@ public class OrderController {
         }
 
         @Operation(description = "PUT endpoint for customers to give feedback to an order." +
-                        "\n\n Can only be done by customers rating their own orders.", summary = "Set order feedback")
+                        "\n\n Can only be done by customers rating their own orders." +
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Set order feedback")
         @PutMapping("/rate/{userId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of FeedBackCreationDTO")
-        @PreAuthorize("(hasAuthority('" + Roles.CUSTOMER + "') and #userId == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles.CUSTOMER + "') and #userId == authentication.principal.id)")
         public SuccessResponse rateDelivery(
                         @Parameter(in = ParameterIn.PATH, name = "userId", description = "Customer ID") @PathVariable int userId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
@@ -198,11 +216,13 @@ public class OrderController {
                 return successResponse;
         }
 
-        @Operation(description = "PUT endpoint for updating the status of an order." +
-                        "\n\n Can only be done by bikers that are associated with the order.", summary = "Update order status (Biker)")
+        @Operation(description = "PUT endpoint for updating the status of an order by a biker." +
+                        "\n\n Can only be done by bikers that are associated with the order." +
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order status (Biker)")
         @PutMapping("/status/bikers/{bikerId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
-        @PreAuthorize("(hasAuthority('" + Roles.BIKER + "') and #bikerId == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles.BIKER + "') and #bikerId == authentication.principal.id)")
         public SuccessResponse updateStatus_Biker(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
@@ -214,11 +234,13 @@ public class OrderController {
                 return successResponse;
         }
 
-        @Operation(description = "PUT endpoint for updating the status of an order." +
-                        "\n\n Can only be done by stores that are associated with the order.", summary = "Update order status (Stoner)")
+        @Operation(description = "PUT endpoint for updating the status of an order by a store." +
+                        "\n\n Can only be done by stores that are associated with the order." +
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order status (Stoner)")
         @PutMapping("/status/stores/{storeId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
-        @PreAuthorize("(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
         public SuccessResponse updateStatus_Store(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
@@ -230,8 +252,9 @@ public class OrderController {
                 return successResponse;
         }
 
-        @Operation(description = "PUT endpoint for updating the status of an order." +
-                        "\n\n Can only be done by back office users.", summary = "Update order status (Back office)")
+        @Operation(description = "PUT endpoint for updating the status of an order by a back office user." +
+                        "\n\n Can only be done by back office users." +
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order status (Back office)")
         @PutMapping("/status/backOffice/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
@@ -245,7 +268,9 @@ public class OrderController {
         }
 
         @Operation(description = "PUT endpoint to assign a biker to an order." +
-                        "\n\n Can only be done by back office users or bikers trying to accept an order for themselves.", summary = "Assign order")
+                        "\n\n Can only be done by back office users or bikers trying to accept an order for themselves."
+                        +
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Assign order")
         @PutMapping("/assign/{bikerId}/{orderId}")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "') or " +
                         "(hasAuthority('" + Roles.BIKER + "') and #bikerId == authentication.principal.id)")
@@ -259,7 +284,8 @@ public class OrderController {
         }
 
         @Operation(description = "DELETE endpoint to delete an order." +
-                        "\n\n Can only be done by back office users.", summary = "Delete order")
+                        "\n\n Can only be done by back office users." +
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete order")
         @DeleteMapping("/backOffice/{orderId}")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
         public SuccessResponse deleteOrder(

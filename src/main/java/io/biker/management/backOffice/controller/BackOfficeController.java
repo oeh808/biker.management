@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@Tag(name = "Back Office Users")
+@Tag(name = "Back Office Users", description = "Controller for handling mappings for back office users")
 @SecurityRequirement(name = "Authorization")
 @RequestMapping("/backOffice")
 public class BackOfficeController {
@@ -41,7 +41,8 @@ public class BackOfficeController {
     }
 
     @Operation(description = "POST endpoint for creating a back office user." +
-            "\n\n Can only be done by back office users and admins.", summary = "Create a back office user")
+            "\n\n Can only be done by back office users." +
+            "\n\n Returns the customer created as an instance of BackOfficeUserReadingDTO.", summary = "Create a back office user")
     @PostMapping()
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of BackOfficeUserCreationDTO")
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
@@ -52,7 +53,8 @@ public class BackOfficeController {
     }
 
     @Operation(description = "GET endpoint for retrieving all back office users." +
-            "\n\n Can only be done by back office users.", summary = "Get all back office users")
+            "\n\n Can only be done by back office users." +
+            "\n\n Returns all back office users as a List of BackOfficeUser.", summary = "Get all back office users")
     @GetMapping()
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public List<BackOfficeUser> getAllBackOfficeUsers() {
@@ -60,7 +62,8 @@ public class BackOfficeController {
     }
 
     @Operation(description = "GET endpoint for retrieving a single back office user given their id." +
-            "\n\n Can only be done by back office users.", summary = "Get single back office user")
+            "\n\n Can only be done by back office users." +
+            "\n\n Returns the back office user as an instance of BackOfficeUser.", summary = "Get single back office user")
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public BackOfficeUser getSingleBackOfficeUser(
@@ -69,7 +72,8 @@ public class BackOfficeController {
     }
 
     @Operation(description = "DELETE endpoint for deleting a back office user." +
-            "\n\n Can only be done by admins.", summary = "Delete Back Office user")
+            "\n\n Can only be done by admins." +
+            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete a Back Office user")
     @Transactional
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")

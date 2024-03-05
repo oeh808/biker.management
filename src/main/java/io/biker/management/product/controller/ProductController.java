@@ -30,8 +30,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
+@Tag(name = "Products", description = "Controller for handling mappings for products")
 @SecurityRequirement(name = "Authorization")
-@Tag(name = "Products")
 public class ProductController {
         private ProductService productService;
         private ProductMapper productMapper;
@@ -44,7 +44,8 @@ public class ProductController {
         // Create
         @Operation(description = "POST endpoint for creating a product associated with a store identified by its storeId."
                         +
-                        "\n\n Can only be done by admins or stores managing their own products.", summary = "Create a product")
+                        "\n\n Can only be done by stores managing their own products." +
+                        "\n\n Returns the product created as an instance of ProductReadingDTO.", summary = "Create a product")
         @PostMapping("{storeId}/products")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of ProductCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
@@ -58,7 +59,8 @@ public class ProductController {
 
         // Read
         @Operation(description = "GET endpoint for retrieving ALL products." +
-                        "\n\n Can only be done by admins.", summary = "Get ALL products")
+                        "\n\n Can only be done by admins." +
+                        "\n\n Returns all products as a List of ProductReadingAdminDTO.", summary = "Get ALL products")
         @GetMapping("/products")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
         public List<ProductReadingAdminDTO> getAllProducts() {
@@ -67,7 +69,8 @@ public class ProductController {
 
         @Operation(description = "GET endpoint for retrieving all products associated with a store identified by its storeId."
                         +
-                        "\n\n Can only be done by admins or stores managing their own products.", summary = "Get all products from store")
+                        "\n\n Can only be done by stores managing their own products." +
+                        "\n\n Returns all of a store's products as a List of ProductReadingDTO.", summary = "Get all products from store")
         @GetMapping("{storeId}/products")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
                         "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
@@ -78,7 +81,8 @@ public class ProductController {
 
         @Operation(description = "GET endpoint for retrieving a single product associated with a store identified by its storeId."
                         +
-                        "\n\n Can only be done by admins or stores managing their own products.", summary = "Get a single product")
+                        "\n\n Can only be done by stores managing their own products." +
+                        "\n\n Returns the product as an instance of ProductReadingDTO.", summary = "Get a single product")
         @GetMapping("{storeId}/products/{id}")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
                         "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
@@ -91,7 +95,8 @@ public class ProductController {
         // Update
         @Operation(description = "PUT endpoint for updating a product associated with a store identified by its storeId."
                         +
-                        "\n\n Can only be done by admins or stores managing their own products.", summary = "Update a product")
+                        "\n\n Can only be done by stores managing their own products." +
+                        "\n\n Returns the product as an instance of ProductReadingDTO.", summary = "Update a product")
         @PutMapping("{storeId}/products/{id}")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
                         "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
@@ -109,7 +114,8 @@ public class ProductController {
         // Delete
         @Operation(description = "DELETE endpoint for deleting a product associated with a store identified by its storeId."
                         +
-                        "\n\n Can only be done by admins or stores managing their own products.", summary = "Delete a product")
+                        "\n\n Can only be done by stores managing their own products." +
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete a product")
         @DeleteMapping("{storeId}/products/{id}")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
                         "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
