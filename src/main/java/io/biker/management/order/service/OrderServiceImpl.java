@@ -30,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(Customer customer, Product product, Address deliveryAddress) {
-        OrderDetails orderDetails = new OrderDetails(product.getName(), product.getPrice(),
+        OrderDetails orderDetails = new OrderDetails(product,
                 Tax.VAT, product.getPrice() * (1 + Tax.VAT), deliveryAddress, null);
         Order order = new Order(0, customer, product.getStore(), null, OrderStatus.AWAITING_APPROVAL,
                 null, orderDetails);

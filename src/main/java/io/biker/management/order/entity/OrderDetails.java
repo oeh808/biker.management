@@ -1,8 +1,11 @@
 package io.biker.management.order.entity;
 
+import io.biker.management.product.entity.Product;
 import io.biker.management.user.Address;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,8 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Embeddable
 public class OrderDetails {
-    private String productName;
-    private float price;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Product product;
     private float VAT;
     private float totalCost;
     @Embedded

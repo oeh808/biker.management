@@ -25,6 +25,7 @@ import io.biker.management.order.entity.Order;
 import io.biker.management.order.entity.OrderDetails;
 import io.biker.management.order.repo.OrderRepo;
 import io.biker.management.product.entity.Product;
+import io.biker.management.product.repo.ProductRepo;
 import io.biker.management.store.entity.Store;
 import io.biker.management.store.repo.StoreRepo;
 import io.biker.management.user.Address;
@@ -44,11 +45,17 @@ public class OrderRepoTest {
     @Autowired
     private BikerRepo bikerRepo;
 
+    @Autowired
+    private ProductRepo productRepo;
+
     private static Customer customer1;
     private static Customer customer2;
 
     private static Store store1;
     private static Store store2;
+
+    private static Product product1;
+    private static Product product2;
 
     private static Biker biker;
 
@@ -74,8 +81,6 @@ public class OrderRepoTest {
 
         address = new Address("Basilisk Gate", "Baldur's Gate", "N/A", "B73 G22", "Faerun");
 
-        orderDetails1 = new OrderDetails("Bag of Holding", 499.99f, 0.14f, 569.90f, address, null);
-        orderDetails2 = new OrderDetails("Ale", 9.99f, 0.24f, 12.40f, address, null);
     }
 
     @BeforeEach
@@ -85,6 +90,15 @@ public class OrderRepoTest {
 
         store1 = storeRepo.save(store1);
         store2 = storeRepo.save(store2);
+
+        product1 = new Product(0, "Bag of Holding", 499.99f, 100, store1);
+        product2 = new Product(0, "Ale", 9.99f, 100, store2);
+
+        product1 = productRepo.save(product1);
+        product2 = productRepo.save(product2);
+
+        orderDetails1 = new OrderDetails(product1, 0.14f, 569.90f, address, null);
+        orderDetails2 = new OrderDetails(product2, 0.24f, 12.40f, address, null);
 
         biker = bikerRepo.save(biker);
 
@@ -100,6 +114,7 @@ public class OrderRepoTest {
     @AfterEach
     public void tearDownForEach() {
         orderRepo.deleteAll();
+        productRepo.deleteAll();
         bikerRepo.deleteAll();
         storeRepo.deleteAll();
         customerRepo.deleteAll();

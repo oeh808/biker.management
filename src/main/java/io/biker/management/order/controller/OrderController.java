@@ -63,10 +63,11 @@ public class OrderController {
         }
 
         @Operation(description = "POST endpoint for creating an order." +
-                        "\n\n Can only be done by customers placing orders for themselves.", summary = "Create order")
+                        "\n\n Can only be done by customers placing orders for themselves or admins.", summary = "Create order")
         @PostMapping("/{userId}/{productId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of AddressCreationDTO")
-        @PreAuthorize("(hasAuthority('" + Roles.CUSTOMER + "') and #userId == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles.CUSTOMER + "') and #userId == authentication.principal.id)")
         public OrderReadingDTOCustomer placeOrder(
                         @Parameter(in = ParameterIn.PATH, name = "userId", description = "Customer ID") @PathVariable int userId,
                         @Parameter(in = ParameterIn.PATH, name = "productId", description = "Product ID") @PathVariable int productId,
@@ -243,23 +244,10 @@ public class OrderController {
         }
 
         @Operation(description = "PUT endpoint to allow a biker to accept a delivery order." +
-                        "\n\n Can only be done by bikers trying to accept an order for themselves.", summary = "Accept order")
+                        "\n\n Can only be done by back office users bikers trying to accept an order for themselves.", summary = "Assign order")
         @PutMapping("/accept/{bikerId}/{orderId}")
         @PreAuthorize("(hasAuthority('" + Roles.BIKER + "') and #id == authentication.principal.id)")
         public SuccessResponse acceptDelivery(
-                        @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
-                        @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
-                orderService.assignDelivery(bikerService.getSingleBiker(bikerId), orderId);
-
-                SuccessResponse successResponse = new SuccessResponse(Responses.ORDER_ASSIGNED(bikerId, orderId));
-                return successResponse;
-        }
-
-        @Operation(description = "PUT endpoint to assign a biker to a delivery order." +
-                        "\n\n Can only be done by back office users.", summary = "Assign order")
-        @PutMapping("/assign/{bikerId}/{orderId}")
-        @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
-        public SuccessResponse assignDelivery(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
                 orderService.assignDelivery(bikerService.getSingleBiker(bikerId), orderId);

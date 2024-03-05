@@ -77,7 +77,7 @@ public class OrderServiceTest {
         biker = new Biker(1, "Timmy", "Timmyyy@gmail.com", "+1512 3514000", "password", null);
 
         address = new Address("Basilisk Gate", "Baldur's Gate", "N/A", "B73 G22", "Faerun");
-        orderDetails = new OrderDetails(product.getName(), product.getPrice(), 0.14f, (product.getPrice() * 1.14f),
+        orderDetails = new OrderDetails(product, 0.14f, (product.getPrice() * 1.14f),
                 address, null);
 
         order = new Order(0, customer, store, biker, OrderStatus.AWAITING_APPROVAL, Date.valueOf("2050-09-15"),
@@ -113,7 +113,7 @@ public class OrderServiceTest {
         Order createdOrder = service.createOrder(customer, product, address);
 
         assertEquals(order.getCustomer(), createdOrder.getCustomer());
-        assertEquals(product.getName(), createdOrder.getOrderDetails().getProductName());
+        assertEquals(product.getName(), createdOrder.getOrderDetails().getProduct().getName());
         assertEquals(address, createdOrder.getOrderDetails().getAddress());
         assertEquals(OrderStatus.AWAITING_APPROVAL, createdOrder.getStatus());
     }

@@ -26,18 +26,26 @@ public class OrderMapper {
     // To Dto
     public OrderReadingDTOCustomer toDtoForCustomer(Order order) {
         OrderDetails orderDetails = order.getOrderDetails();
-        OrderReadingDTOCustomer dto = new OrderReadingDTOCustomer(order.getStatus(), order.getEta(),
-                orderDetails.getProductName(), orderDetails.getPrice(), orderDetails.getVAT(),
-                orderDetails.getTotalCost(),
-                order.getBiker().getName(), orderDetails.getAddress());
+        OrderReadingDTOCustomer dto;
+        if (order.getBiker() == null) {
+            dto = new OrderReadingDTOCustomer(order.getStatus(), order.getEta(),
+                    orderDetails.getProduct().getName(), orderDetails.getProduct().getPrice(), orderDetails.getVAT(),
+                    orderDetails.getTotalCost(),
+                    "Biker not set", orderDetails.getAddress());
+        } else {
+            dto = new OrderReadingDTOCustomer(order.getStatus(), order.getEta(),
+                    orderDetails.getProduct().getName(), orderDetails.getProduct().getPrice(), orderDetails.getVAT(),
+                    orderDetails.getTotalCost(),
+                    order.getBiker().getName(), orderDetails.getAddress());
+        }
 
         return dto;
     }
 
     public OrderReadingDTOBiker toDtoForBiker(Order order) {
         OrderDetails orderDetails = order.getOrderDetails();
-        OrderReadingDTOBiker dto = new OrderReadingDTOBiker(order.getEta(), orderDetails.getProductName(),
-                orderDetails.getPrice(), order.getCustomer().getName(), order.getCustomer().getEmail(),
+        OrderReadingDTOBiker dto = new OrderReadingDTOBiker(order.getEta(), orderDetails.getProduct().getName(),
+                orderDetails.getProduct().getPrice(), order.getCustomer().getName(), order.getCustomer().getEmail(),
                 order.getCustomer().getPhoneNumber(), orderDetails.getAddress());
 
         return dto;
