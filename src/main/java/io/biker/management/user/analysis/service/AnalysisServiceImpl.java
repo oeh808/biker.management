@@ -33,16 +33,19 @@ public class AnalysisServiceImpl implements AnalysisService {
 
         // Calculate average order rating
         List<Order> orders = orderRepo.findAll();
+        int numOfOrders = orders.size();
         float averageOrderRating = 0;
 
         for (Order order : orders) {
             OrderDetails orderDetails = order.getOrderDetails();
             if (orderDetails != null && orderDetails.getFeedBack() != null) {
                 averageOrderRating += orderDetails.getFeedBack().getRating();
+            } else {
+                numOfOrders--;
             }
         }
 
-        averageOrderRating = averageOrderRating / orders.size();
+        averageOrderRating = averageOrderRating / numOfOrders;
         float roundedAvgOrderRating = Math.round(averageOrderRating * 100.0f) / 100.0f;
 
         SystemAnalysis systemAnalysis = new SystemAnalysis(roundedAvgBikerEfficiency, roundedAvgOrderRating);
@@ -52,16 +55,19 @@ public class AnalysisServiceImpl implements AnalysisService {
     @Override
     public BikerAnalysis getBikerAnalysis(Biker biker) {
         List<Order> orders = orderRepo.findByBiker(biker);
+        int numOfOrders = orders.size();
         float averageOrderRating = 0;
 
         for (Order order : orders) {
             OrderDetails orderDetails = order.getOrderDetails();
             if (orderDetails != null && orderDetails.getFeedBack() != null) {
                 averageOrderRating += orderDetails.getFeedBack().getRating();
+            } else {
+                numOfOrders--;
             }
         }
 
-        averageOrderRating = averageOrderRating / orders.size();
+        averageOrderRating = averageOrderRating / numOfOrders;
         float roundedAvgOrderRating = Math.round(averageOrderRating * 100.0f) / 100.0f;
 
         return new BikerAnalysis(roundedAvgOrderRating, calculateDeliveryEfficiency(biker));
