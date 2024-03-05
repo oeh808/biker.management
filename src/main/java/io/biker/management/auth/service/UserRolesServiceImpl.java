@@ -24,7 +24,7 @@ public class UserRolesServiceImpl implements UserDetailsService, UserRolesServic
 
         // Converting userDetail to UserDetails
         return userDetail.map(UserInfoDetails::new)
-                .orElseThrow(() -> new CustomAuthException(AuthExceptionMessages.USER_DOES_NOT_EXIST));
+                .orElseThrow(() -> new CustomAuthException(AuthExceptionMessages.INCORRECT_USERNAME_OR_PASSWORD));
     }
 
     @Override

@@ -69,7 +69,7 @@ public class UserRolesServiceTest {
                 () -> {
                     service.loadUserByUsername("Blah");
                 });
-        assertTrue(ex.getMessage().contains(AuthExceptionMessages.USER_DOES_NOT_EXIST));
+        assertTrue(ex.getMessage().contains(AuthExceptionMessages.INCORRECT_USERNAME_OR_PASSWORD));
     }
 
     @Test

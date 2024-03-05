@@ -132,7 +132,6 @@ public class AuthController {
             return jwtService.generateToken(authRequest.username());
         } else {
             /*
-             * FIXME:
              * Ideally error should contain the same error message as other invalid
              * authentication for token generation to obscure details from potential
              * malicious user.
