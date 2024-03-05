@@ -25,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import io.biker.management.auth.exception.AuthExceptionMessages;
+import io.biker.management.auth.exception.CustomAuthException;
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.customer.exception.CustomerException;
 import io.biker.management.customer.exception.CustomerExceptionMessages;
@@ -33,7 +35,6 @@ import io.biker.management.customer.service.CustomerService;
 import io.biker.management.customer.service.CustomerServiceImpl;
 import io.biker.management.user.Address;
 
-// FIXME: Ensure test is up to date
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 public class CustomerServiceTest {
@@ -68,10 +69,22 @@ public class CustomerServiceTest {
     }
 
     @Test
-    public void createCustomer() {
+    public void createCustomer_Successful() {
         when(repo.save(customer)).thenReturn(customer);
 
         assertEquals(customer, service.createCustomer(customer));
+    }
+
+    @Test
+    public void createCustomer_DuplicateInfo() {
+        when(repo.findByEmail(customer.getEmail())).thenReturn(Optional.of(customer));
+        when(repo.findByPhoneNumber(customer.getPhoneNumber())).thenReturn(Optional.of(customer));
+
+        CustomAuthException ex = assertThrows(CustomAuthException.class,
+                () -> {
+                    service.createCustomer(customer);
+                });
+        assertTrue(ex.getMessage().contains(AuthExceptionMessages.DUPLICATE_DATA));
     }
 
     @Test

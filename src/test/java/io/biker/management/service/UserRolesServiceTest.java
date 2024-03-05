@@ -73,10 +73,22 @@ public class UserRolesServiceTest {
     }
 
     @Test
-    public void addUser() {
+    public void addUser_Successful() {
         when(repo.save(userRoles)).thenReturn(userRoles);
 
         assertEquals(userRoles, service.addUser(userRoles));
+    }
+
+    @Test
+    public void addUser_DuplicateData() {
+        when(repo.findByUser_Email(userRoles.getUser().getEmail())).thenReturn(Optional.of(userRoles));
+        when(repo.findByUser_PhoneNumber(userRoles.getUser().getPhoneNumber())).thenReturn(Optional.of(userRoles));
+
+        CustomAuthException ex = assertThrows(CustomAuthException.class,
+                () -> {
+                    service.addUser(userRoles);
+                });
+        assertTrue(ex.getMessage().contains(AuthExceptionMessages.DUPLICATE_DATA));
     }
 
     @Test

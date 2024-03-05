@@ -18,7 +18,6 @@ import io.biker.management.auth.repo.UserRolesRepo;
 import io.biker.management.backOffice.entity.BackOfficeUser;
 import io.biker.management.backOffice.repo.BackOfficeUserRepo;
 
-// FIXME: Ensure test is up to date
 @ActiveProfiles("test")
 @DataJpaTest
 public class UserRolesRepoTest {

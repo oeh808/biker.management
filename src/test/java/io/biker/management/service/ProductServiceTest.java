@@ -34,7 +34,6 @@ import io.biker.management.store.exception.StoreException;
 import io.biker.management.store.exception.StoreExceptionMessages;
 import io.biker.management.store.repo.StoreRepo;
 
-// FIXME: Ensure test is up to date
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 public class ProductServiceTest {

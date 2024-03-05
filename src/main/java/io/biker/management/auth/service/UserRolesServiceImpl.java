@@ -46,21 +46,19 @@ public class UserRolesServiceImpl implements UserDetailsService, UserRolesServic
         repository.deleteById(id);
     }
 
-    @Override
-    public boolean isDuplicateUsername(String username) {
+    // Helper functions
+    private boolean isDuplicateUsername(String username) {
         Optional<UserRoles> opUser = repository.findByUser_Email(username);
 
         return opUser.isPresent();
     }
 
-    @Override
-    public boolean isDuplicatePhoneNumber(String phoneNum) {
+    private boolean isDuplicatePhoneNumber(String phoneNum) {
         Optional<UserRoles> opUser = repository.findByUser_PhoneNumber(phoneNum);
 
         return opUser.isPresent();
     }
 
-    // Helper functions
     private boolean userExists(int id) {
         Optional<UserRoles> opUser = repository.findById(id);
 

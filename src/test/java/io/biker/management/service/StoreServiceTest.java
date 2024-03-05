@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import io.biker.management.auth.exception.AuthExceptionMessages;
+import io.biker.management.auth.exception.CustomAuthException;
 import io.biker.management.store.entity.Store;
 import io.biker.management.store.exception.StoreException;
 import io.biker.management.store.exception.StoreExceptionMessages;
@@ -29,7 +31,6 @@ import io.biker.management.store.repo.StoreRepo;
 import io.biker.management.store.service.StoreService;
 import io.biker.management.store.service.StoreServiceImpl;
 
-// FIXME: Ensure test is up to date
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 public class StoreServiceTest {
@@ -64,6 +65,18 @@ public class StoreServiceTest {
         when(repo.save(store)).thenReturn(store);
 
         assertEquals(store, service.createStore(store));
+    }
+
+    @Test
+    public void createStore_DuplicateInfo() {
+        when(repo.findByEmail(store.getEmail())).thenReturn(Optional.of(store));
+        when(repo.findByPhoneNumber(store.getPhoneNumber())).thenReturn(Optional.of(store));
+
+        CustomAuthException ex = assertThrows(CustomAuthException.class,
+                () -> {
+                    service.createStore(store);
+                });
+        assertTrue(ex.getMessage().contains(AuthExceptionMessages.DUPLICATE_DATA));
     }
 
     @Test

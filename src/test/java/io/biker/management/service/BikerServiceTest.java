@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import io.biker.management.auth.exception.AuthExceptionMessages;
+import io.biker.management.auth.exception.CustomAuthException;
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.biker.exception.BikerException;
 import io.biker.management.biker.exception.BikerExceptionMessages;
@@ -29,7 +31,6 @@ import io.biker.management.biker.repo.BikerRepo;
 import io.biker.management.biker.service.BikerService;
 import io.biker.management.biker.service.BikerServiceImpl;
 
-// FIXME: Ensure test is up to date
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 public class BikerServiceTest {
@@ -59,10 +60,22 @@ public class BikerServiceTest {
     }
 
     @Test
-    public void createBiker() {
+    public void createBiker_Successful() {
         when(repo.save(biker)).thenReturn(biker);
 
         assertEquals(biker, service.createBiker(biker));
+    }
+
+    @Test
+    public void createBiker_DuplicateInfo() {
+        when(repo.findByEmail(biker.getEmail())).thenReturn(Optional.of(biker));
+        when(repo.findByPhoneNumber(biker.getPhoneNumber())).thenReturn(Optional.of(biker));
+
+        CustomAuthException ex = assertThrows(CustomAuthException.class,
+                () -> {
+                    service.createBiker(biker);
+                });
+        assertTrue(ex.getMessage().contains(AuthExceptionMessages.DUPLICATE_DATA));
     }
 
     @Test

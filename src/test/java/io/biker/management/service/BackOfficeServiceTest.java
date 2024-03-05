@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import io.biker.management.auth.exception.AuthExceptionMessages;
+import io.biker.management.auth.exception.CustomAuthException;
 import io.biker.management.backOffice.entity.BackOfficeUser;
 import io.biker.management.backOffice.exception.BackOfficeException;
 import io.biker.management.backOffice.exception.BackOfficeExceptionMessages;
@@ -29,7 +31,6 @@ import io.biker.management.backOffice.repo.BackOfficeUserRepo;
 import io.biker.management.backOffice.service.BackOfficeService;
 import io.biker.management.backOffice.service.BackOfficeServiceImpl;
 
-// FIXME: Ensure test is up to date
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 public class BackOfficeServiceTest {
@@ -60,10 +61,22 @@ public class BackOfficeServiceTest {
     }
 
     @Test
-    public void createBackOfficeUser() {
+    public void createBackOfficeUser_Success() {
         when(repo.save(backOfficeUser)).thenReturn(backOfficeUser);
 
         assertEquals(backOfficeUser, service.createBackOfficeUser(backOfficeUser));
+    }
+
+    @Test
+    public void createBackOfficeUser_DuplicateInfo() {
+        when(repo.findByEmail(backOfficeUser.getEmail())).thenReturn(Optional.of(backOfficeUser));
+        when(repo.findByPhoneNumber(backOfficeUser.getPhoneNumber())).thenReturn(Optional.of(backOfficeUser));
+
+        CustomAuthException ex = assertThrows(CustomAuthException.class,
+                () -> {
+                    service.createBackOfficeUser(backOfficeUser);
+                });
+        assertTrue(ex.getMessage().contains(AuthExceptionMessages.DUPLICATE_DATA));
     }
 
     @Test
