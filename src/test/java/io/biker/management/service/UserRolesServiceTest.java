@@ -26,7 +26,6 @@ import io.biker.management.auth.exception.CustomAuthException;
 import io.biker.management.auth.repo.UserRolesRepo;
 import io.biker.management.auth.service.UserRolesServiceImpl;
 
-// FIXME: Ensure test is up to date
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 public class UserRolesServiceTest {
