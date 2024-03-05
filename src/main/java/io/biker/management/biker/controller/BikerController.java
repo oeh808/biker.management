@@ -43,7 +43,7 @@ public class BikerController {
 
     @Operation(description = "POST endpoint for creating a bikers." +
             "\n\n Can only be done by back office users and admins.", summary = "Create a biker")
-    @PostMapping("/bikers")
+    @PostMapping()
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of BikerCreationDTO")
     public BikerReadingDTO createBiker(@Valid @RequestBody BikerCreationDTO dto) {

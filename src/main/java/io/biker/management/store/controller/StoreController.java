@@ -43,7 +43,7 @@ public class StoreController {
 
     @Operation(description = "POST endpoint for registering a store." +
             "\n\n Can only be done by admins.", summary = "Register a store")
-    @PostMapping("/stores")
+    @PostMapping()
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StoreCreationDTO")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public StoreReadingDTO registerStore(@Valid @RequestBody StoreCreationDTO dto) {

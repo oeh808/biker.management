@@ -28,18 +28,18 @@ import jakarta.validation.Valid;
 @Tag(name = "Back Office Users")
 @SecurityRequirement(name = "Authorization")
 @RequestMapping("/backOffice")
-public class backOfficeController {
+public class BackOfficeController {
     private BackOfficeService backOfficeService;
     private BackOfficeMapper backOfficeMapper;
 
-    public backOfficeController(BackOfficeService backOfficeService, BackOfficeMapper backOfficeMapper) {
+    public BackOfficeController(BackOfficeService backOfficeService, BackOfficeMapper backOfficeMapper) {
         this.backOfficeService = backOfficeService;
         this.backOfficeMapper = backOfficeMapper;
     }
 
     @Operation(description = "POST endpoint for creating a back office user." +
             "\n\n Can only be done by back office users and admins.", summary = "Create a back office user")
-    @PostMapping("/backOffice")
+    @PostMapping()
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of BackOfficeUserCreationDTO")
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public BackOfficeUserReadingDTO createBackOfficeUser(@Valid @RequestBody BackOfficeUserCreationDTO dto) {
@@ -51,7 +51,7 @@ public class backOfficeController {
     @Operation(description = "DELETE endpoint for deleting a back office user." +
             "\n\n Can only be done by admins.", summary = "Delete Back Office user")
     @Transactional
-    @DeleteMapping("/backOffice/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse deleteBackOfficeUser(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Back Office user ID") @PathVariable int id) {
