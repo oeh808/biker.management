@@ -128,11 +128,9 @@ public class OrderController {
         }
 
         @Operation(description = "GET endpoint for retrieving all orders associated with a biker." +
-                        "\n\n Can only be done by back office users or bikers accessing their own orders.", summary = "Get orders associated with biker")
-        @GetMapping("/backOffice/bikers/{bikerId}")
-        // Accessed by Back Office User
-        @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "') or " +
-                        "(hasAuthority('" + Roles.BIKER + "') and #bikerId == authentication.principal.id)")
+                        "\n\n Can only be done by back office users.", summary = "Get orders associated with biker")
+        @GetMapping("/bikers/{bikerId}")
+        @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
         public List<OrderReadingDTOStoreAndBackOffice> getOrdersByBiker(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId) {
                 return orderMapper.toDtosForStoresandBackOffice(
@@ -143,7 +141,7 @@ public class OrderController {
                         "\n\n Can only be done by bikers that are associated with the order.", summary = "Update order eta (Biker)")
         @PutMapping("/eta/bikers/{bikerId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
-        @PreAuthorize("(hasAuthority('" + Roles.BIKER + "') and #id == authentication.principal.id)")
+        @PreAuthorize("(hasAuthority('" + Roles.BIKER + "') and #bikerId == authentication.principal.id)")
         public SuccessResponse updateEta_Biker(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
@@ -159,7 +157,7 @@ public class OrderController {
                         "\n\n Can only be done by stores that are associated with the order.", summary = "Update order eta (Stoner)")
         @PutMapping("/eta/stores/{storeId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
-        @PreAuthorize("(hasAuthority('" + Roles.STORE + "') and #id == authentication.principal.id)")
+        @PreAuthorize("(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
         public SuccessResponse updateEta_Store(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
@@ -204,7 +202,7 @@ public class OrderController {
                         "\n\n Can only be done by bikers that are associated with the order.", summary = "Update order status (Biker)")
         @PutMapping("/status/bikers/{bikerId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
-        @PreAuthorize("(hasAuthority('" + Roles.BIKER + "') and #id == authentication.principal.id)")
+        @PreAuthorize("(hasAuthority('" + Roles.BIKER + "') and #bikerId == authentication.principal.id)")
         public SuccessResponse updateStatus_Biker(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
@@ -220,7 +218,7 @@ public class OrderController {
                         "\n\n Can only be done by stores that are associated with the order.", summary = "Update order status (Stoner)")
         @PutMapping("/status/stores/{storeId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
-        @PreAuthorize("(hasAuthority('" + Roles.STORE + "') and #id == authentication.principal.id)")
+        @PreAuthorize("(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
         public SuccessResponse updateStatus_Store(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
@@ -246,11 +244,12 @@ public class OrderController {
                 return successResponse;
         }
 
-        @Operation(description = "PUT endpoint to allow a biker to accept a delivery order." +
-                        "\n\n Can only be done by back office users bikers trying to accept an order for themselves.", summary = "Assign order")
-        @PutMapping("/accept/{bikerId}/{orderId}")
-        @PreAuthorize("(hasAuthority('" + Roles.BIKER + "') and #id == authentication.principal.id)")
-        public SuccessResponse acceptDelivery(
+        @Operation(description = "PUT endpoint to assign a biker to an order." +
+                        "\n\n Can only be done by back office users or bikers trying to accept an order for themselves.", summary = "Assign order")
+        @PutMapping("/assign/{bikerId}/{orderId}")
+        @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "') or " +
+                        "(hasAuthority('" + Roles.BIKER + "') and #bikerId == authentication.principal.id)")
+        public SuccessResponse assignDelivery(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
                 orderService.assignDelivery(bikerService.getSingleBiker(bikerId), orderId);
