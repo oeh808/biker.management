@@ -16,6 +16,10 @@ import io.biker.management.user.analysis.data.SystemReport;
 public class AnalysisServiceImpl implements AnalysisService {
     private OrderRepo orderRepo;
 
+    public AnalysisServiceImpl(OrderRepo orderRepo) {
+        this.orderRepo = orderRepo;
+    }
+
     @Override
     public SystemAnalysis getSystemAnalysis(List<Biker> bikers) {
         // Calculate average efficency of bikers
