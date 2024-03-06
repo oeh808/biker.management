@@ -1,35 +1,30 @@
-2024-03-06 16:35:07,011 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 8.0.1.Final
-2024-03-06 16:35:07,069 INFO o.s.b.StartupInfoLogger [main] Starting Application using Java 21.0.1 with PID 55052 (C:\Users\omar\Desktop\Work\BrightSkies\Final Project\biker.management\target\classes started by omar in C:\Users\omar\Desktop\Work\BrightSkies\Final Project\biker.management)
-2024-03-06 16:35:07,072 INFO o.s.b.SpringApplication [main] The following 1 profile is active: "dev"
-2024-03-06 16:35:07,840 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2024-03-06 16:35:07,934 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 83 ms. Found 8 JPA repository interfaces.
-2024-03-06 16:35:08,789 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port 8080 (http)
-2024-03-06 16:35:08,812 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
-2024-03-06 16:35:08,817 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
-2024-03-06 16:35:08,818 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/10.1.19]
-2024-03-06 16:35:08,893 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
-2024-03-06 16:35:08,895 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1774 ms
-2024-03-06 16:35:09,209 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
-2024-03-06 16:35:09,465 INFO c.z.h.p.HikariPool [main] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2e159116
-2024-03-06 16:35:09,467 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
-2024-03-06 16:35:09,512 INFO o.f.c.i.l.s.Slf4jLog [main] Database: jdbc:mysql://localhost:3307/biker_management_db (MySQL 8.3)
-2024-03-06 16:35:09,548 WARN o.f.c.i.l.s.Slf4jLog [main] Flyway upgrade recommended: MySQL 8.3 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
-2024-03-06 16:35:09,587 INFO o.f.c.i.l.s.Slf4jLog [main] Successfully validated 5 migrations (execution time 00:00.030s)
-2024-03-06 16:35:09,605 INFO o.f.c.i.l.s.Slf4jLog [main] Current version of schema `biker_management_db`: 1.2
-2024-03-06 16:35:09,611 INFO o.f.c.i.l.s.Slf4jLog [main] Schema `biker_management_db` is up to date. No migration necessary.
-2024-03-06 16:35:09,743 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
-2024-03-06 16:35:09,795 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 6.4.4.Final
-2024-03-06 16:35:09,821 INFO o.h.c.i.RegionFactoryInitiator [main] HHH000026: Second-level cache disabled
-2024-03-06 16:35:09,951 INFO o.s.o.j.p.SpringPersistenceUnitInfo [main] No LoadTimeWeaver setup: ignoring JPA class transformer
-2024-03-06 16:35:10,701 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2024-03-06 16:35:10,704 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2024-03-06 16:35:11,400 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-03-06 16:35:11,739 INFO o.s.s.w.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@41185195, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1849d35a, org.springframework.security.web.context.SecurityContextHolderFilter@39e0fe23, org.springframework.security.web.header.HeaderWriterFilter@3e03d75e, org.springframework.web.filter.CorsFilter@2154de40, org.springframework.security.web.authentication.logout.LogoutFilter@cb29b75, io.biker.management.auth.filter.JwtAuthFilter@6178ac9d, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5e05dd42, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@246701d5, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@41a940a9, org.springframework.security.web.session.SessionManagementFilter@6bb2dae6, org.springframework.security.web.access.ExceptionTranslationFilter@3b26afbc, org.springframework.security.web.access.intercept.AuthorizationFilter@269fe2fe]
-2024-03-06 16:35:12,025 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
-2024-03-06 16:35:12,041 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port 8080 (http) with context path ''
-2024-03-06 16:35:12,050 INFO o.s.b.StartupInfoLogger [main] Started Application in 5.376 seconds (process running for 5.848)
-2024-03-06 16:35:18,324 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2024-03-06 16:35:18,325 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
-2024-03-06 16:35:18,326 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 1 ms
-2024-03-06 16:35:18,509 INFO i.b.m.u.a.c.AnalysisController [http-nio-8080-exec-1] Behold! Logging!
-2024-03-06 16:35:18,509 WARN i.b.m.u.a.c.AnalysisController [http-nio-8080-exec-1] Bad!
+2024-03-06 16:40:27,113 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 8.0.1.Final
+2024-03-06 16:40:27,192 INFO o.s.b.StartupInfoLogger [main] Starting Application using Java 21.0.1 with PID 30676 (C:\Users\omar\Desktop\Work\BrightSkies\Final Project\biker.management\target\classes started by omar in C:\Users\omar\Desktop\Work\BrightSkies\Final Project\biker.management)
+2024-03-06 16:40:27,196 INFO o.s.b.SpringApplication [main] The following 1 profile is active: "dev"
+2024-03-06 16:40:27,985 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-03-06 16:40:28,066 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 74 ms. Found 8 JPA repository interfaces.
+2024-03-06 16:40:28,899 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port 8080 (http)
+2024-03-06 16:40:28,924 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2024-03-06 16:40:28,929 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2024-03-06 16:40:28,930 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-03-06 16:40:29,021 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2024-03-06 16:40:29,023 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1782 ms
+2024-03-06 16:40:29,387 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2024-03-06 16:40:29,670 INFO c.z.h.p.HikariPool [main] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@35329a05
+2024-03-06 16:40:29,672 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2024-03-06 16:40:29,727 INFO o.f.c.i.l.s.Slf4jLog [main] Database: jdbc:mysql://localhost:3307/biker_management_db (MySQL 8.3)
+2024-03-06 16:40:29,763 WARN o.f.c.i.l.s.Slf4jLog [main] Flyway upgrade recommended: MySQL 8.3 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2024-03-06 16:40:29,800 INFO o.f.c.i.l.s.Slf4jLog [main] Successfully validated 5 migrations (execution time 00:00.029s)
+2024-03-06 16:40:29,818 INFO o.f.c.i.l.s.Slf4jLog [main] Current version of schema `biker_management_db`: 1.2
+2024-03-06 16:40:29,823 INFO o.f.c.i.l.s.Slf4jLog [main] Schema `biker_management_db` is up to date. No migration necessary.
+2024-03-06 16:40:29,967 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-03-06 16:40:30,015 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 6.4.4.Final
+2024-03-06 16:40:30,043 INFO o.h.c.i.RegionFactoryInitiator [main] HHH000026: Second-level cache disabled
+2024-03-06 16:40:30,170 INFO o.s.o.j.p.SpringPersistenceUnitInfo [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-03-06 16:40:30,923 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-03-06 16:40:30,925 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-03-06 16:40:31,556 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-03-06 16:40:31,875 INFO o.s.s.w.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@5536542e, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@77a27356, org.springframework.security.web.context.SecurityContextHolderFilter@3c380db5, org.springframework.security.web.header.HeaderWriterFilter@7220ff10, org.springframework.web.filter.CorsFilter@73c21b13, org.springframework.security.web.authentication.logout.LogoutFilter@5d8edf2, io.biker.management.auth.filter.JwtAuthFilter@3d5009c0, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@f9d7d3f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@264f18fe, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@66e6e5e9, org.springframework.security.web.session.SessionManagementFilter@24c8bc1e, org.springframework.security.web.access.ExceptionTranslationFilter@25f3207e, org.springframework.security.web.access.intercept.AuthorizationFilter@63a833c5]
+2024-03-06 16:40:32,286 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2024-03-06 16:40:32,313 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port 8080 (http) with context path ''
+2024-03-06 16:40:32,322 INFO o.s.b.StartupInfoLogger [main] Started Application in 5.533 seconds (process running for 6.031)
