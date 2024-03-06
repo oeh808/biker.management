@@ -36,3 +36,4 @@ build/
 create.sql
 V1_0_1__Add_admins.sql
 V1_1_1__Add_users.sql
+docker-compose.yaml
