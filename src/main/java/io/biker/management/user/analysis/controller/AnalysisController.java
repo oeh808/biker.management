@@ -41,8 +41,7 @@ public class AnalysisController {
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public BikerAnalysis analyzeBikerPerformance(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
-        log.info("Behold! Logging!");
-        log.warn("Bad!");
+        log.info("Recieved: GET request to /analysis/" + id);
         return analysisService.getBikerAnalysis(bikerService.getSingleBiker(id));
     }
 
@@ -52,6 +51,7 @@ public class AnalysisController {
     @GetMapping()
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public SystemAnalysis analyzeSystemPerformance() {
+        log.info("Recieved: GET request to /analysis");
         return analysisService.getSystemAnalysis(bikerService.getAllBikers());
     }
 
@@ -61,6 +61,7 @@ public class AnalysisController {
     @GetMapping("/report")
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public SystemReport generateReport() {
+        log.info("Recieved: GET request to /report");
         return analysisService.generateReport(bikerService.getAllBikers());
     }
 }

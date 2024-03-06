@@ -11,7 +11,9 @@ import io.biker.management.order.repo.OrderRepo;
 import io.biker.management.user.analysis.data.BikerAnalysis;
 import io.biker.management.user.analysis.data.SystemAnalysis;
 import io.biker.management.user.analysis.data.SystemReport;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Service
 public class AnalysisServiceImpl implements AnalysisService {
     private OrderRepo orderRepo;
@@ -22,6 +24,7 @@ public class AnalysisServiceImpl implements AnalysisService {
 
     @Override
     public SystemAnalysis getSystemAnalysis(List<Biker> bikers) {
+        log.info("Running getSystemAnalysis in AnalysisServiceImpl...");
         // Calculate average efficency of bikers
         float averageBikerEfficiency = 0;
         for (Biker biker : bikers) {
@@ -63,6 +66,7 @@ public class AnalysisServiceImpl implements AnalysisService {
 
     @Override
     public BikerAnalysis getBikerAnalysis(Biker biker) {
+        log.info("Running getBikerAnalysis in AnalysisServiceImpl...");
         List<Order> orders = orderRepo.findByBiker(biker);
         int numOfOrders = orders.size();
         float averageOrderRating = 0;
@@ -89,6 +93,7 @@ public class AnalysisServiceImpl implements AnalysisService {
 
     @Override
     public SystemReport generateReport(List<Biker> bikers) {
+        log.info("Running generateReport in AnalysisServiceImpl...");
         // Analyse system
         SystemAnalysis systemAnalysis = getSystemAnalysis(bikers);
 
