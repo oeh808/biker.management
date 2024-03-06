@@ -28,6 +28,11 @@ public class AnalysisServiceImpl implements AnalysisService {
             averageBikerEfficiency += calculateDeliveryEfficiency(biker);
         }
 
+        if (bikers.size() == 0) {
+            averageBikerEfficiency = 0;
+        } else {
+            averageBikerEfficiency = averageBikerEfficiency / bikers.size();
+        }
         averageBikerEfficiency = averageBikerEfficiency / bikers.size();
         float roundedAvgBikerEfficiency = Math.round(averageBikerEfficiency * 100.0f) / 100.0f;
 
@@ -45,7 +50,11 @@ public class AnalysisServiceImpl implements AnalysisService {
             }
         }
 
-        averageOrderRating = averageOrderRating / numOfOrders;
+        if (orders.size() == 0) {
+            averageOrderRating = 0;
+        } else {
+            averageOrderRating = averageOrderRating / numOfOrders;
+        }
         float roundedAvgOrderRating = Math.round(averageOrderRating * 100.0f) / 100.0f;
 
         SystemAnalysis systemAnalysis = new SystemAnalysis(roundedAvgBikerEfficiency, roundedAvgOrderRating);
@@ -67,7 +76,12 @@ public class AnalysisServiceImpl implements AnalysisService {
             }
         }
 
-        averageOrderRating = averageOrderRating / numOfOrders;
+        if (orders.size() == 0) {
+            averageOrderRating = 0;
+        } else {
+            averageOrderRating = averageOrderRating / numOfOrders;
+        }
+
         float roundedAvgOrderRating = Math.round(averageOrderRating * 100.0f) / 100.0f;
 
         return new BikerAnalysis(roundedAvgOrderRating, calculateDeliveryEfficiency(biker));
