@@ -52,7 +52,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/customers/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/stores/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/users/**").authenticated())
-                .authorizeHttpRequests(requests -> requests.requestMatchers("/users/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/bikers/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/customers/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/stores/**").authenticated())
