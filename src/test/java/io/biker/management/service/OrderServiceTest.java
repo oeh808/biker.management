@@ -86,6 +86,7 @@ public class OrderServiceTest {
 
     @BeforeEach
     public void setUpMocks() {
+        product.setQuantity(3);
         order.setStatus(OrderStatus.AWAITING_APPROVAL);
         order.setEta(Date.valueOf("2050-09-15"));
         order.setBiker(biker);
@@ -116,6 +117,17 @@ public class OrderServiceTest {
         assertEquals(product.getName(), createdOrder.getOrderDetails().getProduct().getName());
         assertEquals(address, createdOrder.getOrderDetails().getAddress());
         assertEquals(OrderStatus.AWAITING_APPROVAL, createdOrder.getStatus());
+    }
+
+    @Test
+    public void createOrder_OutOfStock() {
+        product.setQuantity(0);
+
+        OrderException ex = assertThrows(OrderException.class,
+                () -> {
+                    service.createOrder(customer, product, address);
+                });
+        assertTrue(ex.getMessage().contains(OrderExceptionMessages.OUT_OF_STOCK));
     }
 
     @Test

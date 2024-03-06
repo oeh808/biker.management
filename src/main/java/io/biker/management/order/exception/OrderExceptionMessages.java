@@ -4,4 +4,6 @@ public class OrderExceptionMessages {
     public static String INVALID_STATUS = "The status provided is not valid";
 
     public static String ORDER_NOT_FOUND = "The order with the given id does not exist";
+
+    public static String OUT_OF_STOCK = "The product is out of stock";
 }

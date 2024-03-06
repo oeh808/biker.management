@@ -30,6 +30,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(Customer customer, Product product, Address deliveryAddress) {
+        if (product.getQuantity() < 1) {
+            throw new OrderException(OrderExceptionMessages.OUT_OF_STOCK);
+        }
         OrderDetails orderDetails = new OrderDetails(product,
                 Tax.VAT, product.getPrice() * (1 + Tax.VAT), deliveryAddress, null);
         Order order = new Order(0, customer, product.getStore(), null, OrderStatus.AWAITING_APPROVAL,
