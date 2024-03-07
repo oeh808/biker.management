@@ -3,9 +3,6 @@ create table orders (
 ) engine = InnoDB;
 
 alter table orders
-add constraint UK_306w8sghgvp5hmjrqo21dscv7 unique (product_id);
-
-alter table orders
 add constraint FKaw3syk90oe0615hben2ta36i0 foreign key (biker_id) references bikers (id);
 
 alter table orders
