@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+@Log4j2
 @RestController
 @Tag(name = "Customers", description = "Controller for handling mappings for customers")
 @RequestMapping("/customers")
@@ -49,6 +51,7 @@ public class CustomerController {
         @PostMapping()
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of CustomerCreationDTO")
         public CustomerReadingDTO createCustomer(@Valid @RequestBody CustomerCreationDTO dto) {
+                log.info("Recieved: PUT request to /customers");
                 Customer customer = customerService.createCustomer(customerMapper.toCustomer(dto));
 
                 return customerMapper.toDto(customer);
@@ -61,6 +64,7 @@ public class CustomerController {
         @SecurityRequirement(name = "Authorization")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
         public List<CustomerReadingDTO> getAllCustomers() {
+                log.info("Recieved: GET request to /customers");
                 return customerMapper.toDtos(customerService.getAllCustomers());
         }
 
@@ -73,6 +77,7 @@ public class CustomerController {
                         "(hasAuthority('" + Roles.CUSTOMER + "') and #id == authentication.principal.id)")
         public CustomerReadingDTO getSingleCustomer(
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
+                log.info("Recieved: GET request to /customers/" + id);
                 return customerMapper.toDto(customerService.getSingleCustomer(id));
         }
 
@@ -87,6 +92,7 @@ public class CustomerController {
         public Set<Address> addDeliveryAddress(
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id,
                         @Valid @RequestBody AddressCreationDTO dto) {
+                log.info("Recieved: PUT request to /customers/" + id + "/addresses");
                 return customerService.addDeliveryAddress(id, customerMapper.toAddress(dto));
         }
 
@@ -99,6 +105,7 @@ public class CustomerController {
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
         public SuccessResponse deleteCustomer(
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
+                log.info("Recieved: DELETE request to /customers/" + id);
                 customerService.deleteCustomer(id);
                 return new SuccessResponse(Responses.CUSTOMER_DELETED);
         }

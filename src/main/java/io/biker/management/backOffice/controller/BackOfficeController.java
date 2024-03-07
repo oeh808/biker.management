@@ -26,7 +26,9 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @RestController
 @Tag(name = "Back Office Users", description = "Controller for handling mappings for back office users")
 @SecurityRequirement(name = "Authorization")
@@ -47,6 +49,7 @@ public class BackOfficeController {
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of BackOfficeUserCreationDTO")
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public BackOfficeUserReadingDTO createBackOfficeUser(@Valid @RequestBody BackOfficeUserCreationDTO dto) {
+        log.info("Recieved: POST request to /backOffice");
         BackOfficeUser backOfficeUser = backOfficeService.createBackOfficeUser(backOfficeMapper.toBackOfficeUser(dto));
 
         return backOfficeMapper.toDto(backOfficeUser);
@@ -58,6 +61,7 @@ public class BackOfficeController {
     @GetMapping()
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public List<BackOfficeUser> getAllBackOfficeUsers() {
+        log.info("Recieved: GET request to /backOffice");
         return backOfficeService.getAllBackOfficeUsers();
     }
 
@@ -68,6 +72,7 @@ public class BackOfficeController {
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public BackOfficeUser getSingleBackOfficeUser(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Back Office user ID") @PathVariable int id) {
+        log.info("Recieved: GET request to /backOffice/" + id);
         return backOfficeService.getSingleBackOfficeUser(id);
     }
 
@@ -79,6 +84,7 @@ public class BackOfficeController {
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse deleteBackOfficeUser(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Back Office user ID") @PathVariable int id) {
+        log.info("Recieved: DELETE request to /backOffice/" + id);
         backOfficeService.deleteBackOfficeUser(id);
         return new SuccessResponse(Responses.BACK_OFFICE_USER_DELETED);
     }

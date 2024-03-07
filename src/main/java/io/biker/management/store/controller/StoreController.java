@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@Log4j2
 @RestController
 @Tag(name = "Stores", description = "Controller for handling mappings for stores")
 @SecurityRequirement(name = "Authorization")
@@ -48,7 +50,8 @@ public class StoreController {
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StoreCreationDTO")
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public StoreReadingDTO createStore(@Valid @RequestBody StoreCreationDTO dto) {
-        Store store = storeMapper.toStore(dto);
+        log.info("Recieved: POST request to /stores");
+        Store store = storeService.createStore(storeMapper.toStore(dto));
 
         return storeMapper.toReadingDto(store);
     }
@@ -58,6 +61,7 @@ public class StoreController {
             "\n\n Returns the all stores as a List of StoreReadingDTO.", summary = "Get all stores")
     @GetMapping()
     public List<StoreReadingDTO> getAllStores() {
+        log.info("Recieved: GET request to /stores");
         return storeMapper.toReadingDtos(storeService.getAllStores());
     }
 
@@ -67,6 +71,7 @@ public class StoreController {
     @GetMapping("/{storeId}")
     public StoreReadingDTO getSingleStore(
             @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId) {
+        log.info("Recieved: GET request to /stores/" + storeId);
         return storeMapper.toReadingDto(storeService.getSingleStore(storeId));
     }
 
@@ -78,6 +83,7 @@ public class StoreController {
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse deleteStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
+        log.info("Recieved: DELETE request to /stores/" + id);
         storeService.deleteStore(id);
         return new SuccessResponse(Responses.STORE_DELETED);
     }

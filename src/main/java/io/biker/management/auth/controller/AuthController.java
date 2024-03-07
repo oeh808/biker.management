@@ -35,7 +35,9 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @RestController
 @Tag(name = "Authorization", description = "Controller for handling mappings authentication and registering users")
 @RequestMapping("/auth")
@@ -71,6 +73,7 @@ public class AuthController {
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse registerCustomer(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
+        log.info("Recieved: POST request to /auth/customers/" + id);
         Customer customer = customerService.getSingleCustomer(id);
 
         UserRoles user = new UserRoles(id, customer, Roles.CUSTOMER);
@@ -88,6 +91,7 @@ public class AuthController {
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public SuccessResponse registerBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
+        log.info("Recieved: POST request to /auth/bikers/" + id);
         Biker biker = bikerService.getSingleBiker(id);
 
         UserRoles user = new UserRoles(id, biker, Roles.BIKER);
@@ -105,6 +109,7 @@ public class AuthController {
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public SuccessResponse registerBackOfficeUser(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
+        log.info("Recieved: POST request to /auth/backOffice/" + id);
         BackOfficeUser backOfficeUser = backOfficeService.getSingleBackOfficeUser(id);
 
         UserRoles user = new UserRoles(id, backOfficeUser, Roles.BACK_OFFICE);
@@ -122,6 +127,7 @@ public class AuthController {
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse registerStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
+        log.info("Recieved: POST request to /auth/stores/" + id);
         Store store = storeService.getSingleStore(id);
 
         UserRoles user = new UserRoles(id, store, Roles.STORE);
@@ -136,6 +142,7 @@ public class AuthController {
     @PostMapping("/generateToken")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of AuthRequestDTO")
     public String authenticateAndGetToken(@Valid @RequestBody AuthRequestDTO authRequest) {
+        log.info("Recieved: POST request to /auth/generateToken");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
         if (authentication.isAuthenticated()) {
@@ -160,6 +167,7 @@ public class AuthController {
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse deleteStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "User ID") @PathVariable int id) {
+        log.info("Recieved: DELETE request to /auth/users/" + id);
         userRolesService.deleteUser(id);
         return new SuccessResponse(Responses.USER_DELETED);
     }

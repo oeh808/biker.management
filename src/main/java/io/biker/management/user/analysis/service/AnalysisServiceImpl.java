@@ -24,8 +24,9 @@ public class AnalysisServiceImpl implements AnalysisService {
 
     @Override
     public SystemAnalysis getSystemAnalysis(List<Biker> bikers) {
-        log.info("Running getSystemAnalysis in AnalysisServiceImpl...");
+        log.info("Running getSystemAnalysis(" + bikers.toString() + ") in AnalysisServiceImpl...");
         // Calculate average efficency of bikers
+        log.info("Calculating bikers' efficiency...");
         float averageBikerEfficiency = 0;
         for (Biker biker : bikers) {
             averageBikerEfficiency += calculateDeliveryEfficiency(biker);
@@ -36,10 +37,12 @@ public class AnalysisServiceImpl implements AnalysisService {
         } else {
             averageBikerEfficiency = averageBikerEfficiency / bikers.size();
         }
+
         averageBikerEfficiency = averageBikerEfficiency / bikers.size();
         float roundedAvgBikerEfficiency = Math.round(averageBikerEfficiency * 100.0f) / 100.0f;
 
         // Calculate average order rating
+        log.info("Calculating average order rating for bikers...");
         List<Order> orders = orderRepo.findAll();
         int numOfOrders = orders.size();
         float averageOrderRating = 0;
@@ -66,11 +69,12 @@ public class AnalysisServiceImpl implements AnalysisService {
 
     @Override
     public BikerAnalysis getBikerAnalysis(Biker biker) {
-        log.info("Running getBikerAnalysis in AnalysisServiceImpl...");
+        log.info("Running getBikerAnalysis(" + biker.toString() + ") in AnalysisServiceImpl...");
         List<Order> orders = orderRepo.findByBiker(biker);
         int numOfOrders = orders.size();
         float averageOrderRating = 0;
 
+        log.info("Calculating average order rating for biker...");
         for (Order order : orders) {
             OrderDetails orderDetails = order.getOrderDetails();
             if (orderDetails != null && orderDetails.getFeedBack() != null) {
@@ -88,16 +92,18 @@ public class AnalysisServiceImpl implements AnalysisService {
 
         float roundedAvgOrderRating = Math.round(averageOrderRating * 100.0f) / 100.0f;
 
+        log.info("Calculating biker efficiency...");
         return new BikerAnalysis(roundedAvgOrderRating, calculateDeliveryEfficiency(biker));
     }
 
     @Override
     public SystemReport generateReport(List<Biker> bikers) {
-        log.info("Running generateReport in AnalysisServiceImpl...");
+        log.info("Running generateReport(" + bikers.toString() + ") in AnalysisServiceImpl...");
         // Analyse system
         SystemAnalysis systemAnalysis = getSystemAnalysis(bikers);
 
         // Generate suggestions
+        log.info("Generating suggestions for system improvement...");
         String[] suggestions = generateSuggestions();
 
         // Generate report

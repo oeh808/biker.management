@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+@Log4j2
 @RestController
 @Tag(name = "Products", description = "Controller for handling mappings for products")
 @SecurityRequirement(name = "Authorization")
@@ -53,6 +55,7 @@ public class ProductController {
         public ProductReadingDTO createProduct(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Valid @RequestBody ProductCreationDTO dto) {
+                log.info("Recieved: POST request to /" + storeId + "/products");
                 Product product = productService.createProduct(storeId, productMapper.toProduct(dto));
                 return productMapper.toDto(product);
         }
@@ -64,6 +67,7 @@ public class ProductController {
         @GetMapping("/products")
         @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
         public List<ProductReadingAdminDTO> getAllProducts() {
+                log.info("Recieved: GET request to /products");
                 return productMapper.toDtosAdmim(productService.getAllProducts());
         }
 
@@ -76,6 +80,7 @@ public class ProductController {
                         "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
         public List<ProductReadingDTO> getAllProductsByStore(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId) {
+                log.info("Recieved: GET request to /" + storeId + "/products");
                 return productMapper.toDtos(productService.getAllProductsByStore(storeId));
         }
 
@@ -89,6 +94,7 @@ public class ProductController {
         public ProductReadingDTO getSingleProduct(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Product ID") @PathVariable int id) {
+                log.info("Recieved: GET request to /" + storeId + "/products/" + id);
                 return productMapper.toDto(productService.getSingleProduct(storeId, id));
         }
 
@@ -105,6 +111,7 @@ public class ProductController {
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Product ID") @PathVariable int id,
                         @Valid @RequestBody ProductCreationDTO dto) {
+                log.info("Recieved: PUT request to /" + storeId + "/products/" + id);
                 Product product = productMapper.toProduct(dto);
                 product.setProductId(id);
 
@@ -122,6 +129,7 @@ public class ProductController {
         public SuccessResponse deleteProduct(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Product ID") @PathVariable int id) {
+                log.info("Recieved: DELETE request to /" + storeId + "/products/" + id);
                 productService.deleteProduct(storeId, id);
                 SuccessResponse successResponse = new SuccessResponse(Responses.PRODUCT_DELETED);
 

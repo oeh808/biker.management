@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +41,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+@Log4j2
 @RestController
 @Tag(name = "Orders", description = "Controller for handling mappings authentication and registering users")
 @SecurityRequirement(name = "Authorization")
@@ -74,6 +76,7 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "userId", description = "Customer ID") @PathVariable int userId,
                         @Parameter(in = ParameterIn.PATH, name = "productId", description = "Product ID") @PathVariable int productId,
                         @Valid @RequestBody AddressCreationDTO dto) {
+                log.info("Recieved: POST request to /orders/" + userId + "/" + productId);
                 Customer customer = customerService.getSingleCustomer(userId);
                 Product product = productService.getProduct(productId);
                 Order order = orderService.createOrder(customer, product, orderMapper.toAddress(dto));
@@ -90,6 +93,7 @@ public class OrderController {
         public OrderReadingDTOCustomer getOrder(
                         @Parameter(in = ParameterIn.PATH, name = "userId", description = "Customer ID") @PathVariable int userId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
+                log.info("Recieved: GET request to /orders/" + userId + "/" + orderId);
                 return orderMapper.toDtoForCustomer(
                                 orderService.getOrder(customerService.getSingleCustomer(userId), orderId));
         }
@@ -102,6 +106,7 @@ public class OrderController {
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
         public OrderReadingDTOStoreAndBackOffice getOrder_BackOffice(
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
+                log.info("Recieved: GET request to /orders/backOffice/" + orderId);
                 return orderMapper.toDtoForStoresAndBackOffice(orderService.getOrder_BackOffice(orderId));
         }
 
@@ -111,6 +116,7 @@ public class OrderController {
         @GetMapping("/available")
         @PreAuthorize("hasAuthority('" + Roles.BIKER + "')")
         public List<OrderReadingDTOBiker> getAvailableOrders() {
+                log.info("Recieved: GET request to /orders/available");
                 return orderMapper.toDtosForBiker(orderService.getAvailableOrders());
         }
 
@@ -121,6 +127,7 @@ public class OrderController {
         @GetMapping("/backOffice/available")
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
         public List<OrderReadingDTOStoreAndBackOffice> getAvailableOrders_BackOffice() {
+                log.info("Recieved: GET request to /orders/backOffice/available");
                 return orderMapper.toDtosForStoresandBackOffice(orderService.getAvailableOrders());
         }
 
@@ -132,6 +139,7 @@ public class OrderController {
                         "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
         public List<OrderReadingDTOStoreAndBackOffice> getOrdersByStore(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId) {
+                log.info("Recieved: GET request to /orders/stores/" + storeId);
                 return orderMapper.toDtosForStoresandBackOffice(
                                 orderService.getOrdersByStore(storeService.getSingleStore(storeId)));
         }
@@ -143,6 +151,7 @@ public class OrderController {
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
         public List<OrderReadingDTOStoreAndBackOffice> getOrdersByBiker(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId) {
+                log.info("Recieved: GET request to /orders/bikers/" + bikerId);
                 return orderMapper.toDtosForStoresandBackOffice(
                                 orderService.getOrdersByBiker(bikerService.getSingleBiker(bikerId)));
         }
@@ -158,6 +167,7 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody EtaCreationDTO dto) {
+                log.info("Recieved: PUT request to /orders/eta/bikers/" + bikerId + "/" + orderId);
                 orderService.updateOrderEta_Biker(bikerService.getSingleBiker(bikerId), orderId,
                                 orderMapper.toDate(dto));
 
@@ -176,6 +186,7 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody EtaCreationDTO dto) {
+                log.info("Recieved: PUT request to /orders/eta/stores/" + storeId + "/" + orderId);
                 orderService.updateOrderEta_Store(storeService.getSingleStore(storeId), orderId,
                                 orderMapper.toDate(dto));
 
@@ -193,6 +204,7 @@ public class OrderController {
         public SuccessResponse updateEta_BackOffice(
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody EtaCreationDTO dto) {
+                log.info("Recieved: PUT request to /orders/eta/backOffice/" + orderId);
                 orderService.updateOrderEta_BackOffice(orderId, orderMapper.toDate(dto));
 
                 SuccessResponse successResponse = new SuccessResponse(Responses.ETA_UPDATED);
@@ -210,6 +222,7 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "userId", description = "Customer ID") @PathVariable int userId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody FeedBackCreationDTO dto) {
+                log.info("Recieved: PUT request to /orders/rate/" + userId + "/" + orderId);
                 orderService.rateOrder(customerService.getSingleCustomer(userId), orderId, orderMapper.toFeedBack(dto));
 
                 SuccessResponse successResponse = new SuccessResponse(Responses.FEEDBACK_ADDED);
@@ -227,6 +240,7 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody StatusCreationDTO dto) {
+                log.info("Recieved: PUT request to /orders/status/bikers/" + bikerId + "/" + orderId);
                 orderService.updateOrderStatus_Biker(bikerService.getSingleBiker(bikerId), orderId,
                                 orderMapper.toStatus(dto));
 
@@ -245,6 +259,7 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody StatusCreationDTO dto) {
+                log.info("Recieved: PUT request to /orders/status/stores/" + storeId + "/" + orderId);
                 orderService.updateOrderStatus_Store(storeService.getSingleStore(storeId), orderId,
                                 orderMapper.toStatus(dto));
 
@@ -261,6 +276,7 @@ public class OrderController {
         public SuccessResponse updateStatus_BackOffice(
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody StatusCreationDTO dto) {
+                log.info("Recieved: PUT request to /orders/status/backOffice/" + orderId);
                 orderService.updateOrderStatus_BackOffice(orderId, orderMapper.toStatus(dto));
 
                 SuccessResponse successResponse = new SuccessResponse(Responses.STATUS_UPDATED);
@@ -277,6 +293,7 @@ public class OrderController {
         public SuccessResponse assignDelivery(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
+                log.info("Recieved: PUT request to /orders/assign/" + bikerId + "/" + orderId);
                 orderService.assignDelivery(bikerService.getSingleBiker(bikerId), orderId);
 
                 SuccessResponse successResponse = new SuccessResponse(Responses.ORDER_ASSIGNED(bikerId, orderId));
@@ -290,6 +307,7 @@ public class OrderController {
         @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
         public SuccessResponse deleteOrder(
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
+                log.info("Recieved: DELETE request to /orders/backOffice/" + orderId);
                 orderService.deleteOrder(orderId);
 
                 SuccessResponse successResponse = new SuccessResponse(Responses.ORDER_DELETED);

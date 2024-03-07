@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@Log4j2
 @RestController
 @Tag(name = "Bikers", description = "Controller for handling mappings for bikers")
 @SecurityRequirement(name = "Authorization")
@@ -48,6 +50,7 @@ public class BikerController {
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of BikerCreationDTO")
     public BikerReadingDTO createBiker(@Valid @RequestBody BikerCreationDTO dto) {
+        log.info("Recieved: POST request to /bikers");
         Biker biker = bikerService.createBiker(bikerMapper.toBiker(dto));
 
         return bikerMapper.toDto(biker);
@@ -59,6 +62,7 @@ public class BikerController {
     @GetMapping()
     @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
     public List<BikerReadingDTO> getAllBikers() {
+        log.info("Recieved: GET request to /bikers");
         return bikerMapper.toDtos(bikerService.getAllBikers());
     }
 
@@ -70,6 +74,7 @@ public class BikerController {
             "(hasAuthority('" + Roles.BIKER + "') and #id == authentication.principal.id)")
     public BikerReadingDTO getSingleBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
+        log.info("Recieved: GET request to /bikers/" + id);
         return bikerMapper.toDto(bikerService.getSingleBiker(id));
     }
 
@@ -81,6 +86,7 @@ public class BikerController {
     @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
     public SuccessResponse deleteBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
+        log.info("Recieved: DELETE request to /bikers/" + id);
         bikerService.deleteBiker(id);
         return new SuccessResponse(Responses.BIKER_DELETED);
     }
