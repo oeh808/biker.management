@@ -116,7 +116,8 @@ public class AnalysisServiceImpl implements AnalysisService {
     private float calculateDeliveryEfficiency(Biker biker) {
         /*
          * Insert code that calculates efficiency based on navigation coordinates and
-         * whether the biker delivered the order within the eta or not.
+         * whether the biker delivered the order within the estimatedTimeOfArrival or
+         * not.
          * Current code is more of a place holder.
          */
         return 3;

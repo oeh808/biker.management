@@ -88,7 +88,7 @@ public class OrderServiceTest {
     public void setUpMocks() {
         product.setQuantity(3);
         order.setStatus(OrderStatus.AWAITING_APPROVAL);
-        order.setEta(Date.valueOf("2050-09-15"));
+        order.setEstimatedTimeOfArrival(Date.valueOf("2050-09-15"));
         order.setBiker(biker);
 
         when(repo.findById(order.getOrderId())).thenReturn(Optional.of(order));
@@ -220,29 +220,29 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void updateOrderEta_Biker() {
+    public void updateOrderEstimatedTimeOfArrival_Biker() {
         Date eta = Date.valueOf("3050-09-15");
-        service.updateOrderEta_Biker(biker, order.getOrderId(), eta);
+        service.updateOrderEstimatedTimeOfArrival_Biker(biker, order.getOrderId(), eta);
 
-        assertEquals(eta, order.getEta());
+        assertEquals(eta, order.getEstimatedTimeOfArrival());
         verify(repo, times(1)).save(order);
     }
 
     @Test
-    public void updateOrderEta_Store() {
+    public void updateOrderEstimatedTimeOfArrival_Store() {
         Date eta = Date.valueOf("3050-09-15");
-        service.updateOrderEta_Store(store, order.getOrderId(), eta);
+        service.updateOrderEstimatedTimeOfArrival_Store(store, order.getOrderId(), eta);
 
-        assertEquals(eta, order.getEta());
+        assertEquals(eta, order.getEstimatedTimeOfArrival());
         verify(repo, times(1)).save(order);
     }
 
     @Test
-    public void updateOrderEta_BackOffice() {
+    public void updateOrderEstimatedTimeOfArrival_BackOffice() {
         Date eta = Date.valueOf("3050-09-15");
-        service.updateOrderEta_BackOffice(order.getOrderId(), eta);
+        service.updateOrderEstimatedTimeOfArrival_BackOffice(order.getOrderId(), eta);
 
-        assertEquals(eta, order.getEta());
+        assertEquals(eta, order.getEstimatedTimeOfArrival());
         verify(repo, times(1)).save(order);
     }
 

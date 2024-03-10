@@ -136,38 +136,39 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order updateOrderEta_Biker(Biker biker, int orderId, Date eta) {
-        log.info("Running updateOrderEta_Biker(" + biker.toString() + ", " + orderId + ", "
-                + eta.toString() + ") in OrderServiceImpl...");
+    public Order updateOrderEstimatedTimeOfArrival_Biker(Biker biker, int orderId, Date estimatedTimeOfArrival) {
+        log.info("Running updateOrderEstimatedTimeOfArrival_Biker(" + biker.toString() + ", " + orderId + ", "
+                + estimatedTimeOfArrival.toString() + ") in OrderServiceImpl...");
         Optional<Order> opOrder = orderRepo.findByOrderIdAndBiker(orderId, biker);
         log.info("Attempting to find order...");
         Order order = getOrderFromOptional(opOrder);
-        order.setEta(eta);
+        order.setEstimatedTimeOfArrival(estimatedTimeOfArrival);
 
         log.info("Saving updated order...");
         return orderRepo.save(order);
     }
 
     @Override
-    public Order updateOrderEta_Store(Store store, int orderId, Date eta) {
-        log.info("Running updateOrderEta_Store(" + store.toString() + ", " + orderId + ", "
-                + eta.toString() + ") in OrderServiceImpl...");
+    public Order updateOrderEstimatedTimeOfArrival_Store(Store store, int orderId, Date estimatedTimeOfArrival) {
+        log.info("Running updateOrderEstimatedTimeOfArrival_Store(" + store.toString() + ", " + orderId + ", "
+                + estimatedTimeOfArrival.toString() + ") in OrderServiceImpl...");
         Optional<Order> opOrder = orderRepo.findByOrderIdAndStore(orderId, store);
         log.info("Attempting to find order...");
         Order order = getOrderFromOptional(opOrder);
-        order.setEta(eta);
+        order.setEstimatedTimeOfArrival(estimatedTimeOfArrival);
 
         log.info("Saving updated order...");
         return orderRepo.save(order);
     }
 
     @Override
-    public Order updateOrderEta_BackOffice(int orderId, Date eta) {
-        log.info("Running updateOrderEta_BackOffice(" + orderId + ", " + eta.toString() + ") in OrderServiceImpl...");
+    public Order updateOrderEstimatedTimeOfArrival_BackOffice(int orderId, Date estimatedTimeOfArrival) {
+        log.info("Running updateOrderEstimatedTimeOfArrival_BackOffice(" + orderId + ", " + estimatedTimeOfArrival.toString()
+                + ") in OrderServiceImpl...");
         Optional<Order> opOrder = orderRepo.findById(orderId);
         log.info("Attempting to find order...");
         Order order = getOrderFromOptional(opOrder);
-        order.setEta(eta);
+        order.setEstimatedTimeOfArrival(estimatedTimeOfArrival);
 
         log.info("Saving updated order...");
         return orderRepo.save(order);

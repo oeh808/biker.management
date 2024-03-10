@@ -33,11 +33,11 @@ public interface OrderService {
 
     public void updateOrderStatus_BackOffice(int orderId, OrderStatus status);
 
-    public Order updateOrderEta_Biker(Biker biker, int orderId, Date eta);
+    public Order updateOrderEstimatedTimeOfArrival_Biker(Biker biker, int orderId, Date estimatedTimeOfArrival);
 
-    public Order updateOrderEta_Store(Store store, int orderId, Date eta);
+    public Order updateOrderEstimatedTimeOfArrival_Store(Store store, int orderId, Date estimatedTimeOfArrival);
 
-    public Order updateOrderEta_BackOffice(int orderId, Date eta);
+    public Order updateOrderEstimatedTimeOfArrival_BackOffice(int orderId, Date estimatedTimeOfArrival);
 
     public void assignDelivery(Biker biker, int orderId);
 

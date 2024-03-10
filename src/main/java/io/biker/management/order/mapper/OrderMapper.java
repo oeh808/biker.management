@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import io.biker.management.customer.dtos.AddressCreationDTO;
 import io.biker.management.enums.OrderStatus;
-import io.biker.management.order.dto.EtaCreationDTO;
+import io.biker.management.order.dto.EstimatedTimeOfArrivalCreationDTO;
 import io.biker.management.order.dto.FeedBackCreationDTO;
 import io.biker.management.order.dto.OrderReadingDTOBiker;
 import io.biker.management.order.dto.OrderReadingDTOCustomer;
@@ -26,12 +26,12 @@ public class OrderMapper {
         OrderDetails orderDetails = order.getOrderDetails();
         OrderReadingDTOCustomer dto;
         if (order.getBiker() == null) {
-            dto = new OrderReadingDTOCustomer(order.getStatus().toString(), order.getEta(),
+            dto = new OrderReadingDTOCustomer(order.getStatus().toString(), order.getEstimatedTimeOfArrival(),
                     orderDetails.getProduct().getName(), orderDetails.getProduct().getPrice(), orderDetails.getVAT(),
                     orderDetails.getTotalCost(),
                     "Biker not set", orderDetails.getAddress());
         } else {
-            dto = new OrderReadingDTOCustomer(order.getStatus().toString(), order.getEta(),
+            dto = new OrderReadingDTOCustomer(order.getStatus().toString(), order.getEstimatedTimeOfArrival(),
                     orderDetails.getProduct().getName(), orderDetails.getProduct().getPrice(), orderDetails.getVAT(),
                     orderDetails.getTotalCost(),
                     order.getBiker().getName(), orderDetails.getAddress());
@@ -42,7 +42,8 @@ public class OrderMapper {
 
     public OrderReadingDTOBiker toDtoForBiker(Order order) {
         OrderDetails orderDetails = order.getOrderDetails();
-        OrderReadingDTOBiker dto = new OrderReadingDTOBiker(order.getEta(), orderDetails.getProduct().getName(),
+        OrderReadingDTOBiker dto = new OrderReadingDTOBiker(order.getEstimatedTimeOfArrival(),
+                orderDetails.getProduct().getName(),
                 orderDetails.getProduct().getPrice(), order.getCustomer().getName(), order.getCustomer().getEmail(),
                 order.getCustomer().getPhoneNumber(), orderDetails.getAddress());
 
@@ -64,13 +65,13 @@ public class OrderMapper {
         if (order.getBiker() == null) {
             dto = new OrderReadingDTOStoreAndBackOffice(order.getOrderId(),
                     order.getCustomer().getId(), order.getStore().getId(), -1, orderDetails.getProduct().getProductId(),
-                    order.getStatus().toString(), order.getEta(), orderDetails.getAddress(),
+                    order.getStatus().toString(), order.getEstimatedTimeOfArrival(), orderDetails.getAddress(),
                     orderDetails.getTotalCost(), orderDetails.getFeedBack());
         } else {
             dto = new OrderReadingDTOStoreAndBackOffice(order.getOrderId(),
                     order.getCustomer().getId(), order.getStore().getId(), order.getBiker().getId(),
                     orderDetails.getProduct().getProductId(),
-                    order.getStatus().toString(), order.getEta(), orderDetails.getAddress(),
+                    order.getStatus().toString(), order.getEstimatedTimeOfArrival(), orderDetails.getAddress(),
                     orderDetails.getTotalCost(), orderDetails.getFeedBack());
         }
 
@@ -97,8 +98,8 @@ public class OrderMapper {
         return dto.status();
     }
 
-    public Date toDate(EtaCreationDTO dto) {
-        Date date = dto.eta();
+    public Date toDate(EstimatedTimeOfArrivalCreationDTO dto) {
+        Date date = dto.estimatedTimeOfArrival();
 
         return date;
     }

@@ -10,7 +10,7 @@ import io.biker.management.customer.dtos.AddressCreationDTO;
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.customer.service.CustomerService;
 import io.biker.management.errorHandling.responses.SuccessResponse;
-import io.biker.management.order.dto.EtaCreationDTO;
+import io.biker.management.order.dto.EstimatedTimeOfArrivalCreationDTO;
 import io.biker.management.order.dto.FeedBackCreationDTO;
 import io.biker.management.order.dto.OrderReadingDTOBiker;
 import io.biker.management.order.dto.OrderReadingDTOCustomer;
@@ -158,56 +158,56 @@ public class OrderController {
 
         @Operation(description = "PUT endpoint for updating the estimated time of arrival of an order by a biker." +
                         "\n\n Can only be done by bikers that are associated with the order." +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order eta (Biker)")
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order estimated time of arrival (Biker)")
         @PutMapping("/eta/bikers/{bikerId}/{orderId}")
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EstimatedTimeOfArrivalCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
                         "(hasAuthority('" + Roles_Const.BIKER + "') and #bikerId == authentication.principal.id)")
-        public SuccessResponse updateEta_Biker(
+        public SuccessResponse updateEstimatedTimeOfArrival_Biker(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
-                        @Valid @RequestBody EtaCreationDTO dto) {
+                        @Valid @RequestBody EstimatedTimeOfArrivalCreationDTO dto) {
                 log.info("Recieved: PUT request to /orders/eta/bikers/" + bikerId + "/" + orderId);
-                orderService.updateOrderEta_Biker(bikerService.getSingleBiker(bikerId), orderId,
+                orderService.updateOrderEstimatedTimeOfArrival_Biker(bikerService.getSingleBiker(bikerId), orderId,
                                 orderMapper.toDate(dto));
 
-                SuccessResponse successResponse = new SuccessResponse(Responses.ETA_UPDATED);
+                SuccessResponse successResponse = new SuccessResponse(Responses.ESTIMATED_TIME_OF_ARRIVAL_UPDATED);
                 return successResponse;
         }
 
         @Operation(description = "PUT endpoint for updating the estimated time of arrival of an order by a store." +
                         "\n\n Can only be done by stores that are associated with the order." +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order eta (Stoner)")
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order estimated time of arrival (Stoner)")
         @PutMapping("/eta/stores/{storeId}/{orderId}")
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EstimatedTimeOfArrivalCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
                         "(hasAuthority('" + Roles_Const.STORE + "') and #storeId == authentication.principal.id)")
-        public SuccessResponse updateEta_Store(
+        public SuccessResponse updateEstimatedTimeOfArrival_Store(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
-                        @Valid @RequestBody EtaCreationDTO dto) {
+                        @Valid @RequestBody EstimatedTimeOfArrivalCreationDTO dto) {
                 log.info("Recieved: PUT request to /orders/eta/stores/" + storeId + "/" + orderId);
-                orderService.updateOrderEta_Store(storeService.getSingleStore(storeId), orderId,
+                orderService.updateOrderEstimatedTimeOfArrival_Store(storeService.getSingleStore(storeId), orderId,
                                 orderMapper.toDate(dto));
 
-                SuccessResponse successResponse = new SuccessResponse(Responses.ETA_UPDATED);
+                SuccessResponse successResponse = new SuccessResponse(Responses.ESTIMATED_TIME_OF_ARRIVAL_UPDATED);
                 return successResponse;
         }
 
         @Operation(description = "PUT endpoint for updating the estimated time of arrival of an order by a  backoffice user."
                         +
                         "\n\n Can only be done by back office users." +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order eta (Back office)")
+                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order estimated time of arrival (Back office)")
         @PutMapping("/eta/backOffice/{orderId}")
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EtaCreationDTO")
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EstimatedTimeOfArrivalCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
-        public SuccessResponse updateEta_BackOffice(
+        public SuccessResponse updateEstimatedTimeOfArrival_BackOffice(
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
-                        @Valid @RequestBody EtaCreationDTO dto) {
+                        @Valid @RequestBody EstimatedTimeOfArrivalCreationDTO dto) {
                 log.info("Recieved: PUT request to /orders/eta/backOffice/" + orderId);
-                orderService.updateOrderEta_BackOffice(orderId, orderMapper.toDate(dto));
+                orderService.updateOrderEstimatedTimeOfArrival_BackOffice(orderId, orderMapper.toDate(dto));
 
-                SuccessResponse successResponse = new SuccessResponse(Responses.ETA_UPDATED);
+                SuccessResponse successResponse = new SuccessResponse(Responses.ESTIMATED_TIME_OF_ARRIVAL_UPDATED);
                 return successResponse;
         }
 

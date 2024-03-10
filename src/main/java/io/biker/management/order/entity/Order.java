@@ -46,7 +46,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    private Date eta;
+    private Date estimatedTimeOfArrival;
 
     @Embedded
     private OrderDetails orderDetails;
