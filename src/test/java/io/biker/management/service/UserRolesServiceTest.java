@@ -34,8 +34,8 @@ public class UserRolesServiceTest {
     static class ServiceTestConfig {
         @Bean
         @Autowired
-        UserRolesServiceImpl service() {
-            return new UserRolesServiceImpl(null, null, null, null, null);
+        UserRolesServiceImpl service(UserRolesRepo repo) {
+            return new UserRolesServiceImpl(repo, null, null, null, null);
         }
     }
 
