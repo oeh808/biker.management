@@ -22,12 +22,16 @@ create table stores (
     id integer not null, name varchar(255), email varchar(255), phone_number varchar(255), password varchar(255), street varchar(255), city varchar(255), country varchar(255), state varchar(255), post_code varchar(255), primary key (id)
 ) engine = InnoDB;
 
+create table list_of_roles (
+    user_id integer not null, role varchar(255)
+) engine = InnoDB;
+
 create table user_sequence (next_val bigint) engine = InnoDB;
 
 insert into user_sequence values (50);
 
 create table user_roles (
-    user_id integer not null, roles varchar(255), primary key (user_id)
+    user_id integer not null, primary key (user_id)
 ) engine = InnoDB;
 
 alter table admins
@@ -62,3 +66,6 @@ add constraint UK_m9stdcu26niccyuycrtr9hxwd unique (phone_number);
 
 alter table customer_addresses
 add constraint FKrvr6wl9gll7u98cda18smugp4 foreign key (customer_id) references customers (id);
+
+alter table list_of_roles
+add constraint FKqa5fswbne6o98puelhs266ob2 foreign key (user_id) references user_roles (user_id);

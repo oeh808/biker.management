@@ -7,6 +7,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -25,6 +27,7 @@ import io.biker.management.auth.exception.AuthExceptionMessages;
 import io.biker.management.auth.exception.CustomAuthException;
 import io.biker.management.auth.repo.UserRolesRepo;
 import io.biker.management.auth.service.UserRolesServiceImpl;
+import io.biker.management.constants.Roles_Const;
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
@@ -46,11 +49,15 @@ public class UserRolesServiceTest {
     private UserRolesServiceImpl service;
 
     private static UserRoles userRoles;
+    private static List<String> roles;
 
     @BeforeAll
     public static void setUp() {
+        roles = new ArrayList<>();
+        roles.add(Roles_Const.ADMIN);
+
         userRoles = new UserRoles(1, new Admin(1, "Durge", "Bhaal@gmail.com", "+666 9772223918", "password"),
-                "ADMIN");
+                roles);
     }
 
     @Test

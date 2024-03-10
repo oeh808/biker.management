@@ -3,6 +3,8 @@ package io.biker.management.repo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
@@ -17,6 +19,7 @@ import io.biker.management.auth.entity.UserRoles;
 import io.biker.management.auth.repo.UserRolesRepo;
 import io.biker.management.backOffice.entity.BackOfficeUser;
 import io.biker.management.backOffice.repo.BackOfficeUserRepo;
+import io.biker.management.constants.Roles_Const;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -30,6 +33,8 @@ public class UserRolesRepoTest {
     private static BackOfficeUser backOfficeUser1;
     private static BackOfficeUser backOfficeUser2;
 
+    private static List<String> roles;
+
     private UserRoles userRoles1;
     private UserRoles userRoles2;
 
@@ -37,6 +42,9 @@ public class UserRolesRepoTest {
     public static void setUp() {
         backOfficeUser1 = new BackOfficeUser(50, "Durge", "Bhaal@gmail.com", "+666 9772223918", "password");
         backOfficeUser2 = new BackOfficeUser(51, "Tav", "Vanilla@gmail.com", "+333 9772223918", "password");
+
+        List<String> roles = new ArrayList<>();
+        roles.add(Roles_Const.BACK_OFFICE);
     }
 
     @BeforeEach
@@ -45,9 +53,9 @@ public class UserRolesRepoTest {
         backOfficeUser2 = backOfficeUserRepo.save(backOfficeUser2);
 
         userRoles1 = new UserRoles(backOfficeUser1.getId(), backOfficeUser1,
-                "BACK_OFFICE");
+                roles);
         userRoles2 = new UserRoles(backOfficeUser2.getId(), backOfficeUser2,
-                "BACK_OFFICE");
+                roles);
 
         userRoles1 = userRolesRepo.save(userRoles1);
         userRoles2 = userRolesRepo.save(userRoles2);

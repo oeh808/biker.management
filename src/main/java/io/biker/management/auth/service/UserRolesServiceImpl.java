@@ -1,5 +1,7 @@
 package io.biker.management.auth.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -55,7 +57,10 @@ public class UserRolesServiceImpl implements UserRolesService {
         Customer customer = customerService.getSingleCustomer(id);
 
         log.info("Assigning roles..");
-        UserRoles user = new UserRoles(id, customer, Roles_Const.CUSTOMER);
+        List<String> roles = new ArrayList<>();
+        roles.add(Roles_Const.CUSTOMER);
+
+        UserRoles user = new UserRoles(id, customer, roles);
         return addUser(user);
     }
 
@@ -65,7 +70,10 @@ public class UserRolesServiceImpl implements UserRolesService {
         Biker biker = bikerService.getSingleBiker(id);
 
         log.info("Assigning roles..");
-        UserRoles user = new UserRoles(id, biker, Roles_Const.BIKER);
+        List<String> roles = new ArrayList<>();
+        roles.add(Roles_Const.BIKER);
+
+        UserRoles user = new UserRoles(id, biker, roles);
         return addUser(user);
     }
 
@@ -75,7 +83,10 @@ public class UserRolesServiceImpl implements UserRolesService {
         Store store = storeService.getSingleStore(id);
 
         log.info("Assigning roles..");
-        UserRoles user = new UserRoles(id, store, Roles_Const.STORE);
+        List<String> roles = new ArrayList<>();
+        roles.add(Roles_Const.STORE);
+
+        UserRoles user = new UserRoles(id, store, roles);
         return addUser(user);
     }
 
@@ -85,7 +96,10 @@ public class UserRolesServiceImpl implements UserRolesService {
         BackOfficeUser backOfficeUser = backOfficeService.getSingleBackOfficeUser(id);
 
         log.info("Assigning roles..");
-        UserRoles user = new UserRoles(id, backOfficeUser, Roles_Const.BACK_OFFICE);
+        List<String> roles = new ArrayList<>();
+        roles.add(Roles_Const.BACK_OFFICE);
+
+        UserRoles user = new UserRoles(id, backOfficeUser, roles);
         return addUser(user);
     }
 
