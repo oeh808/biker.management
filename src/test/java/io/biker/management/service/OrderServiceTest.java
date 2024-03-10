@@ -26,7 +26,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.biker.management.biker.entity.Biker;
+import io.biker.management.biker.service.BikerService;
 import io.biker.management.customer.entity.Customer;
+import io.biker.management.customer.service.CustomerService;
 import io.biker.management.enums.OrderStatus;
 import io.biker.management.order.entity.FeedBack;
 import io.biker.management.order.entity.Order;
@@ -37,7 +39,9 @@ import io.biker.management.order.repo.OrderRepo;
 import io.biker.management.order.service.OrderService;
 import io.biker.management.order.service.OrderServiceImpl;
 import io.biker.management.product.entity.Product;
+import io.biker.management.product.service.ProductService;
 import io.biker.management.store.entity.Store;
+import io.biker.management.store.service.StoreService;
 import io.biker.management.user.Address;
 
 @ActiveProfiles("test")
@@ -47,13 +51,26 @@ public class OrderServiceTest {
     static class ServiceTestConfig {
         @Bean
         @Autowired
-        OrderService service(OrderRepo repo) {
-            return new OrderServiceImpl(repo);
+        OrderService service(OrderRepo repo, CustomerService customerService, ProductService productService,
+                StoreService storeService, BikerService bikerService) {
+            return new OrderServiceImpl(repo, customerService, productService, storeService, bikerService);
         }
     }
 
     @MockBean
     private OrderRepo repo;
+
+    @MockBean
+    private CustomerService customerService;
+
+    @MockBean
+    private ProductService productService;
+
+    @MockBean
+    private StoreService storeService;
+
+    @MockBean
+    private BikerService bikerService;
 
     @Autowired
     private OrderService service;
@@ -102,6 +119,11 @@ public class OrderServiceTest {
 
         when(repo.findByOrderIdAndStore(order.getOrderId(), store)).thenReturn(Optional.of(order));
         when(repo.findByOrderIdAndStore(order.getOrderId() - 1, store)).thenReturn(Optional.empty());
+
+        when(customerService.getSingleCustomer(customer.getId())).thenReturn(customer);
+        when(bikerService.getSingleBiker(biker.getId())).thenReturn(biker);
+        when(storeService.getSingleStore(store.getId())).thenReturn(store);
+        when(productService.getProduct(product.getProductId())).thenReturn(product);
     }
 
     @Test
@@ -111,7 +133,7 @@ public class OrderServiceTest {
             return createdOrder;
         }).when(repo).save(any(Order.class));
 
-        Order createdOrder = service.createOrder(customer, product, address);
+        Order createdOrder = service.createOrder(customer.getId(), product.getProductId(), address);
 
         assertEquals(order.getCustomer(), createdOrder.getCustomer());
         assertEquals(product.getName(), createdOrder.getOrderDetails().getProduct().getName());
@@ -125,21 +147,21 @@ public class OrderServiceTest {
 
         OrderException ex = assertThrows(OrderException.class,
                 () -> {
-                    service.createOrder(customer, product, address);
+                    service.createOrder(customer.getId(), product.getProductId(), address);
                 });
         assertTrue(ex.getMessage().contains(OrderExceptionMessages.OUT_OF_STOCK));
     }
 
     @Test
     public void getOrder_Success() {
-        assertEquals(order, service.getOrder(customer, order.getOrderId()));
+        assertEquals(order, service.getOrder(customer.getId(), order.getOrderId()));
     }
 
     @Test
     public void getOrder_NotFound() {
         OrderException ex = assertThrows(OrderException.class,
                 () -> {
-                    service.getOrder(customer, order.getOrderId() - 1);
+                    service.getOrder(customer.getId(), order.getOrderId() - 1);
                 });
         assertTrue(ex.getMessage().contains(OrderExceptionMessages.ORDER_NOT_FOUND));
     }
@@ -173,7 +195,7 @@ public class OrderServiceTest {
         orders.add(order);
         when(repo.findByStore(store)).thenReturn(orders);
 
-        assertEquals(orders, service.getOrdersByStore(store));
+        assertEquals(orders, service.getOrdersByStore(store.getId()));
     }
 
     @Test
@@ -182,14 +204,14 @@ public class OrderServiceTest {
         orders.add(order);
         when(repo.findByBiker(biker)).thenReturn(orders);
 
-        assertEquals(orders, service.getOrdersByBiker(biker));
+        assertEquals(orders, service.getOrdersByBiker(biker.getId()));
     }
 
     @Test
     public void rateOrder() {
         FeedBack feedBack = new FeedBack(5, "Amazing");
 
-        service.rateOrder(customer, order.getOrderId(), feedBack);
+        service.rateOrder(customer.getId(), order.getOrderId(), feedBack);
 
         assertEquals(feedBack, order.getOrderDetails().getFeedBack());
         verify(repo, times(1)).save(order);
@@ -197,7 +219,7 @@ public class OrderServiceTest {
 
     @Test
     public void updateOrderStatus_Biker() {
-        service.updateOrderStatus_Biker(biker, order.getOrderId(), OrderStatus.DELIVERED);
+        service.updateOrderStatus_Biker(biker.getId(), order.getOrderId(), OrderStatus.DELIVERED);
 
         assertEquals(OrderStatus.DELIVERED, order.getStatus());
         verify(repo, times(1)).save(order);
@@ -205,7 +227,7 @@ public class OrderServiceTest {
 
     @Test
     public void updateOrderStatus_Store() {
-        service.updateOrderStatus_Store(store, order.getOrderId(), OrderStatus.DELIVERED);
+        service.updateOrderStatus_Store(store.getId(), order.getOrderId(), OrderStatus.DELIVERED);
 
         assertEquals(OrderStatus.DELIVERED, order.getStatus());
         verify(repo, times(1)).save(order);
@@ -222,7 +244,7 @@ public class OrderServiceTest {
     @Test
     public void updateOrderEstimatedTimeOfArrival_Biker() {
         Date eta = Date.valueOf("3050-09-15");
-        service.updateOrderEstimatedTimeOfArrival_Biker(biker, order.getOrderId(), eta);
+        service.updateOrderEstimatedTimeOfArrival_Biker(biker.getId(), order.getOrderId(), eta);
 
         assertEquals(eta, order.getEstimatedTimeOfArrival());
         verify(repo, times(1)).save(order);
@@ -231,7 +253,7 @@ public class OrderServiceTest {
     @Test
     public void updateOrderEstimatedTimeOfArrival_Store() {
         Date eta = Date.valueOf("3050-09-15");
-        service.updateOrderEstimatedTimeOfArrival_Store(store, order.getOrderId(), eta);
+        service.updateOrderEstimatedTimeOfArrival_Store(store.getId(), order.getOrderId(), eta);
 
         assertEquals(eta, order.getEstimatedTimeOfArrival());
         verify(repo, times(1)).save(order);
@@ -249,7 +271,8 @@ public class OrderServiceTest {
     @Test
     public void assignDelivery() {
         Biker someBiker = new Biker();
-        service.assignDelivery(someBiker, order.getOrderId());
+        when(bikerService.getSingleBiker(someBiker.getId())).thenReturn(someBiker);
+        service.assignDelivery(someBiker.getId(), order.getOrderId());
 
         assertEquals(someBiker, order.getBiker());
         verify(repo, times(1)).save(order);

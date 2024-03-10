@@ -7,7 +7,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import io.biker.management.biker.entity.Biker;
+import io.biker.management.biker.service.BikerService;
 import io.biker.management.customer.entity.Customer;
+import io.biker.management.customer.service.CustomerService;
 import io.biker.management.enums.OrderStatus;
 import io.biker.management.order.constants.Tax;
 import io.biker.management.order.entity.FeedBack;
@@ -17,7 +19,9 @@ import io.biker.management.order.exception.OrderException;
 import io.biker.management.order.exception.OrderExceptionMessages;
 import io.biker.management.order.repo.OrderRepo;
 import io.biker.management.product.entity.Product;
+import io.biker.management.product.service.ProductService;
 import io.biker.management.store.entity.Store;
+import io.biker.management.store.service.StoreService;
 import io.biker.management.user.Address;
 import lombok.extern.log4j.Log4j2;
 
@@ -25,15 +29,27 @@ import lombok.extern.log4j.Log4j2;
 @Service
 public class OrderServiceImpl implements OrderService {
     private OrderRepo orderRepo;
+    private CustomerService customerService;
+    private ProductService productService;
+    private StoreService storeService;
+    private BikerService bikerService;
 
-    public OrderServiceImpl(OrderRepo orderRepo) {
+    public OrderServiceImpl(OrderRepo orderRepo, CustomerService customerService, ProductService productService,
+            StoreService storeService, BikerService bikerService) {
         this.orderRepo = orderRepo;
+        this.customerService = customerService;
+        this.productService = productService;
+        this.storeService = storeService;
+        this.bikerService = bikerService;
     }
 
     @Override
-    public Order createOrder(Customer customer, Product product, Address deliveryAddress) {
-        log.info("Running createOrder(" + customer.toString() + ", " + product.toString() + ", "
+    public Order createOrder(int customerId, int productId, Address deliveryAddress) {
+        log.info("Running createOrder(" + customerId + ", " + productId + ", "
                 + deliveryAddress.toString() + ") in OrderServiceImpl...");
+        Customer customer = customerService.getSingleCustomer(customerId);
+        Product product = productService.getProduct(productId);
+
         if (product.getQuantity() < 1) {
             log.error("User attempting to order a product that is out of stock!");
             throw new OrderException(OrderExceptionMessages.OUT_OF_STOCK);
@@ -50,8 +66,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order getOrder(Customer customer, int orderId) {
-        log.info("Running getOrder(" + customer.toString() + ", " + orderId + ") in ProductServiceImpl...");
+    public Order getOrder(int customerId, int orderId) {
+        log.info("Running getOrder(" + customerId + ", " + orderId + ") in ProductServiceImpl...");
+        Customer customer = customerService.getSingleCustomer(customerId);
         Optional<Order> opOrder = orderRepo.findByOrderIdAndCustomer(orderId, customer);
 
         return getOrderFromOptional(opOrder);
@@ -72,22 +89,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getOrdersByStore(Store store) {
-        log.info("Running getOrdersByStore(" + store.toString() + ") in ProductServiceImpl...");
+    public List<Order> getOrdersByStore(int storeId) {
+        log.info("Running getOrdersByStore(" + storeId + ") in ProductServiceImpl...");
+        Store store = storeService.getSingleStore(storeId);
+
         return orderRepo.findByStore(store);
     }
 
     @Override
-    public List<Order> getOrdersByBiker(Biker biker) {
-        log.info("Running getOrdersByBiker(" + biker.toString() + ") in ProductServiceImpl...");
+    public List<Order> getOrdersByBiker(int bikerId) {
+        log.info("Running getOrdersByBiker(" + bikerId + ") in ProductServiceImpl...");
+        Biker biker = bikerService.getSingleBiker(bikerId);
+
         return orderRepo.findByBiker(biker);
     }
 
     @Override
-    public void rateOrder(Customer customer, int orderId, FeedBack feedBack) {
-        log.info("Running rateOrder(" + customer.toString() + ", " + orderId + ", "
+    public void rateOrder(int customerId, int orderId, FeedBack feedBack) {
+        log.info("Running rateOrder(" + customerId + ", " + orderId + ", "
                 + feedBack.toString() + ") in OrderServiceImpl...");
-        Order order = getOrder(customer, orderId);
+
+        Order order = getOrder(customerId, orderId);
         OrderDetails orderDetails = order.getOrderDetails();
         orderDetails.setFeedBack(feedBack);
 
@@ -98,9 +120,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateOrderStatus_Biker(Biker biker, int orderId, OrderStatus status) {
-        log.info("Running updateOrderStatus_Biker(" + biker.toString() + ", " + orderId + ", "
+    public void updateOrderStatus_Biker(int bikerId, int orderId, OrderStatus status) {
+        log.info("Running updateOrderStatus_Biker(" + bikerId + ", " + orderId + ", "
                 + status + ") in OrderServiceImpl...");
+        Biker biker = bikerService.getSingleBiker(bikerId);
+
         Optional<Order> opOrder = orderRepo.findByOrderIdAndBiker(orderId, biker);
         log.info("Attempting to find order...");
         Order order = getOrderFromOptional(opOrder);
@@ -111,9 +135,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateOrderStatus_Store(Store store, int orderId, OrderStatus status) {
-        log.info("Running updateOrderStatus_Store(" + store.toString() + ", " + orderId + ", "
+    public void updateOrderStatus_Store(int storeId, int orderId, OrderStatus status) {
+        log.info("Running updateOrderStatus_Store(" + storeId + ", " + orderId + ", "
                 + status + ") in OrderServiceImpl...");
+        Store store = storeService.getSingleStore(storeId);
+
         Optional<Order> opOrder = orderRepo.findByOrderIdAndStore(orderId, store);
         log.info("Attempting to find order...");
         Order order = getOrderFromOptional(opOrder);
@@ -136,9 +162,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order updateOrderEstimatedTimeOfArrival_Biker(Biker biker, int orderId, Date estimatedTimeOfArrival) {
-        log.info("Running updateOrderEstimatedTimeOfArrival_Biker(" + biker.toString() + ", " + orderId + ", "
+    public Order updateOrderEstimatedTimeOfArrival_Biker(int bikerId, int orderId, Date estimatedTimeOfArrival) {
+        log.info("Running updateOrderEstimatedTimeOfArrival_Biker(" + bikerId + ", " + orderId + ", "
                 + estimatedTimeOfArrival.toString() + ") in OrderServiceImpl...");
+        Biker biker = bikerService.getSingleBiker(bikerId);
+
         Optional<Order> opOrder = orderRepo.findByOrderIdAndBiker(orderId, biker);
         log.info("Attempting to find order...");
         Order order = getOrderFromOptional(opOrder);
@@ -149,9 +177,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order updateOrderEstimatedTimeOfArrival_Store(Store store, int orderId, Date estimatedTimeOfArrival) {
-        log.info("Running updateOrderEstimatedTimeOfArrival_Store(" + store.toString() + ", " + orderId + ", "
+    public Order updateOrderEstimatedTimeOfArrival_Store(int storeId, int orderId, Date estimatedTimeOfArrival) {
+        log.info("Running updateOrderEstimatedTimeOfArrival_Store(" + storeId + ", " + orderId + ", "
                 + estimatedTimeOfArrival.toString() + ") in OrderServiceImpl...");
+        Store store = storeService.getSingleStore(storeId);
+
         Optional<Order> opOrder = orderRepo.findByOrderIdAndStore(orderId, store);
         log.info("Attempting to find order...");
         Order order = getOrderFromOptional(opOrder);
@@ -163,7 +193,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order updateOrderEstimatedTimeOfArrival_BackOffice(int orderId, Date estimatedTimeOfArrival) {
-        log.info("Running updateOrderEstimatedTimeOfArrival_BackOffice(" + orderId + ", " + estimatedTimeOfArrival.toString()
+        log.info("Running updateOrderEstimatedTimeOfArrival_BackOffice(" + orderId + ", "
+                + estimatedTimeOfArrival.toString()
                 + ") in OrderServiceImpl...");
         Optional<Order> opOrder = orderRepo.findById(orderId);
         log.info("Attempting to find order...");
@@ -175,8 +206,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void assignDelivery(Biker biker, int orderId) {
-        log.info("Running assignDelivery(" + biker.toString() + ", " + orderId + ") in OrderServiceImpl...");
+    public void assignDelivery(int bikerId, int orderId) {
+        log.info("Running assignDelivery(" + bikerId + ", " + orderId + ") in OrderServiceImpl...");
+        Biker biker = bikerService.getSingleBiker(bikerId);
+
         Optional<Order> opOrder = orderRepo.findById(orderId);
         log.info("Attempting to find order...");
         Order order = getOrderFromOptional(opOrder);

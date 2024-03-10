@@ -3,12 +3,9 @@ package io.biker.management.order.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.biker.management.biker.service.BikerService;
 import io.biker.management.constants.Roles_Const;
 import io.biker.management.constants.response.Responses;
 import io.biker.management.customer.dtos.AddressCreationDTO;
-import io.biker.management.customer.entity.Customer;
-import io.biker.management.customer.service.CustomerService;
 import io.biker.management.errorHandling.responses.SuccessResponse;
 import io.biker.management.order.dto.EstimatedTimeOfArrivalCreationDTO;
 import io.biker.management.order.dto.FeedBackCreationDTO;
@@ -19,9 +16,6 @@ import io.biker.management.order.dto.StatusCreationDTO;
 import io.biker.management.order.entity.Order;
 import io.biker.management.order.mapper.OrderMapper;
 import io.biker.management.order.service.OrderService;
-import io.biker.management.product.entity.Product;
-import io.biker.management.product.service.ProductService;
-import io.biker.management.store.service.StoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -49,20 +43,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 @SecurityRequirement(name = "Authorization")
 @RequestMapping("/orders")
 public class OrderController {
-        private CustomerService customerService;
-        private ProductService productService;
-        private BikerService bikerService;
-        private StoreService storeService;
         private OrderService orderService;
         private OrderMapper orderMapper;
 
-        public OrderController(CustomerService customerService, ProductService productService,
-                        BikerService bikerService, StoreService storeService, OrderService orderService,
-                        OrderMapper orderMapper) {
-                this.customerService = customerService;
-                this.productService = productService;
-                this.bikerService = bikerService;
-                this.storeService = storeService;
+        public OrderController(OrderService orderService, OrderMapper orderMapper) {
                 this.orderService = orderService;
                 this.orderMapper = orderMapper;
         }
@@ -79,9 +63,7 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "productId", description = "Product ID") @PathVariable int productId,
                         @Valid @RequestBody AddressCreationDTO dto) {
                 log.info("Recieved: POST request to /orders/" + userId + "/" + productId);
-                Customer customer = customerService.getSingleCustomer(userId);
-                Product product = productService.getProduct(productId);
-                Order order = orderService.createOrder(customer, product, orderMapper.toAddress(dto));
+                Order order = orderService.createOrder(userId, productId, orderMapper.toAddress(dto));
 
                 return orderMapper.toDtoForCustomer(order);
         }
@@ -96,8 +78,8 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "userId", description = "Customer ID") @PathVariable int userId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
                 log.info("Recieved: GET request to /orders/" + userId + "/" + orderId);
-                return orderMapper.toDtoForCustomer(
-                                orderService.getOrder(customerService.getSingleCustomer(userId), orderId));
+
+                return orderMapper.toDtoForCustomer(orderService.getOrder(userId, orderId));
         }
 
         @Operation(description = "GET endpoint for retrieving a single order by its id. (Provides more database related info in response than similair request)"
@@ -142,20 +124,33 @@ public class OrderController {
         public List<OrderReadingDTOStoreAndBackOffice> getOrdersByStore(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId) {
                 log.info("Recieved: GET request to /orders/stores/" + storeId);
-                return orderMapper.toDtosForStoresandBackOffice(
-                                orderService.getOrdersByStore(storeService.getSingleStore(storeId)));
+
+                return orderMapper.toDtosForStoresandBackOffice(orderService.getOrdersByStore(storeId));
         }
 
         @Operation(description = "GET endpoint for retrieving all orders associated with a biker." +
                         "\n\n Can only be done by back office users." +
                         "\n\n Returns all orders associated with a biker as a List of OrderReadingDTOStoreAndBackOffice", summary = "Get orders associated with biker")
-        @GetMapping("/bikers/{bikerId}")
+        @GetMapping("/backOffice/bikers/{bikerId}")
         @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
         public List<OrderReadingDTOStoreAndBackOffice> getOrdersByBiker(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId) {
+                log.info("Recieved: GET request to /orders/backOffice/bikers/" + bikerId);
+
+                return orderMapper.toDtosForStoresandBackOffice(orderService.getOrdersByBiker(bikerId));
+        }
+
+        @Operation(description = "GET endpoint for retrieving all orders associated with a biker." +
+                        "\n\n Can only be done by bikers accessing their own orders." +
+                        "\n\n Returns all orders associated with a biker as a List of OrderReadingDTOBiker", summary = "Get orders associated with biker (For Bikers)")
+        @GetMapping("/bikers/{bikerId}")
+        @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles_Const.BIKER + "') and #bikerId == authentication.principal.id)")
+        public List<OrderReadingDTOBiker> getOrdersByBiker_Biker(
+                        @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId) {
                 log.info("Recieved: GET request to /orders/bikers/" + bikerId);
-                return orderMapper.toDtosForStoresandBackOffice(
-                                orderService.getOrdersByBiker(bikerService.getSingleBiker(bikerId)));
+
+                return orderMapper.toDtosForBiker(orderService.getOrdersByBiker(bikerId));
         }
 
         @Operation(description = "PUT endpoint for updating the estimated time of arrival of an order by a biker." +
@@ -170,8 +165,8 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody EstimatedTimeOfArrivalCreationDTO dto) {
                 log.info("Recieved: PUT request to /orders/eta/bikers/" + bikerId + "/" + orderId);
-                orderService.updateOrderEstimatedTimeOfArrival_Biker(bikerService.getSingleBiker(bikerId), orderId,
-                                orderMapper.toDate(dto));
+
+                orderService.updateOrderEstimatedTimeOfArrival_Biker(bikerId, orderId, orderMapper.toDate(dto));
 
                 return new ResponseEntity<SuccessResponse>(
                                 new SuccessResponse(Responses.ESTIMATED_TIME_OF_ARRIVAL_UPDATED),
@@ -190,8 +185,8 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody EstimatedTimeOfArrivalCreationDTO dto) {
                 log.info("Recieved: PUT request to /orders/eta/stores/" + storeId + "/" + orderId);
-                orderService.updateOrderEstimatedTimeOfArrival_Store(storeService.getSingleStore(storeId), orderId,
-                                orderMapper.toDate(dto));
+
+                orderService.updateOrderEstimatedTimeOfArrival_Store(storeId, orderId, orderMapper.toDate(dto));
 
                 return new ResponseEntity<SuccessResponse>(
                                 new SuccessResponse(Responses.ESTIMATED_TIME_OF_ARRIVAL_UPDATED),
@@ -228,7 +223,7 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody FeedBackCreationDTO dto) {
                 log.info("Recieved: PUT request to /orders/rate/" + userId + "/" + orderId);
-                orderService.rateOrder(customerService.getSingleCustomer(userId), orderId, orderMapper.toFeedBack(dto));
+                orderService.rateOrder(userId, orderId, orderMapper.toFeedBack(dto));
 
                 return new ResponseEntity<SuccessResponse>(
                                 new SuccessResponse(Responses.FEEDBACK_ADDED),
@@ -247,8 +242,7 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody StatusCreationDTO dto) {
                 log.info("Recieved: PUT request to /orders/status/bikers/" + bikerId + "/" + orderId);
-                orderService.updateOrderStatus_Biker(bikerService.getSingleBiker(bikerId), orderId,
-                                orderMapper.toStatus(dto));
+                orderService.updateOrderStatus_Biker(bikerId, orderId, orderMapper.toStatus(dto));
 
                 return new ResponseEntity<SuccessResponse>(
                                 new SuccessResponse(Responses.STATUS_UPDATED),
@@ -267,8 +261,7 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody StatusCreationDTO dto) {
                 log.info("Recieved: PUT request to /orders/status/stores/" + storeId + "/" + orderId);
-                orderService.updateOrderStatus_Store(storeService.getSingleStore(storeId), orderId,
-                                orderMapper.toStatus(dto));
+                orderService.updateOrderStatus_Store(storeId, orderId, orderMapper.toStatus(dto));
 
                 return new ResponseEntity<SuccessResponse>(
                                 new SuccessResponse(Responses.STATUS_UPDATED),
@@ -303,7 +296,7 @@ public class OrderController {
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
                 log.info("Recieved: PUT request to /orders/assign/" + bikerId + "/" + orderId);
-                orderService.assignDelivery(bikerService.getSingleBiker(bikerId), orderId);
+                orderService.assignDelivery(bikerId, orderId);
 
                 return new ResponseEntity<SuccessResponse>(
                                 new SuccessResponse(Responses.ORDER_ASSIGNED(bikerId, orderId)),
