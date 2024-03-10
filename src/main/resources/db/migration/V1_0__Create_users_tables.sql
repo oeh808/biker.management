@@ -23,7 +23,7 @@ create table stores (
 ) engine = InnoDB;
 
 create table list_of_roles (
-    user_id integer not null, role varchar(255)
+    user_roles_user_id integer not null, roles varchar(255)
 ) engine = InnoDB;
 
 create table user_sequence (next_val bigint) engine = InnoDB;
@@ -68,4 +68,4 @@ alter table customer_addresses
 add constraint FKrvr6wl9gll7u98cda18smugp4 foreign key (customer_id) references customers (id);
 
 alter table list_of_roles
-add constraint FKqa5fswbne6o98puelhs266ob2 foreign key (user_id) references user_roles (user_id);
+add constraint FKqa5fswbne6o98puelhs266ob2 foreign key (user_roles_user_id) references user_roles (user_id);
