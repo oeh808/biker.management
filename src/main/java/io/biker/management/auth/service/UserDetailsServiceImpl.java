@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import io.biker.management.auth.entity.UserRoles;
 import io.biker.management.auth.exception.AuthExceptionMessages;
@@ -20,6 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRolesRepo repository;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) {
         log.info("Running loadUserByUsername(" + username + ") in UserRolesServiceImpl...");
         Optional<UserRoles> userDetail = repository.findByUser_Email(username);
