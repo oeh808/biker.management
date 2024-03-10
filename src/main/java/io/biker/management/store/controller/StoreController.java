@@ -3,7 +3,7 @@ package io.biker.management.store.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.biker.management.auth.Roles;
+import io.biker.management.constants.Roles_Const;
 import io.biker.management.constants.response.Responses;
 import io.biker.management.errorHandling.responses.SuccessResponse;
 import io.biker.management.store.dto.StoreCreationDTO;
@@ -48,7 +48,7 @@ public class StoreController {
             "\n\n Returns the store created as an instance of StoreReadingDTO.", summary = "Create a store")
     @PostMapping()
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StoreCreationDTO")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
     public StoreReadingDTO createStore(@Valid @RequestBody StoreCreationDTO dto) {
         log.info("Recieved: POST request to /stores");
         Store store = storeService.createStore(storeMapper.toStore(dto));
@@ -80,7 +80,7 @@ public class StoreController {
             "\n\n Returns a response as an instance of SuccessResponse", summary = "Delete a Store")
     @Transactional
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
     public SuccessResponse deleteStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
         log.info("Recieved: DELETE request to /stores/" + id);

@@ -2,7 +2,7 @@ package io.biker.management.product.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import io.biker.management.auth.Roles;
+import io.biker.management.constants.Roles_Const;
 import io.biker.management.constants.response.Responses;
 import io.biker.management.errorHandling.responses.SuccessResponse;
 import io.biker.management.product.dto.ProductCreationDTO;
@@ -50,8 +50,8 @@ public class ProductController {
                         "\n\n Returns the product created as an instance of ProductReadingDTO.", summary = "Create a product")
         @PostMapping("{storeId}/products")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of ProductCreationDTO")
-        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
-                        "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles_Const.STORE + "') and #storeId == authentication.principal.id)")
         public ProductReadingDTO createProduct(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Valid @RequestBody ProductCreationDTO dto) {
@@ -65,7 +65,7 @@ public class ProductController {
                         "\n\n Can only be done by admins." +
                         "\n\n Returns all products as a List of ProductReadingAdminDTO.", summary = "Get ALL products")
         @GetMapping("/products")
-        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+        @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
         public List<ProductReadingAdminDTO> getAllProducts() {
                 log.info("Recieved: GET request to /products");
                 return productMapper.toDtosAdmim(productService.getAllProducts());
@@ -76,8 +76,8 @@ public class ProductController {
                         "\n\n Can only be done by stores managing their own products." +
                         "\n\n Returns all of a store's products as a List of ProductReadingDTO.", summary = "Get all products from store")
         @GetMapping("{storeId}/products")
-        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
-                        "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles_Const.STORE + "') and #storeId == authentication.principal.id)")
         public List<ProductReadingDTO> getAllProductsByStore(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId) {
                 log.info("Recieved: GET request to /" + storeId + "/products");
@@ -89,8 +89,8 @@ public class ProductController {
                         "\n\n Can only be done by stores managing their own products." +
                         "\n\n Returns the product as an instance of ProductReadingDTO.", summary = "Get a single product")
         @GetMapping("{storeId}/products/{id}")
-        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
-                        "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles_Const.STORE + "') and #storeId == authentication.principal.id)")
         public ProductReadingDTO getSingleProduct(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Product ID") @PathVariable int id) {
@@ -104,8 +104,8 @@ public class ProductController {
                         "\n\n Can only be done by stores managing their own products." +
                         "\n\n Returns the product as an instance of ProductReadingDTO.", summary = "Update a product")
         @PutMapping("{storeId}/products/{id}")
-        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
-                        "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles_Const.STORE + "') and #storeId == authentication.principal.id)")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of ProductCreationDTO")
         public ProductReadingDTO updateProduct(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
@@ -124,8 +124,8 @@ public class ProductController {
                         "\n\n Can only be done by stores managing their own products." +
                         "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete a product")
         @DeleteMapping("{storeId}/products/{id}")
-        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
-                        "(hasAuthority('" + Roles.STORE + "') and #storeId == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles_Const.STORE + "') and #storeId == authentication.principal.id)")
         public SuccessResponse deleteProduct(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Product ID") @PathVariable int id) {

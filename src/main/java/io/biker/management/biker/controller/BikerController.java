@@ -3,12 +3,12 @@ package io.biker.management.biker.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.biker.management.auth.Roles;
 import io.biker.management.biker.dto.BikerCreationDTO;
 import io.biker.management.biker.dto.BikerReadingDTO;
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.biker.mapper.BikerMapper;
 import io.biker.management.biker.service.BikerService;
+import io.biker.management.constants.Roles_Const;
 import io.biker.management.constants.response.Responses;
 import io.biker.management.errorHandling.responses.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,7 +47,7 @@ public class BikerController {
             "\n\n Can only be done by back office users." +
             "\n\n Returns the biker created as an instance of BikerReadingDTO.", summary = "Create a biker")
     @PostMapping()
-    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of BikerCreationDTO")
     public BikerReadingDTO createBiker(@Valid @RequestBody BikerCreationDTO dto) {
         log.info("Recieved: POST request to /bikers");
@@ -60,7 +60,7 @@ public class BikerController {
             "\n\n Can only be done by back office users." +
             "\n\n Returns all bikers as an List of BikerReadingDTO.", summary = "Get all bikers")
     @GetMapping()
-    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
     public List<BikerReadingDTO> getAllBikers() {
         log.info("Recieved: GET request to /bikers");
         return bikerMapper.toDtos(bikerService.getAllBikers());
@@ -70,8 +70,8 @@ public class BikerController {
             "\n\n Can only be done by back office users or the biker being retrieved." +
             "\n\n Returns the biker as an instance of BikerReadingDTO.", summary = "Get single biker")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "') or " +
-            "(hasAuthority('" + Roles.BIKER + "') and #id == authentication.principal.id)")
+    @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "') or " +
+            "(hasAuthority('" + Roles_Const.BIKER + "') and #id == authentication.principal.id)")
     public BikerReadingDTO getSingleBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         log.info("Recieved: GET request to /bikers/" + id);
@@ -83,7 +83,7 @@ public class BikerController {
             "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete a Biker")
     @Transactional
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
     public SuccessResponse deleteBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         log.info("Recieved: DELETE request to /bikers/" + id);

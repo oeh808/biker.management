@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.biker.management.auth.Roles;
 import io.biker.management.auth.dto.AuthRequestDTO;
 import io.biker.management.auth.entity.UserRoles;
 import io.biker.management.auth.exception.AuthExceptionMessages;
@@ -23,6 +22,7 @@ import io.biker.management.backOffice.entity.BackOfficeUser;
 import io.biker.management.backOffice.service.BackOfficeService;
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.biker.service.BikerService;
+import io.biker.management.constants.Roles_Const;
 import io.biker.management.constants.response.Responses;
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.customer.service.CustomerService;
@@ -70,13 +70,13 @@ public class AuthController {
             "\n\n Returns a response as an instance of SuccessResponse.", summary = "Register a customer")
     @PostMapping("/customers/{id}")
     @SecurityRequirement(name = "Authorization")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
     public SuccessResponse registerCustomer(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
         log.info("Recieved: POST request to /auth/customers/" + id);
         Customer customer = customerService.getSingleCustomer(id);
 
-        UserRoles user = new UserRoles(id, customer, Roles.CUSTOMER);
+        UserRoles user = new UserRoles(id, customer, Roles_Const.CUSTOMER);
         userRolesService.addUser(user);
 
         return new SuccessResponse(Responses.USER_ADDED);
@@ -88,13 +88,13 @@ public class AuthController {
             "\n\n Returns a response as an instance of SuccessResponse.", summary = "Register a biker")
     @PostMapping("/bikers/{id}")
     @SecurityRequirement(name = "Authorization")
-    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
     public SuccessResponse registerBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         log.info("Recieved: POST request to /auth/bikers/" + id);
         Biker biker = bikerService.getSingleBiker(id);
 
-        UserRoles user = new UserRoles(id, biker, Roles.BIKER);
+        UserRoles user = new UserRoles(id, biker, Roles_Const.BIKER);
         userRolesService.addUser(user);
 
         return new SuccessResponse(Responses.USER_ADDED);
@@ -106,13 +106,13 @@ public class AuthController {
             "\n\n Returns a response as an instance of SuccessResponse.", summary = "Register a back office user")
     @PostMapping("/backOffice/{id}")
     @SecurityRequirement(name = "Authorization")
-    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
     public SuccessResponse registerBackOfficeUser(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         log.info("Recieved: POST request to /auth/backOffice/" + id);
         BackOfficeUser backOfficeUser = backOfficeService.getSingleBackOfficeUser(id);
 
-        UserRoles user = new UserRoles(id, backOfficeUser, Roles.BACK_OFFICE);
+        UserRoles user = new UserRoles(id, backOfficeUser, Roles_Const.BACK_OFFICE);
         userRolesService.addUser(user);
 
         return new SuccessResponse(Responses.USER_ADDED);
@@ -124,13 +124,13 @@ public class AuthController {
             "\n\n Returns a response as an instance of SuccessResponse.", summary = "Register a store")
     @PostMapping("/stores/{id}")
     @SecurityRequirement(name = "Authorization")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
     public SuccessResponse registerStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
         log.info("Recieved: POST request to /auth/stores/" + id);
         Store store = storeService.getSingleStore(id);
 
-        UserRoles user = new UserRoles(id, store, Roles.STORE);
+        UserRoles user = new UserRoles(id, store, Roles_Const.STORE);
         userRolesService.addUser(user);
 
         return new SuccessResponse(Responses.USER_ADDED);
@@ -164,7 +164,7 @@ public class AuthController {
     @Transactional
     @DeleteMapping("/users/{id}")
     @SecurityRequirement(name = "Authorization")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
     public SuccessResponse deleteStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "User ID") @PathVariable int id) {
         log.info("Recieved: DELETE request to /auth/users/" + id);

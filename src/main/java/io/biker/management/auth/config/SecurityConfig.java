@@ -22,9 +22,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import io.biker.management.auth.Roles;
 import io.biker.management.auth.filter.JwtAuthFilter;
 import io.biker.management.auth.service.UserRolesServiceImpl;
+import io.biker.management.constants.Roles_Const;
 
 @Configuration
 @EnableWebSecurity
@@ -65,10 +65,10 @@ public class SecurityConfig {
     @Bean
     RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl r = new RoleHierarchyImpl();
-        r.setHierarchy(Roles.ADMIN + " > " + Roles.CUSTOMER + "\n" +
-                Roles.ADMIN + " > " + Roles.BIKER + "\n" +
-                Roles.ADMIN + " > " + Roles.STORE + "\n" +
-                Roles.ADMIN + " > " + Roles.BACK_OFFICE);
+        r.setHierarchy(Roles_Const.ADMIN + " > " + Roles_Const.CUSTOMER + "\n" +
+                Roles_Const.ADMIN + " > " + Roles_Const.BIKER + "\n" +
+                Roles_Const.ADMIN + " > " + Roles_Const.STORE + "\n" +
+                Roles_Const.ADMIN + " > " + Roles_Const.BACK_OFFICE);
         return r;
     }
 

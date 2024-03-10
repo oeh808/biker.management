@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.biker.management.auth.Roles;
 import io.biker.management.backOffice.dto.BackOfficeUserCreationDTO;
 import io.biker.management.backOffice.dto.BackOfficeUserReadingDTO;
 import io.biker.management.backOffice.entity.BackOfficeUser;
 import io.biker.management.backOffice.mapper.BackOfficeMapper;
 import io.biker.management.backOffice.service.BackOfficeService;
+import io.biker.management.constants.Roles_Const;
 import io.biker.management.constants.response.Responses;
 import io.biker.management.errorHandling.responses.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,7 +47,7 @@ public class BackOfficeController {
             "\n\n Returns the customer created as an instance of BackOfficeUserReadingDTO.", summary = "Create a back office user")
     @PostMapping()
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of BackOfficeUserCreationDTO")
-    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
     public BackOfficeUserReadingDTO createBackOfficeUser(@Valid @RequestBody BackOfficeUserCreationDTO dto) {
         log.info("Recieved: POST request to /backOffice");
         BackOfficeUser backOfficeUser = backOfficeService.createBackOfficeUser(backOfficeMapper.toBackOfficeUser(dto));
@@ -59,7 +59,7 @@ public class BackOfficeController {
             "\n\n Can only be done by back office users." +
             "\n\n Returns all back office users as a List of BackOfficeUser.", summary = "Get all back office users")
     @GetMapping()
-    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
     public List<BackOfficeUser> getAllBackOfficeUsers() {
         log.info("Recieved: GET request to /backOffice");
         return backOfficeService.getAllBackOfficeUsers();
@@ -69,7 +69,7 @@ public class BackOfficeController {
             "\n\n Can only be done by back office users." +
             "\n\n Returns the back office user as an instance of BackOfficeUser.", summary = "Get single back office user")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('" + Roles.BACK_OFFICE + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
     public BackOfficeUser getSingleBackOfficeUser(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Back Office user ID") @PathVariable int id) {
         log.info("Recieved: GET request to /backOffice/" + id);
@@ -81,7 +81,7 @@ public class BackOfficeController {
             "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete a Back Office user")
     @Transactional
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+    @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
     public SuccessResponse deleteBackOfficeUser(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Back Office user ID") @PathVariable int id) {
         log.info("Recieved: DELETE request to /backOffice/" + id);

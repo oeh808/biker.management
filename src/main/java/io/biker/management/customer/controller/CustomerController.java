@@ -3,7 +3,7 @@ package io.biker.management.customer.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.biker.management.auth.Roles;
+import io.biker.management.constants.Roles_Const;
 import io.biker.management.constants.response.Responses;
 import io.biker.management.customer.dtos.AddressCreationDTO;
 import io.biker.management.customer.dtos.CustomerCreationDTO;
@@ -62,7 +62,7 @@ public class CustomerController {
                         "\n\n Returns all customers as a List of CustomerReadingDTO.", summary = "Get all customers")
         @GetMapping()
         @SecurityRequirement(name = "Authorization")
-        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+        @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
         public List<CustomerReadingDTO> getAllCustomers() {
                 log.info("Recieved: GET request to /customers");
                 return customerMapper.toDtos(customerService.getAllCustomers());
@@ -73,8 +73,8 @@ public class CustomerController {
                         "\n\n Returns the customer as an instance of CustomerReadingDTO.", summary = "Get single customer")
         @GetMapping("/{id}")
         @SecurityRequirement(name = "Authorization")
-        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
-                        "(hasAuthority('" + Roles.CUSTOMER + "') and #id == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles_Const.CUSTOMER + "') and #id == authentication.principal.id)")
         public CustomerReadingDTO getSingleCustomer(
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
                 log.info("Recieved: GET request to /customers/" + id);
@@ -87,8 +87,8 @@ public class CustomerController {
         @PutMapping("/{id}/addresses")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of AddressCreationDTO")
         @SecurityRequirement(name = "Authorization")
-        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "') or " +
-                        "(hasAuthority('" + Roles.CUSTOMER + "') and #id == authentication.principal.id)")
+        @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
+                        "(hasAuthority('" + Roles_Const.CUSTOMER + "') and #id == authentication.principal.id)")
         public Set<Address> addDeliveryAddress(
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id,
                         @Valid @RequestBody AddressCreationDTO dto) {
@@ -102,7 +102,7 @@ public class CustomerController {
         @Transactional
         @DeleteMapping("/{id}")
         @SecurityRequirement(name = "Authorization")
-        @PreAuthorize("hasAuthority('" + Roles.ADMIN + "')")
+        @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
         public SuccessResponse deleteCustomer(
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
                 log.info("Recieved: DELETE request to /customers/" + id);
