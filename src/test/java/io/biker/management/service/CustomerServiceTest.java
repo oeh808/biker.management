@@ -130,7 +130,7 @@ public class CustomerServiceTest {
         when(repo.findById(customer.getId() - 1)).thenReturn(Optional.empty());
 
         CustomerException ex = assertThrows(CustomerException.class, () -> {
-            service.addDeliveryAddress(customer.getId() - 1, null);
+            service.addDeliveryAddress(customer.getId() - 1, new Address());
         });
         assertTrue(ex.getMessage().contains(CustomerExceptionMessages.CUSTOMER_NOT_FOUND));
 
