@@ -5,6 +5,7 @@ import java.util.List;
 
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.customer.entity.Customer;
+import io.biker.management.enums.OrderStatus;
 import io.biker.management.order.entity.FeedBack;
 import io.biker.management.order.entity.Order;
 import io.biker.management.product.entity.Product;
@@ -26,11 +27,11 @@ public interface OrderService {
 
     public void rateOrder(Customer customer, int orderId, FeedBack feedBack);
 
-    public void updateOrderStatus_Biker(Biker biker, int orderId, String status);
+    public void updateOrderStatus_Biker(Biker biker, int orderId, OrderStatus status);
 
-    public void updateOrderStatus_Store(Store store, int orderId, String status);
+    public void updateOrderStatus_Store(Store store, int orderId, OrderStatus status);
 
-    public void updateOrderStatus_BackOffice(int orderId, String status);
+    public void updateOrderStatus_BackOffice(int orderId, OrderStatus status);
 
     public Order updateOrderEta_Biker(Biker biker, int orderId, Date eta);
 

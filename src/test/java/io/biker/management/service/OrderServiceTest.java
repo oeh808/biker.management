@@ -27,7 +27,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.customer.entity.Customer;
-import io.biker.management.order.constants.OrderStatus;
+import io.biker.management.enums.OrderStatus;
 import io.biker.management.order.entity.FeedBack;
 import io.biker.management.order.entity.Order;
 import io.biker.management.order.entity.OrderDetails;

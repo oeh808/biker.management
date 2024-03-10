@@ -1,5 +1,7 @@
 create table orders (
-    order_id integer not null auto_increment, customer_id integer, product_id integer, status varchar(255), eta date, store_id integer, vat float(23), total_cost float(23), street varchar(255), city varchar(255), country varchar(255), state varchar(255), post_code varchar(255), biker_id integer, rating integer, review varchar(255), primary key (order_id)
+    order_id integer not null auto_increment, customer_id integer, product_id integer, status enum(
+        'AWAITING_APPROVAL', 'PREPARING', 'WAITING_FOR_PICK_UP', 'EN_ROUTE', 'DELIVERED'
+    ), eta date, store_id integer, vat float(23), total_cost float(23), street varchar(255), city varchar(255), country varchar(255), state varchar(255), post_code varchar(255), biker_id integer, rating integer, review varchar(255), primary key (order_id)
 ) engine = InnoDB;
 
 alter table orders

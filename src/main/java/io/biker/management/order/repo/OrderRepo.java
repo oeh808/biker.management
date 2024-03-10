@@ -3,6 +3,7 @@ package io.biker.management.order.repo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import io.biker.management.customer.entity.Customer;
+import io.biker.management.enums.OrderStatus;
 import io.biker.management.order.entity.Order;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface OrderRepo extends JpaRepository<Order, Integer> {
 
     Optional<Order> findByOrderIdAndStore(int orderId, Store store);
 
-    List<Order> findByStatus(String status);
+    List<Order> findByStatus(OrderStatus status);
 
     List<Order> findByStore(Store store);
 

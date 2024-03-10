@@ -20,7 +20,7 @@ import io.biker.management.biker.entity.Biker;
 import io.biker.management.biker.repo.BikerRepo;
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.customer.repo.CustomerRepo;
-import io.biker.management.order.constants.OrderStatus;
+import io.biker.management.enums.OrderStatus;
 import io.biker.management.order.entity.Order;
 import io.biker.management.order.entity.OrderDetails;
 import io.biker.management.order.repo.OrderRepo;

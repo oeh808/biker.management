@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.customer.entity.Customer;
-import io.biker.management.order.constants.OrderStatus;
+import io.biker.management.enums.OrderStatus;
 import io.biker.management.order.constants.Tax;
 import io.biker.management.order.entity.FeedBack;
 import io.biker.management.order.entity.Order;
@@ -98,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateOrderStatus_Biker(Biker biker, int orderId, String status) {
+    public void updateOrderStatus_Biker(Biker biker, int orderId, OrderStatus status) {
         log.info("Running updateOrderStatus_Biker(" + biker.toString() + ", " + orderId + ", "
                 + status + ") in OrderServiceImpl...");
         Optional<Order> opOrder = orderRepo.findByOrderIdAndBiker(orderId, biker);
@@ -111,7 +111,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateOrderStatus_Store(Store store, int orderId, String status) {
+    public void updateOrderStatus_Store(Store store, int orderId, OrderStatus status) {
         log.info("Running updateOrderStatus_Store(" + store.toString() + ", " + orderId + ", "
                 + status + ") in OrderServiceImpl...");
         Optional<Order> opOrder = orderRepo.findByOrderIdAndStore(orderId, store);
@@ -124,7 +124,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateOrderStatus_BackOffice(int orderId, String status) {
+    public void updateOrderStatus_BackOffice(int orderId, OrderStatus status) {
         log.info("Running updateOrderStatus_BackOffice(" + orderId + ", " + status + ") in OrderServiceImpl...");
         Optional<Order> opOrder = orderRepo.findById(orderId);
         log.info("Attempting to find order...");

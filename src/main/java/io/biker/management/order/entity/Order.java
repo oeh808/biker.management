@@ -4,9 +4,12 @@ import java.sql.Date;
 
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.customer.entity.Customer;
+import io.biker.management.enums.OrderStatus;
 import io.biker.management.store.entity.Store;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,7 +43,8 @@ public class Order {
     @JoinColumn(name = "bikerId")
     private Biker biker;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     private Date eta;
 
