@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -126,13 +128,12 @@ public class ProductController {
         @DeleteMapping("{storeId}/products/{id}")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
                         "(hasAuthority('" + Roles_Const.STORE + "') and #storeId == authentication.principal.id)")
-        public SuccessResponse deleteProduct(
+        public ResponseEntity<SuccessResponse> deleteProduct(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Product ID") @PathVariable int id) {
                 log.info("Recieved: DELETE request to /" + storeId + "/products/" + id);
                 productService.deleteProduct(storeId, id);
-                SuccessResponse successResponse = new SuccessResponse(Responses.PRODUCT_DELETED);
-
-                return successResponse;
+                return new ResponseEntity<SuccessResponse>(new SuccessResponse(Responses.PRODUCT_DELETED),
+                                HttpStatus.ACCEPTED);
         }
 }

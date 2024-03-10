@@ -21,6 +21,8 @@ import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -81,10 +83,11 @@ public class StoreController {
     @Transactional
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
-    public SuccessResponse deleteStore(
+    public ResponseEntity<SuccessResponse> deleteStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
         log.info("Recieved: DELETE request to /stores/" + id);
         storeService.deleteStore(id);
-        return new SuccessResponse(Responses.STORE_DELETED);
+        return new ResponseEntity<SuccessResponse>(new SuccessResponse(Responses.STORE_DELETED),
+                HttpStatus.ACCEPTED);
     }
 }

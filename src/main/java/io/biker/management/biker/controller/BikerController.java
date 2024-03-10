@@ -21,6 +21,8 @@ import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -84,10 +86,11 @@ public class BikerController {
     @Transactional
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
-    public SuccessResponse deleteBiker(
+    public ResponseEntity<SuccessResponse> deleteBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         log.info("Recieved: DELETE request to /bikers/" + id);
         bikerService.deleteBiker(id);
-        return new SuccessResponse(Responses.BIKER_DELETED);
+        return new ResponseEntity<SuccessResponse>(new SuccessResponse(Responses.BIKER_DELETED),
+                HttpStatus.ACCEPTED);
     }
 }

@@ -1,6 +1,8 @@
 package io.biker.management.auth.controller;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,12 +47,12 @@ public class AuthController {
     @PostMapping("/customers/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
-    public SuccessResponse registerCustomer(
+    public ResponseEntity<SuccessResponse> registerCustomer(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
         log.info("Recieved: POST request to /auth/customers/" + id);
         userRolesService.registerCustomer(id);
 
-        return new SuccessResponse(Responses.USER_ADDED);
+        return new ResponseEntity<SuccessResponse>(new SuccessResponse(Responses.USER_ADDED), HttpStatus.ACCEPTED);
     }
 
     @Operation(description = "POST endpoint for registering a biker and assigning their roles. (Entity must be created before registeration)"
@@ -60,12 +62,12 @@ public class AuthController {
     @PostMapping("/bikers/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
-    public SuccessResponse registerBiker(
+    public ResponseEntity<SuccessResponse> registerBiker(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         log.info("Recieved: POST request to /auth/bikers/" + id);
         userRolesService.registerBiker(id);
 
-        return new SuccessResponse(Responses.USER_ADDED);
+        return new ResponseEntity<SuccessResponse>(new SuccessResponse(Responses.USER_ADDED), HttpStatus.ACCEPTED);
     }
 
     @Operation(description = "POST endpoint for registering a back office user and assigning their roles. (Entity must be created before registeration)"
@@ -75,12 +77,12 @@ public class AuthController {
     @PostMapping("/backOffice/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
-    public SuccessResponse registerBackOfficeUser(
+    public ResponseEntity<SuccessResponse> registerBackOfficeUser(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Biker ID") @PathVariable int id) {
         log.info("Recieved: POST request to /auth/backOffice/" + id);
         userRolesService.registerBackOfficeUser(id);
 
-        return new SuccessResponse(Responses.USER_ADDED);
+        return new ResponseEntity<SuccessResponse>(new SuccessResponse(Responses.USER_ADDED), HttpStatus.ACCEPTED);
     }
 
     @Operation(description = "POST endpoint for registering a store and assigning their roles. (Entity must be created before registeration)"
@@ -90,12 +92,12 @@ public class AuthController {
     @PostMapping("/stores/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
-    public SuccessResponse registerStore(
+    public ResponseEntity<SuccessResponse> registerStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Store ID") @PathVariable int id) {
         log.info("Recieved: POST request to /auth/stores/" + id);
         userRolesService.registerStore(id);
 
-        return new SuccessResponse(Responses.USER_ADDED);
+        return new ResponseEntity<SuccessResponse>(new SuccessResponse(Responses.USER_ADDED), HttpStatus.ACCEPTED);
     }
 
     @Operation(description = "POST endpoint for generating a Jwt Token given a user name and password (Basically the login mapping)."
@@ -116,11 +118,11 @@ public class AuthController {
     @DeleteMapping("/users/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
-    public SuccessResponse deleteStore(
+    public ResponseEntity<SuccessResponse> deleteStore(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "User ID") @PathVariable int id) {
         log.info("Recieved: DELETE request to /auth/users/" + id);
         userRolesService.deleteUser(id);
-        return new SuccessResponse(Responses.USER_DELETED);
+        return new ResponseEntity<SuccessResponse>(new SuccessResponse(Responses.USER_DELETED), HttpStatus.ACCEPTED);
     }
 
 }

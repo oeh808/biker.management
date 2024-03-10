@@ -24,6 +24,8 @@ import lombok.extern.log4j.Log4j2;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -103,11 +105,12 @@ public class CustomerController {
         @DeleteMapping("/{id}")
         @SecurityRequirement(name = "Authorization")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
-        public SuccessResponse deleteCustomer(
+        public ResponseEntity<SuccessResponse> deleteCustomer(
                         @Parameter(in = ParameterIn.PATH, name = "id", description = "Customer ID") @PathVariable int id) {
                 log.info("Recieved: DELETE request to /customers/" + id);
                 customerService.deleteCustomer(id);
-                return new SuccessResponse(Responses.CUSTOMER_DELETED);
+                return new ResponseEntity<SuccessResponse>(new SuccessResponse(Responses.CUSTOMER_DELETED),
+                                HttpStatus.ACCEPTED);
         }
 
 }

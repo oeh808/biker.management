@@ -2,6 +2,8 @@ package io.biker.management.backOffice.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -82,10 +84,11 @@ public class BackOfficeController {
     @Transactional
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
-    public SuccessResponse deleteBackOfficeUser(
+    public ResponseEntity<SuccessResponse> deleteBackOfficeUser(
             @Parameter(in = ParameterIn.PATH, name = "id", description = "Back Office user ID") @PathVariable int id) {
         log.info("Recieved: DELETE request to /backOffice/" + id);
         backOfficeService.deleteBackOfficeUser(id);
-        return new SuccessResponse(Responses.BACK_OFFICE_USER_DELETED);
+        return new ResponseEntity<SuccessResponse>(new SuccessResponse(Responses.BACK_OFFICE_USER_DELETED),
+                HttpStatus.ACCEPTED);
     }
 }

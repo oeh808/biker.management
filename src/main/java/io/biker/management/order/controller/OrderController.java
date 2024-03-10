@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -163,7 +165,7 @@ public class OrderController {
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EstimatedTimeOfArrivalCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
                         "(hasAuthority('" + Roles_Const.BIKER + "') and #bikerId == authentication.principal.id)")
-        public SuccessResponse updateEstimatedTimeOfArrival_Biker(
+        public ResponseEntity<SuccessResponse> updateEstimatedTimeOfArrival_Biker(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody EstimatedTimeOfArrivalCreationDTO dto) {
@@ -171,8 +173,9 @@ public class OrderController {
                 orderService.updateOrderEstimatedTimeOfArrival_Biker(bikerService.getSingleBiker(bikerId), orderId,
                                 orderMapper.toDate(dto));
 
-                SuccessResponse successResponse = new SuccessResponse(Responses.ESTIMATED_TIME_OF_ARRIVAL_UPDATED);
-                return successResponse;
+                return new ResponseEntity<SuccessResponse>(
+                                new SuccessResponse(Responses.ESTIMATED_TIME_OF_ARRIVAL_UPDATED),
+                                HttpStatus.ACCEPTED);
         }
 
         @Operation(description = "PUT endpoint for updating the estimated time of arrival of an order by a store." +
@@ -182,7 +185,7 @@ public class OrderController {
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EstimatedTimeOfArrivalCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
                         "(hasAuthority('" + Roles_Const.STORE + "') and #storeId == authentication.principal.id)")
-        public SuccessResponse updateEstimatedTimeOfArrival_Store(
+        public ResponseEntity<SuccessResponse> updateEstimatedTimeOfArrival_Store(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody EstimatedTimeOfArrivalCreationDTO dto) {
@@ -190,8 +193,9 @@ public class OrderController {
                 orderService.updateOrderEstimatedTimeOfArrival_Store(storeService.getSingleStore(storeId), orderId,
                                 orderMapper.toDate(dto));
 
-                SuccessResponse successResponse = new SuccessResponse(Responses.ESTIMATED_TIME_OF_ARRIVAL_UPDATED);
-                return successResponse;
+                return new ResponseEntity<SuccessResponse>(
+                                new SuccessResponse(Responses.ESTIMATED_TIME_OF_ARRIVAL_UPDATED),
+                                HttpStatus.ACCEPTED);
         }
 
         @Operation(description = "PUT endpoint for updating the estimated time of arrival of an order by a  backoffice user."
@@ -201,14 +205,15 @@ public class OrderController {
         @PutMapping("/eta/backOffice/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EstimatedTimeOfArrivalCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
-        public SuccessResponse updateEstimatedTimeOfArrival_BackOffice(
+        public ResponseEntity<SuccessResponse> updateEstimatedTimeOfArrival_BackOffice(
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody EstimatedTimeOfArrivalCreationDTO dto) {
                 log.info("Recieved: PUT request to /orders/eta/backOffice/" + orderId);
                 orderService.updateOrderEstimatedTimeOfArrival_BackOffice(orderId, orderMapper.toDate(dto));
 
-                SuccessResponse successResponse = new SuccessResponse(Responses.ESTIMATED_TIME_OF_ARRIVAL_UPDATED);
-                return successResponse;
+                return new ResponseEntity<SuccessResponse>(
+                                new SuccessResponse(Responses.ESTIMATED_TIME_OF_ARRIVAL_UPDATED),
+                                HttpStatus.ACCEPTED);
         }
 
         @Operation(description = "PUT endpoint for customers to give feedback to an order." +
@@ -218,15 +223,16 @@ public class OrderController {
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of FeedBackCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
                         "(hasAuthority('" + Roles_Const.CUSTOMER + "') and #userId == authentication.principal.id)")
-        public SuccessResponse rateDelivery(
+        public ResponseEntity<SuccessResponse> rateDelivery(
                         @Parameter(in = ParameterIn.PATH, name = "userId", description = "Customer ID") @PathVariable int userId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody FeedBackCreationDTO dto) {
                 log.info("Recieved: PUT request to /orders/rate/" + userId + "/" + orderId);
                 orderService.rateOrder(customerService.getSingleCustomer(userId), orderId, orderMapper.toFeedBack(dto));
 
-                SuccessResponse successResponse = new SuccessResponse(Responses.FEEDBACK_ADDED);
-                return successResponse;
+                return new ResponseEntity<SuccessResponse>(
+                                new SuccessResponse(Responses.FEEDBACK_ADDED),
+                                HttpStatus.ACCEPTED);
         }
 
         @Operation(description = "PUT endpoint for updating the status of an order by a biker." +
@@ -236,7 +242,7 @@ public class OrderController {
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
                         "(hasAuthority('" + Roles_Const.BIKER + "') and #bikerId == authentication.principal.id)")
-        public SuccessResponse updateStatus_Biker(
+        public ResponseEntity<SuccessResponse> updateStatus_Biker(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody StatusCreationDTO dto) {
@@ -244,8 +250,9 @@ public class OrderController {
                 orderService.updateOrderStatus_Biker(bikerService.getSingleBiker(bikerId), orderId,
                                 orderMapper.toStatus(dto));
 
-                SuccessResponse successResponse = new SuccessResponse(Responses.STATUS_UPDATED);
-                return successResponse;
+                return new ResponseEntity<SuccessResponse>(
+                                new SuccessResponse(Responses.STATUS_UPDATED),
+                                HttpStatus.ACCEPTED);
         }
 
         @Operation(description = "PUT endpoint for updating the status of an order by a store." +
@@ -255,7 +262,7 @@ public class OrderController {
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
                         "(hasAuthority('" + Roles_Const.STORE + "') and #storeId == authentication.principal.id)")
-        public SuccessResponse updateStatus_Store(
+        public ResponseEntity<SuccessResponse> updateStatus_Store(
                         @Parameter(in = ParameterIn.PATH, name = "storeId", description = "Store ID") @PathVariable int storeId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody StatusCreationDTO dto) {
@@ -263,8 +270,9 @@ public class OrderController {
                 orderService.updateOrderStatus_Store(storeService.getSingleStore(storeId), orderId,
                                 orderMapper.toStatus(dto));
 
-                SuccessResponse successResponse = new SuccessResponse(Responses.STATUS_UPDATED);
-                return successResponse;
+                return new ResponseEntity<SuccessResponse>(
+                                new SuccessResponse(Responses.STATUS_UPDATED),
+                                HttpStatus.ACCEPTED);
         }
 
         @Operation(description = "PUT endpoint for updating the status of an order by a back office user." +
@@ -273,14 +281,15 @@ public class OrderController {
         @PutMapping("/status/backOffice/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
-        public SuccessResponse updateStatus_BackOffice(
+        public ResponseEntity<SuccessResponse> updateStatus_BackOffice(
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId,
                         @Valid @RequestBody StatusCreationDTO dto) {
                 log.info("Recieved: PUT request to /orders/status/backOffice/" + orderId);
                 orderService.updateOrderStatus_BackOffice(orderId, orderMapper.toStatus(dto));
 
-                SuccessResponse successResponse = new SuccessResponse(Responses.STATUS_UPDATED);
-                return successResponse;
+                return new ResponseEntity<SuccessResponse>(
+                                new SuccessResponse(Responses.STATUS_UPDATED),
+                                HttpStatus.ACCEPTED);
         }
 
         @Operation(description = "PUT endpoint to assign a biker to an order." +
@@ -290,14 +299,15 @@ public class OrderController {
         @PutMapping("/assign/{bikerId}/{orderId}")
         @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "') or " +
                         "(hasAuthority('" + Roles_Const.BIKER + "') and #bikerId == authentication.principal.id)")
-        public SuccessResponse assignDelivery(
+        public ResponseEntity<SuccessResponse> assignDelivery(
                         @Parameter(in = ParameterIn.PATH, name = "bikerId", description = "Biker ID") @PathVariable int bikerId,
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
                 log.info("Recieved: PUT request to /orders/assign/" + bikerId + "/" + orderId);
                 orderService.assignDelivery(bikerService.getSingleBiker(bikerId), orderId);
 
-                SuccessResponse successResponse = new SuccessResponse(Responses.ORDER_ASSIGNED(bikerId, orderId));
-                return successResponse;
+                return new ResponseEntity<SuccessResponse>(
+                                new SuccessResponse(Responses.ORDER_ASSIGNED(bikerId, orderId)),
+                                HttpStatus.ACCEPTED);
         }
 
         @Operation(description = "DELETE endpoint to delete an order." +
@@ -305,13 +315,14 @@ public class OrderController {
                         "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete order")
         @DeleteMapping("/backOffice/{orderId}")
         @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
-        public SuccessResponse deleteOrder(
+        public ResponseEntity<SuccessResponse> deleteOrder(
                         @Parameter(in = ParameterIn.PATH, name = "orderId", description = "Order ID") @PathVariable int orderId) {
                 log.info("Recieved: DELETE request to /orders/backOffice/" + orderId);
                 orderService.deleteOrder(orderId);
 
-                SuccessResponse successResponse = new SuccessResponse(Responses.ORDER_DELETED);
-                return successResponse;
+                return new ResponseEntity<SuccessResponse>(
+                                new SuccessResponse(Responses.ORDER_DELETED),
+                                HttpStatus.ACCEPTED);
         }
 
 }
