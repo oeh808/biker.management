@@ -23,7 +23,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import io.biker.management.auth.filter.JwtAuthFilter;
-import io.biker.management.auth.service.UserRolesServiceImpl;
+import io.biker.management.auth.service.UserDetailsServiceImpl;
 import io.biker.management.constants.Roles_Const;
 
 @Configuration
@@ -36,7 +36,7 @@ public class SecurityConfig {
     // User Creation
     @Bean
     UserDetailsService userDetailsService() {
-        return new UserRolesServiceImpl();
+        return new UserDetailsServiceImpl();
     }
 
     // Configuring HttpSecurity

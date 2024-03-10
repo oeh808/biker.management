@@ -2,32 +2,39 @@ package io.biker.management.auth.service;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import io.biker.management.auth.entity.UserRoles;
 import io.biker.management.auth.exception.AuthExceptionMessages;
 import io.biker.management.auth.exception.CustomAuthException;
 import io.biker.management.auth.repo.UserRolesRepo;
+import io.biker.management.backOffice.entity.BackOfficeUser;
+import io.biker.management.backOffice.service.BackOfficeService;
+import io.biker.management.biker.entity.Biker;
+import io.biker.management.biker.service.BikerService;
+import io.biker.management.constants.Roles_Const;
+import io.biker.management.customer.entity.Customer;
+import io.biker.management.customer.service.CustomerService;
+import io.biker.management.store.entity.Store;
+import io.biker.management.store.service.StoreService;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Service
-public class UserRolesServiceImpl implements UserDetailsService, UserRolesService {
-    @Autowired
+public class UserRolesServiceImpl implements UserRolesService {
     private UserRolesRepo repository;
+    private CustomerService customerService;
+    private BikerService bikerService;
+    private BackOfficeService backOfficeService;
+    private StoreService storeService;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) {
-        log.info("Running loadUserByUsername(" + username + ") in UserRolesServiceImpl...");
-        Optional<UserRoles> userDetail = repository.findByUser_Email(username);
-
-        // Converting userDetail to UserDetails
-        log.info("Attempting to retrieve user details by username...");
-        return userDetail.map(UserInfoDetails::new)
-                .orElseThrow(() -> new CustomAuthException(AuthExceptionMessages.INCORRECT_USERNAME_OR_PASSWORD));
+    public UserRolesServiceImpl(UserRolesRepo repository, CustomerService customerService, BikerService bikerService,
+            BackOfficeService backOfficeService, StoreService storeService) {
+        this.repository = repository;
+        this.customerService = customerService;
+        this.bikerService = bikerService;
+        this.backOfficeService = backOfficeService;
+        this.storeService = storeService;
     }
 
     @Override
@@ -40,6 +47,46 @@ public class UserRolesServiceImpl implements UserDetailsService, UserRolesServic
 
         log.info("Saving user registered with roles...");
         return repository.save(userRoles);
+    }
+
+    @Override
+    public UserRoles registerCustomer(int id) {
+        log.info("Running registerCustomer(" + id + ") in UserRolesServiceImpl...");
+        Customer customer = customerService.getSingleCustomer(id);
+
+        log.info("Assigning roles..");
+        UserRoles user = new UserRoles(id, customer, Roles_Const.CUSTOMER);
+        return addUser(user);
+    }
+
+    @Override
+    public UserRoles registerBiker(int id) {
+        log.info("Running registerBiker(" + id + ") in UserRolesServiceImpl...");
+        Biker biker = bikerService.getSingleBiker(id);
+
+        log.info("Assigning roles..");
+        UserRoles user = new UserRoles(id, biker, Roles_Const.BIKER);
+        return addUser(user);
+    }
+
+    @Override
+    public UserRoles registerStore(int id) {
+        log.info("Running registerStore(" + id + ") in UserRolesServiceImpl...");
+        Store store = storeService.getSingleStore(id);
+
+        log.info("Assigning roles..");
+        UserRoles user = new UserRoles(id, store, Roles_Const.STORE);
+        return addUser(user);
+    }
+
+    @Override
+    public UserRoles registerBackOfficeUser(int id) {
+        log.info("Running registerBackOfficeUser(" + id + ") in UserRolesServiceImpl...");
+        BackOfficeUser backOfficeUser = backOfficeService.getSingleBackOfficeUser(id);
+
+        log.info("Assigning roles..");
+        UserRoles user = new UserRoles(id, backOfficeUser, Roles_Const.BACK_OFFICE);
+        return addUser(user);
     }
 
     @Override

@@ -7,9 +7,14 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import io.biker.management.auth.exception.AuthExceptionMessages;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -21,9 +26,11 @@ import lombok.extern.log4j.Log4j2;
 @Component
 public class JwtService {
     public final String SECRET;
+    private AuthenticationManager authenticationManager;
 
-    public JwtService(@Value("${jwt.secret.key}") String key) {
+    public JwtService(@Value("${jwt.secret.key}") String key, AuthenticationManager authenticationManager) {
         this.SECRET = key;
+        this.authenticationManager = authenticationManager;
     }
 
     public String generateToken(String userName) {
@@ -84,5 +91,21 @@ public class JwtService {
         log.info("Running validateToken(" + token + ", " + userDetails.toString() + ") in JwtService...");
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public String authenticateAndGetToken(String username, String password) {
+        log.info("Running authenticateAndGetToken(" + username + ", " + password + ") in JwtService...");
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password));
+        if (authentication.isAuthenticated()) {
+            return generateToken(username);
+        } else {
+            /*
+             * Ideally error should contain the same error message as other invalid
+             * authentication for token generation to obscure details from potential
+             * malicious user.
+             */
+            throw new UsernameNotFoundException(AuthExceptionMessages.INCORRECT_USERNAME_OR_PASSWORD);
+        }
     }
 }
