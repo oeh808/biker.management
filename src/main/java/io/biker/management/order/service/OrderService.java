@@ -13,6 +13,8 @@ public interface OrderService {
 
     public Order getOrder(int customerId, int orderId);
 
+    public Order getOrder(int orderId);
+
     public Order getOrder_BackOffice(int orderId);
 
     public List<Order> getAvailableOrders();

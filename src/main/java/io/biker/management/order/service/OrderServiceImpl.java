@@ -67,7 +67,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getOrder(int customerId, int orderId) {
-        log.info("Running getOrder(" + customerId + ", " + orderId + ") in ProductServiceImpl...");
+        log.info("Running getOrder(" + customerId + ", " + orderId + ") in OrderServiceImpl...");
         Customer customer = customerService.getSingleCustomer(customerId);
         Optional<Order> opOrder = orderRepo.findByOrderIdAndCustomer(orderId, customer);
 
@@ -75,8 +75,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Order getOrder(int orderId) {
+        log.info("Running getOrder(" + orderId + ") in OrderServiceImpl...");
+        Optional<Order> opOrder = orderRepo.findById(orderId);
+
+        return getOrderFromOptional(opOrder);
+    }
+
+    @Override
     public Order getOrder_BackOffice(int orderId) {
-        log.info("Running getOrder_BackOffice(" + orderId + ") in ProductServiceImpl...");
+        log.info("Running getOrder_BackOffice(" + orderId + ") in OrderServiceImpl...");
         Optional<Order> opOrder = orderRepo.findById(orderId);
 
         return getOrderFromOptional(opOrder);
@@ -84,13 +92,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getAvailableOrders() {
-        log.info("Running getAvailableOrders() in ProductServiceImpl...");
+        log.info("Running getAvailableOrders() in OrderServiceImpl...");
         return orderRepo.findByStatus(OrderStatus.AWAITING_APPROVAL);
     }
 
     @Override
     public List<Order> getOrdersByStore(int storeId) {
-        log.info("Running getOrdersByStore(" + storeId + ") in ProductServiceImpl...");
+        log.info("Running getOrdersByStore(" + storeId + ") in OrderServiceImpl...");
         Store store = storeService.getSingleStore(storeId);
 
         return orderRepo.findByStore(store);
@@ -98,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getOrdersByBiker(int bikerId) {
-        log.info("Running getOrdersByBiker(" + bikerId + ") in ProductServiceImpl...");
+        log.info("Running getOrdersByBiker(" + bikerId + ") in OrderServiceImpl...");
         Biker biker = bikerService.getSingleBiker(bikerId);
 
         return orderRepo.findByBiker(biker);

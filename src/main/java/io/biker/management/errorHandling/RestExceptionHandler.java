@@ -27,6 +27,7 @@ import io.biker.management.biker.exception.BikerException;
 import io.biker.management.customer.exception.CustomerException;
 import io.biker.management.errorHandling.responses.ErrorResponse;
 import io.biker.management.order.exception.OrderException;
+import io.biker.management.orderHistory.exception.OrderHistoryException;
 import io.biker.management.product.exception.ProductException;
 import io.biker.management.store.exception.StoreException;
 
@@ -82,6 +83,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorResponse handleOrderException(OrderException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(OrderHistoryException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleOrderHistoryException(OrderHistoryException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
 
         return errorResponse;

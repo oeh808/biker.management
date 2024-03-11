@@ -14,11 +14,21 @@ import io.biker.management.orderHistory.entity.OrderHistory;
 public class OrderHistoryMapper {
     // To Dto
     public OrderHistoryReadingDTO toDto(OrderHistory orderHistory) {
-        OrderHistoryReadingDTO dto = new OrderHistoryReadingDTO(orderHistory.getId(),
-                orderHistory.getOrder().getOrderId(),
-                orderHistory.getOrderCreationDate(), orderHistory.getUpdatedAt(),
-                orderHistory.getEstimatedTimeOfArrival(), orderHistory.getStatus(),
-                orderHistory.getBiker().getId());
+        OrderHistoryReadingDTO dto;
+        if (orderHistory.getBiker() == null) {
+            dto = new OrderHistoryReadingDTO(orderHistory.getId(),
+                    orderHistory.getOrder().getOrderId(),
+                    orderHistory.getOrderCreationDate(), orderHistory.getUpdatedAt(),
+                    orderHistory.getEstimatedTimeOfArrival(), orderHistory.getStatus(),
+                    -1);
+        } else {
+            dto = new OrderHistoryReadingDTO(orderHistory.getId(),
+                    orderHistory.getOrder().getOrderId(),
+                    orderHistory.getOrderCreationDate(), orderHistory.getUpdatedAt(),
+                    orderHistory.getEstimatedTimeOfArrival(), orderHistory.getStatus(),
+                    orderHistory.getBiker().getId());
+        }
+
         return dto;
     }
 
