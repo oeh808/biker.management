@@ -82,7 +82,7 @@ public class BikerController {
 
     @Operation(description = "DELETE endpoint for deleting a biker from the biker table." +
             "\n\n Can only be done by admins." +
-            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete a Biker")
+            "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Delete a Biker")
     @Transactional
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")

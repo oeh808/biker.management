@@ -43,7 +43,7 @@ public class AuthController {
     @Operation(description = "POST endpoint for registering a customer and assigning their roles. (Entity must be created before registeration)"
             +
             "\n\n Can only be done by admins." +
-            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Register a customer")
+            "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Register a customer")
     @PostMapping("/customers/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
@@ -58,7 +58,7 @@ public class AuthController {
     @Operation(description = "POST endpoint for registering a biker and assigning their roles. (Entity must be created before registeration)"
             +
             "\n\n Can only be done by back office users." +
-            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Register a biker")
+            "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Register a biker")
     @PostMapping("/bikers/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
@@ -73,7 +73,7 @@ public class AuthController {
     @Operation(description = "POST endpoint for registering a back office user and assigning their roles. (Entity must be created before registeration)"
             +
             "\n\n Can only be done by back office users." +
-            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Register a back office user")
+            "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Register a back office user")
     @PostMapping("/backOffice/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
@@ -88,7 +88,7 @@ public class AuthController {
     @Operation(description = "POST endpoint for registering a store and assigning their roles. (Entity must be created before registeration)"
             +
             "\n\n Can only be done by admins." +
-            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Register a store")
+            "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Register a store")
     @PostMapping("/stores/{id}")
     @SecurityRequirement(name = "Authorization")
     @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")
@@ -113,7 +113,7 @@ public class AuthController {
     @Operation(description = "DELETE endpoint for deleting a user and their roles (Does not affect the user's respective entity table)."
             +
             "\n\n Can only be done by admins." +
-            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete Store Info")
+            "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Delete Store Info")
     @Transactional
     @DeleteMapping("/users/{id}")
     @SecurityRequirement(name = "Authorization")

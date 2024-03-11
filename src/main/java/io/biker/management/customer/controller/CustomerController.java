@@ -100,7 +100,7 @@ public class CustomerController {
 
         @Operation(description = "DELETE endpoint for deleting a customer from the customer table." +
                         "\n\n Can only be done by admins." +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete a Customer")
+                        "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Delete a Customer")
         @Transactional
         @DeleteMapping("/{id}")
         @SecurityRequirement(name = "Authorization")

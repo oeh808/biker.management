@@ -124,7 +124,7 @@ public class ProductController {
         @Operation(description = "DELETE endpoint for deleting a product associated with a store identified by its storeId."
                         +
                         "\n\n Can only be done by stores managing their own products." +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete a product")
+                        "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Delete a product")
         @DeleteMapping("{storeId}/products/{id}")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
                         "(hasAuthority('" + Roles_Const.STORE + "') and #storeId == authentication.principal.id)")

@@ -79,7 +79,7 @@ public class StoreController {
 
     @Operation(description = "DELETE endpoint for deleting a store from the table of stores." +
             "\n\n Can only be done by admins." +
-            "\n\n Returns a response as an instance of SuccessResponse", summary = "Delete a Store")
+            "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>", summary = "Delete a Store")
     @Transactional
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")

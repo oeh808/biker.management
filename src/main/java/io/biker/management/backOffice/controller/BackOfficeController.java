@@ -80,7 +80,7 @@ public class BackOfficeController {
 
     @Operation(description = "DELETE endpoint for deleting a back office user." +
             "\n\n Can only be done by admins." +
-            "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete a Back Office user")
+            "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Delete a Back Office user")
     @Transactional
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "')")

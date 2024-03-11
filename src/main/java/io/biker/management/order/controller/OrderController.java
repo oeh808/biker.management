@@ -155,7 +155,7 @@ public class OrderController {
 
         @Operation(description = "PUT endpoint for updating the estimated time of arrival of an order by a biker." +
                         "\n\n Can only be done by bikers that are associated with the order." +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order estimated time of arrival (Biker)")
+                        "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Update order estimated time of arrival (Biker)")
         @PutMapping("/eta/bikers/{bikerId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EstimatedTimeOfArrivalCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
@@ -175,7 +175,7 @@ public class OrderController {
 
         @Operation(description = "PUT endpoint for updating the estimated time of arrival of an order by a store." +
                         "\n\n Can only be done by stores that are associated with the order." +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order estimated time of arrival (Stoner)")
+                        "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Update order estimated time of arrival (Stoner)")
         @PutMapping("/eta/stores/{storeId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EstimatedTimeOfArrivalCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
@@ -196,7 +196,7 @@ public class OrderController {
         @Operation(description = "PUT endpoint for updating the estimated time of arrival of an order by a  backoffice user."
                         +
                         "\n\n Can only be done by back office users." +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order estimated time of arrival (Back office)")
+                        "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Update order estimated time of arrival (Back office)")
         @PutMapping("/eta/backOffice/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of EstimatedTimeOfArrivalCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
@@ -213,7 +213,7 @@ public class OrderController {
 
         @Operation(description = "PUT endpoint for customers to give feedback to an order." +
                         "\n\n Can only be done by customers rating their own orders." +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Set order feedback")
+                        "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Set order feedback")
         @PutMapping("/rate/{userId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of FeedBackCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
@@ -232,7 +232,7 @@ public class OrderController {
 
         @Operation(description = "PUT endpoint for updating the status of an order by a biker." +
                         "\n\n Can only be done by bikers that are associated with the order." +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order status (Biker)")
+                        "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Update order status (Biker)")
         @PutMapping("/status/bikers/{bikerId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
@@ -251,7 +251,7 @@ public class OrderController {
 
         @Operation(description = "PUT endpoint for updating the status of an order by a store." +
                         "\n\n Can only be done by stores that are associated with the order." +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order status (Stoner)")
+                        "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Update order status (Stoner)")
         @PutMapping("/status/stores/{storeId}/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.ADMIN + "') or " +
@@ -270,7 +270,7 @@ public class OrderController {
 
         @Operation(description = "PUT endpoint for updating the status of an order by a back office user." +
                         "\n\n Can only be done by back office users." +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Update order status (Back office)")
+                        "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Update order status (Back office)")
         @PutMapping("/status/backOffice/{orderId}")
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Must conform to required properties of StatusCreationDTO")
         @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
@@ -288,7 +288,7 @@ public class OrderController {
         @Operation(description = "PUT endpoint to assign a biker to an order." +
                         "\n\n Can only be done by back office users or bikers trying to accept an order for themselves."
                         +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Assign order")
+                        "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Assign order")
         @PutMapping("/assign/{bikerId}/{orderId}")
         @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "') or " +
                         "(hasAuthority('" + Roles_Const.BIKER + "') and #bikerId == authentication.principal.id)")
@@ -305,7 +305,7 @@ public class OrderController {
 
         @Operation(description = "DELETE endpoint to delete an order." +
                         "\n\n Can only be done by back office users." +
-                        "\n\n Returns a response as an instance of SuccessResponse.", summary = "Delete order")
+                        "\n\n Returns a response as an instance of ResponseEntity<SuccessResponse>.", summary = "Delete order")
         @DeleteMapping("/backOffice/{orderId}")
         @PreAuthorize("hasAuthority('" + Roles_Const.BACK_OFFICE + "')")
         public ResponseEntity<SuccessResponse> deleteOrder(
