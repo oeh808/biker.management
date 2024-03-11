@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Log4j2
 @RestController
-@Tag(name = "Orders", description = "Controller for handling mappings authentication and registering users")
+@Tag(name = "Orders", description = "Controller for handling mappings for delivery orders")
 @SecurityRequirement(name = "Authorization")
 @RequestMapping("/orders")
 public class OrderController {
