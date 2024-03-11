@@ -1,6 +1,8 @@
 package io.biker.management.orderHistory.mapper;
 
 import java.sql.Date;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +20,15 @@ public class OrderHistoryMapper {
         if (orderHistory.getBiker() == null) {
             dto = new OrderHistoryReadingDTO(orderHistory.getId(),
                     orderHistory.getOrder().getOrderId(),
-                    orderHistory.getOrderCreationDate(), orderHistory.getUpdatedAt(),
+                    orderHistory.getOrderCreationDate(),
+                    formatDate(orderHistory.getUpdatedAt()),
                     orderHistory.getEstimatedTimeOfArrival(), orderHistory.getStatus(),
                     -1);
         } else {
             dto = new OrderHistoryReadingDTO(orderHistory.getId(),
                     orderHistory.getOrder().getOrderId(),
-                    orderHistory.getOrderCreationDate(), orderHistory.getUpdatedAt(),
+                    orderHistory.getOrderCreationDate(),
+                    formatDate(orderHistory.getUpdatedAt()),
                     orderHistory.getEstimatedTimeOfArrival(), orderHistory.getStatus(),
                     orderHistory.getBiker().getId());
         }
@@ -44,5 +48,13 @@ public class OrderHistoryMapper {
     // To Entity
     public Date toDate(OrderHistoryCreationDTO dto) {
         return dto.orderCreationDate();
+    }
+
+    // Helper Functions
+    private String formatDate(ZonedDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss z");
+        String formattedString = dateTime.format(formatter);
+
+        return formattedString;
     }
 }

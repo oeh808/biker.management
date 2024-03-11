@@ -1,7 +1,7 @@
 package io.biker.management.orderHistory.service;
 
 import java.sql.Date;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +35,7 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
         Order order = orderService.getOrder(orderId);
         OrderHistory orderHistory = new OrderHistory(0, orderCreationDate, order.getStatus(),
                 order.getEstimatedTimeOfArrival(),
-                order.getBiker(), Date.valueOf(LocalDate.now()), order);
+                order.getBiker(), ZonedDateTime.now(), order);
 
         log.info("Saving Order History...");
         return orderHistoryRepo.save(orderHistory);

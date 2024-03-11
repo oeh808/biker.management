@@ -1,7 +1,7 @@
 create table order_history (
     id integer not null auto_increment, order_creation_date date, status enum(
         'AWAITING_APPROVAL', 'PREPARING', 'WAITING_FOR_PICK_UP', 'EN_ROUTE', 'DELIVERED'
-    ), estimated_time_of_arrival date, biker_id integer, updated_at date, order_id integer, primary key (id)
+    ), estimated_time_of_arrival date, biker_id integer, updated_at datetime(6), order_id integer, primary key (id)
 ) engine = InnoDB;
 
 alter table order_history

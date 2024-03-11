@@ -1,6 +1,7 @@
 package io.biker.management.orderHistory.entity;
 
 import java.sql.Date;
+import java.time.ZonedDateTime;
 
 import io.biker.management.biker.entity.Biker;
 import io.biker.management.enums.OrderStatus;
@@ -38,7 +39,7 @@ public class OrderHistory {
     @JoinColumn(name = "bikerId")
     private Biker biker;
 
-    private Date updatedAt;
+    private ZonedDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderId")
