@@ -20,4 +20,10 @@ public class Responses {
     public static String STORE_DELETED = "Store deleted";
     public static String BIKER_DELETED = "Biker deleted";
     public static String BACK_OFFICE_USER_DELETED = "Back Office Users deleted";
+
+    public static String ORDER_HISTORY_DELETED = "Record of order history deleted";
+
+    public static String ORDER_HISTORIES_DELETED(int orderId) {
+        return "All records of order history for order with id = " + orderId + " have been deleted";
+    }
 }

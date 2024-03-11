@@ -1,5 +1,5 @@
 create table order_history (
-    id integer not null auto_increment, created_at date, status enum(
+    id integer not null auto_increment, order_creation_date date, status enum(
         'AWAITING_APPROVAL', 'PREPARING', 'WAITING_FOR_PICK_UP', 'EN_ROUTE', 'DELIVERED'
     ), estimated_time_of_arrival date, biker_id integer, updated_at date, order_id integer, primary key (id)
 ) engine = InnoDB;

@@ -27,7 +27,7 @@ public class OrderHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private Date createdAt;
+    private Date orderCreationDate;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;

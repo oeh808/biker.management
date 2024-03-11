@@ -13,6 +13,8 @@ public class ValidationMessages {
 
     public static final String LOE_TO_FIVE = " must be less than or equal to 5";
 
+    public static final String PAST_OR_PRESENT = " must be in the past or present";
+    public static final String PAST_OR_PRESENT_SCHEMA = "Must be in the past or present";
     public static final String FUTURE = " must be in the future";
     public static final String FUTURE_SCHEMA = "Must be in the future";
 
