@@ -11,6 +11,7 @@ import io.biker.management.orderHistory.mapper.OrderHistoryMapper;
 import io.biker.management.orderHistory.service.OrderHistoryService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +44,7 @@ public class OrderHistoryController {
 
     @PostMapping("/{orderId}")
     public OrderHistoryReadingDTO createOrderHistory(@PathVariable int orderId,
-            @RequestBody OrderHistoryCreationDTO dto) {
+            @Valid @RequestBody OrderHistoryCreationDTO dto) {
         log.info("Recieved: PUT request to /orders/history/" + orderId);
 
         OrderHistory orderHistory = orderHistoryService.createOrderHistory(orderId, orderHistoryMapper.toDate(dto));
