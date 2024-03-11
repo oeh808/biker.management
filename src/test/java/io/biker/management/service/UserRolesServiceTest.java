@@ -43,7 +43,6 @@ import io.biker.management.store.service.StoreService;
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
-// FIXME: Update tests
 public class UserRolesServiceTest {
     @TestConfiguration
     static class ServiceTestConfig {
@@ -172,7 +171,6 @@ public class UserRolesServiceTest {
 
     @Test
     public void registerStore() {
-        // TODO: Complete test
         doAnswer((i) -> {
             return i.getArgument(0);
         }).when(repo).save(any(UserRoles.class));
