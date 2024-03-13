@@ -1,5 +1,7 @@
 FROM eclipse-temurin:21-jdk-alpine
 
+EXPOSE 8080
+
 WORKDIR /app
 
 COPY .mvn/ .mvn
