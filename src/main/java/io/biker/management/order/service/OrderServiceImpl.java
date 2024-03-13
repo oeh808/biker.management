@@ -260,10 +260,9 @@ public class OrderServiceImpl implements OrderService {
         log.info("Attempting to find order...");
         getOrderFromOptional(opOrder);
 
+        orderHistoryService.deleteOrderHistoriesByOrder(orderId);
         log.info("Deleting order...");
         orderRepo.deleteById(orderId);
-
-        orderHistoryService.deleteOrderHistoriesByOrder(orderId);
     }
 
     // Helper functions
