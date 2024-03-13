@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import io.biker.management.biker.entity.Biker;
@@ -263,6 +264,23 @@ public class OrderServiceImpl implements OrderService {
         orderHistoryService.deleteOrderHistoriesByOrder(orderId);
         log.info("Deleting order...");
         orderRepo.deleteById(orderId);
+    }
+
+    @Override
+    // Scheduled to run every day at midnight
+    @Scheduled(cron = "0 0 0 * * *")
+    public void deleteDeliveredOrders() {
+        log.info("Running deleteDeliveredOrders() in OrderServiceImpl...");
+
+        log.info("Retrieving delivered orders...");
+        List<Order> deliveredOrders = orderRepo.findByStatus(OrderStatus.DELIVERED);
+
+        log.info("Deleting orders...");
+        for (Order order : deliveredOrders) {
+            orderHistoryService.deleteOrderHistoriesByOrder(order.getOrderId());
+            log.info("Deleting order with id = " + order.getOrderId() + "...");
+            orderRepo.deleteById(order.getOrderId());
+        }
     }
 
     // Helper functions

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -138,6 +139,7 @@ public class OrderServiceTest {
         when(productService.getProduct(product.getProductId())).thenReturn(product);
 
         when(orderHistoryService.getOrderHistoriesByOrder(order.getOrderId())).thenReturn(orderHistories);
+        when(orderHistoryService.createOrderHistory(0, null)).thenReturn(orderHistory);
     }
 
     @Test
@@ -153,6 +155,7 @@ public class OrderServiceTest {
         assertEquals(product.getName(), createdOrder.getOrderDetails().getProduct().getName());
         assertEquals(address, createdOrder.getOrderDetails().getAddress());
         assertEquals(OrderStatus.AWAITING_APPROVAL, createdOrder.getStatus());
+        verify(orderHistoryService, times(1)).createOrderHistory(anyInt(), any(Date.class));
     }
 
     @Test
@@ -164,6 +167,7 @@ public class OrderServiceTest {
                     orderService.createOrder(customer.getId(), product.getProductId(), address);
                 });
         assertTrue(ex.getMessage().contains(OrderExceptionMessages.OUT_OF_STOCK));
+        verify(orderHistoryService, times(0)).createOrderHistory(anyInt(), any(Date.class));
     }
 
     @Test
@@ -237,6 +241,7 @@ public class OrderServiceTest {
 
         assertEquals(OrderStatus.DELIVERED, order.getStatus());
         verify(repo, times(1)).save(order);
+        verify(orderHistoryService, times(1)).createOrderHistory(order.getOrderId(), null);
     }
 
     @Test
@@ -245,6 +250,7 @@ public class OrderServiceTest {
 
         assertEquals(OrderStatus.DELIVERED, order.getStatus());
         verify(repo, times(1)).save(order);
+        verify(orderHistoryService, times(1)).createOrderHistory(order.getOrderId(), null);
     }
 
     @Test
@@ -253,6 +259,7 @@ public class OrderServiceTest {
 
         assertEquals(OrderStatus.DELIVERED, order.getStatus());
         verify(repo, times(1)).save(order);
+        verify(orderHistoryService, times(1)).createOrderHistory(order.getOrderId(), null);
     }
 
     @Test
@@ -262,6 +269,7 @@ public class OrderServiceTest {
 
         assertEquals(eta, order.getEstimatedTimeOfArrival());
         verify(repo, times(1)).save(order);
+        verify(orderHistoryService, times(1)).createOrderHistory(order.getOrderId(), null);
     }
 
     @Test
@@ -271,6 +279,7 @@ public class OrderServiceTest {
 
         assertEquals(eta, order.getEstimatedTimeOfArrival());
         verify(repo, times(1)).save(order);
+        verify(orderHistoryService, times(1)).createOrderHistory(order.getOrderId(), null);
     }
 
     @Test
@@ -280,6 +289,7 @@ public class OrderServiceTest {
 
         assertEquals(eta, order.getEstimatedTimeOfArrival());
         verify(repo, times(1)).save(order);
+        verify(orderHistoryService, times(1)).createOrderHistory(order.getOrderId(), null);
     }
 
     @Test
@@ -290,6 +300,7 @@ public class OrderServiceTest {
 
         assertEquals(someBiker, order.getBiker());
         verify(repo, times(1)).save(order);
+        verify(orderHistoryService, times(1)).createOrderHistory(order.getOrderId(), null);
     }
 
     @Test
@@ -297,6 +308,7 @@ public class OrderServiceTest {
         orderService.deleteOrder(order.getOrderId());
 
         verify(repo, times(1)).deleteById(order.getOrderId());
+        verify(orderHistoryService, times(1)).deleteOrderHistoriesByOrder(order.getOrderId());
     }
 
     @Test
@@ -307,6 +319,19 @@ public class OrderServiceTest {
                 });
         assertTrue(ex.getMessage().contains(OrderExceptionMessages.ORDER_NOT_FOUND));
 
+        verify(orderHistoryService, times(0)).deleteOrderHistoriesByOrder(order.getOrderId() - 1);
         verify(repo, times(0)).deleteById(order.getOrderId() - 1);
+    }
+
+    @Test
+    public void deleteDeliveredOrders() {
+        List<Order> orders = new ArrayList<>();
+        orders.add(order);
+        when(repo.findByStatus(OrderStatus.DELIVERED)).thenReturn(orders);
+
+        orderService.deleteDeliveredOrders();
+
+        verify(orderHistoryService, times(1)).deleteOrderHistoriesByOrder(order.getOrderId());
+        verify(repo, times(1)).deleteById(order.getOrderId());
     }
 }

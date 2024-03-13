@@ -40,4 +40,6 @@ public interface OrderService {
     public void assignDelivery(int bikerId, int orderId);
 
     public void deleteOrder(int orderId);
+
+    public void deleteDeliveredOrders();
 }
