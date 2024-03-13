@@ -1,6 +1,7 @@
 package io.biker.management.order.service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,10 @@ import io.biker.management.order.entity.OrderDetails;
 import io.biker.management.order.exception.OrderException;
 import io.biker.management.order.exception.OrderExceptionMessages;
 import io.biker.management.order.repo.OrderRepo;
+import io.biker.management.orderHistory.entity.OrderHistory;
+import io.biker.management.orderHistory.exception.OrderHistoryException;
+import io.biker.management.orderHistory.exception.OrderHistoryExceptionMessages;
+import io.biker.management.orderHistory.service.OrderHistoryService;
 import io.biker.management.product.entity.Product;
 import io.biker.management.product.service.ProductService;
 import io.biker.management.store.entity.Store;
@@ -33,14 +38,16 @@ public class OrderServiceImpl implements OrderService {
     private ProductService productService;
     private StoreService storeService;
     private BikerService bikerService;
+    private OrderHistoryService orderHistoryService;
 
     public OrderServiceImpl(OrderRepo orderRepo, CustomerService customerService, ProductService productService,
-            StoreService storeService, BikerService bikerService) {
+            StoreService storeService, BikerService bikerService, OrderHistoryService orderHistoryService) {
         this.orderRepo = orderRepo;
         this.customerService = customerService;
         this.productService = productService;
         this.storeService = storeService;
         this.bikerService = bikerService;
+        this.orderHistoryService = orderHistoryService;
     }
 
     @Override
@@ -62,7 +69,11 @@ public class OrderServiceImpl implements OrderService {
                 null, orderDetails);
 
         log.info("Saving order...");
-        return orderRepo.save(order);
+        order = orderRepo.save(order);
+
+        orderHistoryService.createOrderHistory(order.getOrderId(), Date.valueOf(LocalDate.now()));
+
+        return order;
     }
 
     @Override
@@ -140,6 +151,8 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(status);
         log.info("Saving updated order...");
         orderRepo.save(order);
+
+        orderHistoryService.createOrderHistory(orderId, getOrderCreationDate(orderId));
     }
 
     @Override
@@ -155,6 +168,8 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(status);
         log.info("Saving updated order...");
         orderRepo.save(order);
+
+        orderHistoryService.createOrderHistory(orderId, getOrderCreationDate(orderId));
     }
 
     @Override
@@ -167,10 +182,12 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(status);
         log.info("Saving updated order...");
         orderRepo.save(order);
+
+        orderHistoryService.createOrderHistory(orderId, getOrderCreationDate(orderId));
     }
 
     @Override
-    public Order updateOrderEstimatedTimeOfArrival_Biker(int bikerId, int orderId, Date estimatedTimeOfArrival) {
+    public void updateOrderEstimatedTimeOfArrival_Biker(int bikerId, int orderId, Date estimatedTimeOfArrival) {
         log.info("Running updateOrderEstimatedTimeOfArrival_Biker(" + bikerId + ", " + orderId + ", "
                 + estimatedTimeOfArrival.toString() + ") in OrderServiceImpl...");
         Biker biker = bikerService.getSingleBiker(bikerId);
@@ -181,11 +198,13 @@ public class OrderServiceImpl implements OrderService {
         order.setEstimatedTimeOfArrival(estimatedTimeOfArrival);
 
         log.info("Saving updated order...");
-        return orderRepo.save(order);
+        orderRepo.save(order);
+
+        orderHistoryService.createOrderHistory(orderId, getOrderCreationDate(orderId));
     }
 
     @Override
-    public Order updateOrderEstimatedTimeOfArrival_Store(int storeId, int orderId, Date estimatedTimeOfArrival) {
+    public void updateOrderEstimatedTimeOfArrival_Store(int storeId, int orderId, Date estimatedTimeOfArrival) {
         log.info("Running updateOrderEstimatedTimeOfArrival_Store(" + storeId + ", " + orderId + ", "
                 + estimatedTimeOfArrival.toString() + ") in OrderServiceImpl...");
         Store store = storeService.getSingleStore(storeId);
@@ -196,11 +215,13 @@ public class OrderServiceImpl implements OrderService {
         order.setEstimatedTimeOfArrival(estimatedTimeOfArrival);
 
         log.info("Saving updated order...");
-        return orderRepo.save(order);
+        orderRepo.save(order);
+
+        orderHistoryService.createOrderHistory(orderId, getOrderCreationDate(orderId));
     }
 
     @Override
-    public Order updateOrderEstimatedTimeOfArrival_BackOffice(int orderId, Date estimatedTimeOfArrival) {
+    public void updateOrderEstimatedTimeOfArrival_BackOffice(int orderId, Date estimatedTimeOfArrival) {
         log.info("Running updateOrderEstimatedTimeOfArrival_BackOffice(" + orderId + ", "
                 + estimatedTimeOfArrival.toString()
                 + ") in OrderServiceImpl...");
@@ -210,7 +231,9 @@ public class OrderServiceImpl implements OrderService {
         order.setEstimatedTimeOfArrival(estimatedTimeOfArrival);
 
         log.info("Saving updated order...");
-        return orderRepo.save(order);
+        orderRepo.save(order);
+
+        orderHistoryService.createOrderHistory(orderId, getOrderCreationDate(orderId));
     }
 
     @Override
@@ -226,6 +249,8 @@ public class OrderServiceImpl implements OrderService {
         order.setBiker(biker);
         log.info("Saving updated order...");
         orderRepo.save(order);
+
+        orderHistoryService.createOrderHistory(orderId, getOrderCreationDate(orderId));
     }
 
     @Override
@@ -237,6 +262,8 @@ public class OrderServiceImpl implements OrderService {
 
         log.info("Deleting order...");
         orderRepo.deleteById(orderId);
+
+        orderHistoryService.deleteOrderHistoriesByOrder(orderId);
     }
 
     // Helper functions
@@ -246,6 +273,15 @@ public class OrderServiceImpl implements OrderService {
         } else {
             log.error("Order not found with provided paremeters!");
             throw new OrderException(OrderExceptionMessages.ORDER_NOT_FOUND);
+        }
+    }
+
+    private Date getOrderCreationDate(int orderId) {
+        List<OrderHistory> orderHistories = orderHistoryService.getOrderHistoriesByOrder(orderId);
+        if (orderHistories.isEmpty()) {
+            throw new OrderHistoryException(OrderHistoryExceptionMessages.ORDER_HISTORY_DOES_NOT_EXIST);
+        } else {
+            return orderHistories.get(0).getOrderCreationDate();
         }
     }
 }

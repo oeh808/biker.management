@@ -30,7 +30,7 @@ import io.biker.management.enums.OrderStatus;
 import io.biker.management.order.entity.Order;
 import io.biker.management.order.exception.OrderException;
 import io.biker.management.order.exception.OrderExceptionMessages;
-import io.biker.management.order.service.OrderService;
+import io.biker.management.order.repo.OrderRepo;
 import io.biker.management.orderHistory.entity.OrderHistory;
 import io.biker.management.orderHistory.exception.OrderHistoryException;
 import io.biker.management.orderHistory.exception.OrderHistoryExceptionMessages;
@@ -45,8 +45,8 @@ public class OrderHistoryServiceTest {
     static class ServiceTestConfig {
         @Bean
         @Autowired
-        OrderHistoryService service(OrderHistoryRepo repo, OrderService orderService) {
-            return new OrderHistoryServiceImpl(repo, orderService);
+        OrderHistoryService service(OrderHistoryRepo repo, OrderRepo orderRepo) {
+            return new OrderHistoryServiceImpl(repo, orderRepo);
         }
     }
 
@@ -54,7 +54,7 @@ public class OrderHistoryServiceTest {
     private OrderHistoryRepo repo;
 
     @MockBean
-    private OrderService orderService;
+    private OrderRepo orderRepo;
 
     @Autowired
     private OrderHistoryService orderHistoryService;
@@ -86,12 +86,9 @@ public class OrderHistoryServiceTest {
 
     @BeforeEach
     public void setUpMocks() {
-        when(orderService.getOrder(order1.getOrderId())).thenReturn(order1);
-        when(orderService.getOrder(order2.getOrderId())).thenReturn(order2);
-        when(orderService.getOrder(order1.getOrderId() - 1)).thenAnswer(
-                (i) -> {
-                    throw new OrderException(OrderExceptionMessages.ORDER_NOT_FOUND);
-                });
+        when(orderRepo.findById(order1.getOrderId())).thenReturn(Optional.of(order1));
+        when(orderRepo.findById(order2.getOrderId())).thenReturn(Optional.of(order2));
+        when(orderRepo.findById(order1.getOrderId() - 1)).thenReturn(Optional.empty());
 
         doAnswer(
                 (i) -> {

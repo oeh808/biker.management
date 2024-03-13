@@ -38,6 +38,8 @@ import io.biker.management.order.exception.OrderExceptionMessages;
 import io.biker.management.order.repo.OrderRepo;
 import io.biker.management.order.service.OrderService;
 import io.biker.management.order.service.OrderServiceImpl;
+import io.biker.management.orderHistory.entity.OrderHistory;
+import io.biker.management.orderHistory.service.OrderHistoryService;
 import io.biker.management.product.entity.Product;
 import io.biker.management.product.service.ProductService;
 import io.biker.management.store.entity.Store;
@@ -52,8 +54,9 @@ public class OrderServiceTest {
         @Bean
         @Autowired
         OrderService service(OrderRepo repo, CustomerService customerService, ProductService productService,
-                StoreService storeService, BikerService bikerService) {
-            return new OrderServiceImpl(repo, customerService, productService, storeService, bikerService);
+                StoreService storeService, BikerService bikerService, OrderHistoryService orderHistoryService) {
+            return new OrderServiceImpl(repo, customerService, productService, storeService, bikerService,
+                    orderHistoryService);
         }
     }
 
@@ -72,6 +75,9 @@ public class OrderServiceTest {
     @MockBean
     private BikerService bikerService;
 
+    @MockBean
+    private OrderHistoryService orderHistoryService;
+
     @Autowired
     private OrderService orderService;
 
@@ -84,6 +90,9 @@ public class OrderServiceTest {
     private static OrderDetails orderDetails;
 
     private static Order order;
+
+    private static OrderHistory orderHistory;
+    private static List<OrderHistory> orderHistories = new ArrayList<>();
 
     @BeforeAll
     public static void setUp() {
@@ -99,6 +108,9 @@ public class OrderServiceTest {
 
         order = new Order(0, customer, store, biker, OrderStatus.AWAITING_APPROVAL, Date.valueOf("2050-09-15"),
                 orderDetails);
+
+        orderHistory = new OrderHistory(5, null, null, null, null, null, order);
+        orderHistories.add(orderHistory);
     }
 
     @BeforeEach
@@ -124,6 +136,8 @@ public class OrderServiceTest {
         when(bikerService.getSingleBiker(biker.getId())).thenReturn(biker);
         when(storeService.getSingleStore(store.getId())).thenReturn(store);
         when(productService.getProduct(product.getProductId())).thenReturn(product);
+
+        when(orderHistoryService.getOrderHistoriesByOrder(order.getOrderId())).thenReturn(orderHistories);
     }
 
     @Test

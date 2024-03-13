@@ -31,11 +31,11 @@ public interface OrderService {
 
     public void updateOrderStatus_BackOffice(int orderId, OrderStatus status);
 
-    public Order updateOrderEstimatedTimeOfArrival_Biker(int bikerId, int orderId, Date estimatedTimeOfArrival);
+    public void updateOrderEstimatedTimeOfArrival_Biker(int bikerId, int orderId, Date estimatedTimeOfArrival);
 
-    public Order updateOrderEstimatedTimeOfArrival_Store(int storeId, int orderId, Date estimatedTimeOfArrival);
+    public void updateOrderEstimatedTimeOfArrival_Store(int storeId, int orderId, Date estimatedTimeOfArrival);
 
-    public Order updateOrderEstimatedTimeOfArrival_BackOffice(int orderId, Date estimatedTimeOfArrival);
+    public void updateOrderEstimatedTimeOfArrival_BackOffice(int orderId, Date estimatedTimeOfArrival);
 
     public void assignDelivery(int bikerId, int orderId);
 
