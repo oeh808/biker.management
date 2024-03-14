@@ -5,6 +5,10 @@ services:
       context: .
       dockerfile: Dockerfile
     image: biker_management
+    ports:
+      - '8080:8080'
+    env_file:
+      - docker.env
   db:
     image: mysql:latest
     restart: always
@@ -15,7 +19,9 @@ services:
       # You can use whatever password you like
       MYSQL_PASSWORD: ${DB_PASSWORD}
       # Password for root access
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    env_file:
+      - docker.env
     ports:
       # <Port exposed> : <MySQL Port running inside container>
       - '3307:3306'
