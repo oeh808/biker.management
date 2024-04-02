@@ -9,8 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.sql.Date;
-import java.time.ZonedDateTime;
+import java.util.Date;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,14 +70,14 @@ public class OrderHistoryServiceTest {
     @BeforeAll
     public static void setUp() {
         order1 = new Order(1, null, null, null, OrderStatus.AWAITING_APPROVAL,
-                Date.valueOf("2030-04-20"), null);
+                java.sql.Date.valueOf("2030-04-20"), null);
         order2 = new Order(2, null, null, null, OrderStatus.DELIVERED,
-                Date.valueOf("2030-09-15"), null);
+                java.sql.Date.valueOf("2030-09-15"), null);
 
-        orderHistory1 = new OrderHistory(1, Date.valueOf("2030-04-17"),
-                order1.getStatus(), order1.getEstimatedTimeOfArrival(), null, ZonedDateTime.now(), order1);
-        orderHistory2 = new OrderHistory(2, Date.valueOf("2030-09-01"),
-                order2.getStatus(), order2.getEstimatedTimeOfArrival(), null, ZonedDateTime.now(), order2);
+        orderHistory1 = new OrderHistory(1, java.sql.Date.valueOf("2030-04-17"),
+                order1.getStatus(), order1.getEstimatedTimeOfArrival(), null, Instant.now(), order1);
+        orderHistory2 = new OrderHistory(2, java.sql.Date.valueOf("2030-09-01"),
+                order2.getStatus(), order2.getEstimatedTimeOfArrival(), null, Instant.now(), order2);
 
         orderHistories = new ArrayList<>();
         orderHistories.add(orderHistory1);

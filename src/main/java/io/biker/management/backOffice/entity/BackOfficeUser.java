@@ -1,11 +1,10 @@
 package io.biker.management.backOffice.entity;
 
-import io.biker.management.user.entity.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "BACK_OFFICE_USERS")
+import io.biker.management.user.entity.User;
+
+@Document(collection = "BackOffice Users")
 public class BackOfficeUser extends User {
     public BackOfficeUser() {
         super();

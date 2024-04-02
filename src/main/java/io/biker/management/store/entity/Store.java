@@ -3,21 +3,15 @@ package io.biker.management.store.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import io.biker.management.product.entity.Product;
 import io.biker.management.user.Address;
 import io.biker.management.user.entity.User;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "Stores")
+@Document(collection = "Stores")
 public class Store extends User {
-    @Embedded
     private Address address;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
     private List<Product> products;
 
     public Store() {

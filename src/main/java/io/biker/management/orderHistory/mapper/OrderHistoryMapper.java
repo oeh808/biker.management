@@ -1,7 +1,7 @@
 package io.biker.management.orderHistory.mapper;
 
-import java.sql.Date;
-import java.time.ZonedDateTime;
+import java.util.Date;
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +51,9 @@ public class OrderHistoryMapper {
     }
 
     // Helper Functions
-    private String formatDate(ZonedDateTime dateTime) {
+    private String formatDate(Instant dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss z");
-        String formattedString = dateTime.format(formatter);
+        String formattedString = formatter.format(dateTime);
 
         return formattedString;
     }

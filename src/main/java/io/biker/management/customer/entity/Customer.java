@@ -3,16 +3,13 @@ package io.biker.management.customer.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import io.biker.management.user.Address;
 import io.biker.management.user.entity.User;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "Customers")
+@Document(collection = "Customers")
 public class Customer extends User {
-    @ElementCollection
     private Set<Address> addresses = new HashSet<Address>();
 
     public Customer() {

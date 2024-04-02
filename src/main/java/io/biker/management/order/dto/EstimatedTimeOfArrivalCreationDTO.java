@@ -1,6 +1,6 @@
 package io.biker.management.order.dto;
 
-import java.sql.Date;
+import java.util.Date;
 
 import io.biker.management.constants.validation.ValidationMessages;
 import io.swagger.v3.oas.annotations.media.Schema;

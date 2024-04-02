@@ -1,6 +1,6 @@
 package io.biker.management.order.repo;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import io.biker.management.customer.entity.Customer;
 import io.biker.management.enums.OrderStatus;
@@ -11,7 +11,7 @@ import java.util.Optional;
 import io.biker.management.store.entity.Store;
 import io.biker.management.biker.entity.Biker;
 
-public interface OrderRepo extends JpaRepository<Order, Integer> {
+public interface OrderRepo extends MongoRepository<Order, Integer> {
 
     Optional<Order> findByOrderIdAndCustomer(int orderId, Customer customer);
 

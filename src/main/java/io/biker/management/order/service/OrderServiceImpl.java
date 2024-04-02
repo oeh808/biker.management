@@ -1,6 +1,6 @@
 package io.biker.management.order.service;
 
-import java.sql.Date;
+import java.util.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
         log.info("Saving order...");
         order = orderRepo.save(order);
 
-        orderHistoryService.createOrderHistory(order.getOrderId(), Date.valueOf(LocalDate.now()));
+        orderHistoryService.createOrderHistory(order.getOrderId(), java.sql.Date.valueOf(LocalDate.now()));
 
         return order;
     }

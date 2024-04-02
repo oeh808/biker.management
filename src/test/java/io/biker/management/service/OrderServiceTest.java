@@ -10,7 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -107,7 +107,7 @@ public class OrderServiceTest {
         orderDetails = new OrderDetails(product, 0.14f, (product.getPrice() * 1.14f),
                 address, null);
 
-        order = new Order(0, customer, store, biker, OrderStatus.AWAITING_APPROVAL, Date.valueOf("2050-09-15"),
+        order = new Order(0, customer, store, biker, OrderStatus.AWAITING_APPROVAL, java.sql.Date.valueOf("2050-09-15"),
                 orderDetails);
 
         orderHistory = new OrderHistory(5, null, null, null, null, null, order);
@@ -118,7 +118,7 @@ public class OrderServiceTest {
     public void setUpMocks() {
         product.setQuantity(3);
         order.setStatus(OrderStatus.AWAITING_APPROVAL);
-        order.setEstimatedTimeOfArrival(Date.valueOf("2050-09-15"));
+        order.setEstimatedTimeOfArrival(java.sql.Date.valueOf("2050-09-15"));
         order.setBiker(biker);
 
         when(repo.findById(order.getOrderId())).thenReturn(Optional.of(order));
@@ -264,7 +264,7 @@ public class OrderServiceTest {
 
     @Test
     public void updateOrderEstimatedTimeOfArrival_Biker() {
-        Date eta = Date.valueOf("3050-09-15");
+        Date eta = java.sql.Date.valueOf("3050-09-15");
         orderService.updateOrderEstimatedTimeOfArrival_Biker(biker.getId(), order.getOrderId(), eta);
 
         assertEquals(eta, order.getEstimatedTimeOfArrival());
@@ -274,7 +274,7 @@ public class OrderServiceTest {
 
     @Test
     public void updateOrderEstimatedTimeOfArrival_Store() {
-        Date eta = Date.valueOf("3050-09-15");
+        Date eta = java.sql.Date.valueOf("3050-09-15");
         orderService.updateOrderEstimatedTimeOfArrival_Store(store.getId(), order.getOrderId(), eta);
 
         assertEquals(eta, order.getEstimatedTimeOfArrival());
@@ -284,7 +284,7 @@ public class OrderServiceTest {
 
     @Test
     public void updateOrderEstimatedTimeOfArrival_BackOffice() {
-        Date eta = Date.valueOf("3050-09-15");
+        Date eta = java.sql.Date.valueOf("3050-09-15");
         orderService.updateOrderEstimatedTimeOfArrival_BackOffice(order.getOrderId(), eta);
 
         assertEquals(eta, order.getEstimatedTimeOfArrival());

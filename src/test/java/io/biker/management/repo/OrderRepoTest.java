@@ -3,7 +3,7 @@ package io.biker.management.repo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -31,7 +32,7 @@ import io.biker.management.store.repo.StoreRepo;
 import io.biker.management.user.Address;
 
 @ActiveProfiles("test")
-@DataJpaTest
+@DataMongoTest
 public class OrderRepoTest {
     @Autowired
     private OrderRepo orderRepo;
@@ -91,8 +92,8 @@ public class OrderRepoTest {
         store1 = storeRepo.save(store1);
         store2 = storeRepo.save(store2);
 
-        product1 = new Product(0, "Bag of Holding", 499.99f, 100, store1);
-        product2 = new Product(0, "Ale", 9.99f, 100, store2);
+        product1 = new Product(1, "Bag of Holding", 499.99f, 100, store1);
+        product2 = new Product(2, "Ale", 9.99f, 100, store2);
 
         product1 = productRepo.save(product1);
         product2 = productRepo.save(product2);
@@ -103,9 +104,9 @@ public class OrderRepoTest {
         biker = bikerRepo.save(biker);
 
         order1 = new Order(1, customer1, store1, null, OrderStatus.AWAITING_APPROVAL,
-                Date.valueOf("2050-09-15"), orderDetails1);
+                java.sql.Date.valueOf("2050-09-15"), orderDetails1);
         order2 = new Order(2, customer1, store2, biker, OrderStatus.EN_ROUTE,
-                Date.valueOf("2023-05-13"), orderDetails2);
+                java.sql.Date.valueOf("2023-05-13"), orderDetails2);
 
         order1 = orderRepo.save(order1);
         order2 = orderRepo.save(order2);

@@ -1,12 +1,11 @@
 package io.biker.management.biker.entity;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import io.biker.management.user.Address;
 import io.biker.management.user.entity.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "BIKERS")
+@Document(collection = "Bikers")
 public class Biker extends User {
     private Address currentLocation;
 

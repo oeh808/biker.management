@@ -1,6 +1,6 @@
 package io.biker.management.order.service;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import io.biker.management.enums.OrderStatus;

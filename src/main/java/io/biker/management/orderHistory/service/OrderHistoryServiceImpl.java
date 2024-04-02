@@ -1,7 +1,7 @@
 package io.biker.management.orderHistory.service;
 
-import java.sql.Date;
-import java.time.ZonedDateTime;
+import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +15,6 @@ import io.biker.management.orderHistory.entity.OrderHistory;
 import io.biker.management.orderHistory.exception.OrderHistoryException;
 import io.biker.management.orderHistory.exception.OrderHistoryExceptionMessages;
 import io.biker.management.orderHistory.repo.OrderHistoryRepo;
-import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -37,7 +36,7 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
         Order order = getOrder(orderId);
         OrderHistory orderHistory = new OrderHistory(0, orderCreationDate, order.getStatus(),
                 order.getEstimatedTimeOfArrival(),
-                order.getBiker(), ZonedDateTime.now(), order);
+                order.getBiker(), Instant.now(), order);
 
         log.info("Saving Order History...");
         return orderHistoryRepo.save(orderHistory);
@@ -84,7 +83,6 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
         orderHistoryRepo.deleteById(id);
     }
 
-    @Transactional
     @Override
     public void deleteOrderHistoriesByOrder(int orderId) {
         log.info("Running deleteOrderHistoriesByOrder(" + orderId + ") in OrderHistoryServiceImpl...");

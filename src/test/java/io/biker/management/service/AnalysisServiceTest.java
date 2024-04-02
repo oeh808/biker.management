@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,11 +73,11 @@ public class AnalysisServiceTest {
         orderDetails1 = new OrderDetails(null, 0, 0, null, feedBack1);
         orderDetails2 = new OrderDetails(null, 0, 0, null, feedBack2);
 
-        order1 = new Order(0, null, null, biker, OrderStatus.DELIVERED, Date.valueOf("2050-09-15"),
+        order1 = new Order(0, null, null, biker, OrderStatus.DELIVERED, java.sql.Date.valueOf("2050-09-15"),
                 orderDetails1);
-        order2 = new Order(0, null, null, biker, OrderStatus.DELIVERED, Date.valueOf("2050-09-15"),
+        order2 = new Order(0, null, null, biker, OrderStatus.DELIVERED, java.sql.Date.valueOf("2050-09-15"),
                 orderDetails2);
-        order3 = new Order(0, null, null, biker, OrderStatus.PREPARING, Date.valueOf("2050-09-15"),
+        order3 = new Order(0, null, null, biker, OrderStatus.PREPARING, java.sql.Date.valueOf("2050-09-15"),
                 null);
 
         orders.add(order1);
