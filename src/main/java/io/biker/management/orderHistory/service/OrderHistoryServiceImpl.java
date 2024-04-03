@@ -95,11 +95,12 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
 
     // Helper functions
     private Order getOrder(int orderId) {
-        log.info("Retrieving order...");
+        log.info("Retrieving order with id: " + orderId + "...");
         Optional<Order> opOrder = orderRepo.findById(orderId);
         if (opOrder.isPresent()) {
             return opOrder.get();
         } else {
+            log.error("Order with id: " + orderId + " not found!");
             throw new OrderException(OrderExceptionMessages.ORDER_NOT_FOUND);
         }
     }
