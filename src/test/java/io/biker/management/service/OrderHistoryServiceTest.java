@@ -171,7 +171,7 @@ public class OrderHistoryServiceTest {
     public void deleteOrderHistoriesByOrder_ExistantOrder() {
         orderHistoryService.deleteOrderHistoriesByOrder(order1.getOrderId());
 
-        verify(repo, times(1)).deleteByOrder(order1);
+        verify(repo, times(1)).deleteByOrder_OrderId(order1.getOrderId());
     }
 
     @Test
@@ -182,6 +182,6 @@ public class OrderHistoryServiceTest {
                 });
         assertTrue(ex.getMessage().contains(OrderExceptionMessages.ORDER_NOT_FOUND));
 
-        verify(repo, times(0)).deleteByOrder(order1);
+        verify(repo, times(0)).deleteByOrder_OrderId(order1.getOrderId());
     }
 }

@@ -88,7 +88,7 @@ public class OrderHistoryRepoTest {
         List<OrderHistory> expectedList = new ArrayList<>();
         expectedList.add(orderHistory2);
 
-        orderHistoryRepo.deleteByOrder(order1);
+        orderHistoryRepo.deleteByOrder_OrderId(order1.getOrderId());
 
         assertEquals(expectedList.get(0).getId(), orderHistoryRepo.findAll().get(0).getId());
     }

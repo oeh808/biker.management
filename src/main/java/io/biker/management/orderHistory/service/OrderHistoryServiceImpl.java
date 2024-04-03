@@ -88,10 +88,10 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
     public void deleteOrderHistoriesByOrder(int orderId) {
         log.info("Running deleteOrderHistoriesByOrder(" + orderId + ") in OrderHistoryServiceImpl...");
 
-        Order order = getOrder(orderId);
+        getOrder(orderId);
 
         log.info("Deleting all records of order history for order...");
-        orderHistoryRepo.deleteByOrder(order);
+        orderHistoryRepo.deleteByOrder_OrderId(orderId);
     }
 
     // Helper functions

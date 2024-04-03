@@ -137,6 +137,8 @@ public class OrderServiceImpl implements OrderService {
 
         log.info("Saving updated order...");
         orderRepo.save(order);
+
+        orderHistoryService.createOrderHistory(orderId, getOrderCreationDate(orderId));
     }
 
     @Override
