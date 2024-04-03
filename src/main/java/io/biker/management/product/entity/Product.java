@@ -1,6 +1,7 @@
 package io.biker.management.product.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import io.biker.management.store.entity.Store;
@@ -13,6 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
+    @Transient
+    public static final String SEQUENCE_NAME = "productsSequence";
+
     @Id
     private int productId;
     private String name;

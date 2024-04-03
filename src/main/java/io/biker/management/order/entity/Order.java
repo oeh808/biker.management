@@ -3,6 +3,7 @@ package io.biker.management.order.entity;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import io.biker.management.biker.entity.Biker;
@@ -18,6 +19,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Document(collection = "Orders")
 public class Order {
+    @Transient
+    public static final String SEQUENCE_NAME = "ordersSequence";
+
     @Id
     private int orderId;
     private Customer customer;

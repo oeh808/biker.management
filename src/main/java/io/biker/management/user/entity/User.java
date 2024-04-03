@@ -2,6 +2,7 @@ package io.biker.management.user.entity;
 
 import org.springframework.data.annotation.Id;
 // import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Transient;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +15,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public abstract class User {
+    @Transient
+    public static final String SEQUENCE_NAME = "usersSequence";
+
     @Id
     private int id;
     private String name;
