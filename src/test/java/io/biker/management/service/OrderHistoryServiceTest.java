@@ -95,8 +95,9 @@ public class OrderHistoryServiceTest {
                 }).when(repo).save(any(OrderHistory.class));
 
         when(repo.findAll()).thenReturn(orderHistories);
-        when(repo.findByIdAndOrder(orderHistory1.getId(), order1)).thenReturn(Optional.of(orderHistory1));
-        when(repo.findByIdAndOrder(orderHistory2.getId(), order1)).thenReturn(Optional.empty());
+        when(repo.findByIdAndOrder_OrderId(orderHistory1.getId(), order1.getOrderId()))
+                .thenReturn(Optional.of(orderHistory1));
+        when(repo.findByIdAndOrder_OrderId(orderHistory2.getId(), order1.getOrderId())).thenReturn(Optional.empty());
     }
 
     @Test
@@ -117,7 +118,7 @@ public class OrderHistoryServiceTest {
     @Test
     public void getOrderHistoriesByOrder_ExistantOrder() {
         List<OrderHistory> someOrderHistories = orderHistoryService.getOrderHistoriesByOrder(order1.getOrderId());
-        when(repo.findByOrder(order1)).thenReturn(someOrderHistories);
+        when(repo.findByOrder_OrderId(order1.getOrderId())).thenReturn(someOrderHistories);
 
         assertEquals(someOrderHistories, orderHistoryService.getOrderHistoriesByOrder(order1.getOrderId()));
     }

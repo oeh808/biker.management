@@ -54,7 +54,8 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
 
         Order order = getOrder(orderId);
 
-        return orderHistoryRepo.findByOrder(order);
+        log.info(orderHistoryRepo.findByOrder_OrderId(order.getOrderId()).size());
+        return orderHistoryRepo.findByOrder_OrderId(order.getOrderId());
     }
 
     @Override
@@ -64,7 +65,7 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
         Order order = getOrder(orderId);
 
         log.info("Retrieving order history...");
-        Optional<OrderHistory> opOrderHistory = orderHistoryRepo.findByIdAndOrder(id, order);
+        Optional<OrderHistory> opOrderHistory = orderHistoryRepo.findByIdAndOrder_OrderId(id, order.getOrderId());
         if (opOrderHistory.isEmpty()) {
             log.error("Order History not found with provided parameters!");
             throw new OrderHistoryException(OrderHistoryExceptionMessages.ORDER_HISTORY_DOES_NOT_EXIST(orderId));

@@ -294,8 +294,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Date getOrderCreationDate(int orderId) {
+        log.info("Retrieving Order creation date...");
         List<OrderHistory> orderHistories = orderHistoryService.getOrderHistoriesByOrder(orderId);
         if (orderHistories.isEmpty()) {
+            log.error("Order's history not found!");
             throw new OrderHistoryException(OrderHistoryExceptionMessages.ORDER_HISTORY_DOES_NOT_EXIST);
         } else {
             return orderHistories.get(0).getOrderCreationDate();

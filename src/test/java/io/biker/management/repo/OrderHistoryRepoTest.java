@@ -70,12 +70,14 @@ public class OrderHistoryRepoTest {
         List<OrderHistory> expectedList = new ArrayList<>();
         expectedList.add(orderHistory1);
 
-        assertEquals(expectedList.get(0).getId(), orderHistoryRepo.findByOrder(order1).get(0).getId());
+        assertEquals(expectedList.get(0).getId(),
+                orderHistoryRepo.findByOrder_OrderId(order1.getOrderId()).get(0).getId());
     }
 
     @Test
     public void findByIdAndOrder() {
-        Optional<OrderHistory> opOrderHistory = orderHistoryRepo.findByIdAndOrder(orderHistory1.getId(), order1);
+        Optional<OrderHistory> opOrderHistory = orderHistoryRepo.findByIdAndOrder_OrderId(orderHistory1.getId(),
+                order1.getOrderId());
 
         assertTrue(opOrderHistory.isPresent());
         assertEquals(orderHistory1.getId(), opOrderHistory.get().getId());

@@ -9,9 +9,9 @@ import java.util.Optional;
 import io.biker.management.order.entity.Order;
 
 public interface OrderHistoryRepo extends MongoRepository<OrderHistory, Integer> {
-    List<OrderHistory> findByOrder(Order order);
+    List<OrderHistory> findByOrder_OrderId(int orderId);
 
-    Optional<OrderHistory> findByIdAndOrder(int id, Order order);
+    Optional<OrderHistory> findByIdAndOrder_OrderId(int id, int orderId);
 
     void deleteByOrder(Order order);
 }
