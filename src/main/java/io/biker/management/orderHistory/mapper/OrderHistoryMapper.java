@@ -1,8 +1,6 @@
 package io.biker.management.orderHistory.mapper;
 
 import java.util.Date;
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,14 +19,14 @@ public class OrderHistoryMapper {
             dto = new OrderHistoryReadingDTO(orderHistory.getId(),
                     orderHistory.getOrder().getOrderId(),
                     orderHistory.getOrderCreationDate(),
-                    formatDate(orderHistory.getUpdatedAt()),
+                    orderHistory.getUpdatedAt().toString(),
                     orderHistory.getEstimatedTimeOfArrival(), orderHistory.getStatus(),
                     -1);
         } else {
             dto = new OrderHistoryReadingDTO(orderHistory.getId(),
                     orderHistory.getOrder().getOrderId(),
                     orderHistory.getOrderCreationDate(),
-                    formatDate(orderHistory.getUpdatedAt()),
+                    orderHistory.getUpdatedAt().toString(),
                     orderHistory.getEstimatedTimeOfArrival(), orderHistory.getStatus(),
                     orderHistory.getBiker().getId());
         }
@@ -51,10 +49,11 @@ public class OrderHistoryMapper {
     }
 
     // Helper Functions
-    private String formatDate(Instant dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss z");
-        String formattedString = formatter.format(dateTime);
+    // private String formatDate(Instant dateTime) {
+    // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy -
+    // HH:mm:ss z");
+    // String formattedString = formatter.format(dateTime);
 
-        return formattedString;
-    }
+    // return formattedString;
+    // }
 }
